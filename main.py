@@ -15,8 +15,40 @@ with open('config.json', encoding='utf-8') as json_file:
 twitch_bot = "foo" # replace with reference to Devon's code
 client = ObsClient(data, twitch_bot)
 
-user = {
-	"name": "somebody",
+user1 = {
+	"name": "Mr. Spams",
+	"follower": True,
+	"subscriber": False,
+	"subscriber_duration": None,
+	"moderator": False
+}
+
+user2 = {
+	"name": "Bob",
+	"follower": True,
+	"subscriber": False,
+	"subscriber_duration": None,
+	"moderator": False
+}
+
+user3 = {
+	"name": "Molly",
+	"follower": True,
+	"subscriber": False,
+	"subscriber_duration": None,
+	"moderator": False
+}
+
+user4 = {
+	"name": "Chase",
+	"follower": True,
+	"subscriber": False,
+	"subscriber_duration": None,
+	"moderator": False
+}
+
+user5 = {
+	"name": "Kathy",
 	"follower": True,
 	"subscriber": False,
 	"subscriber_duration": None,
@@ -25,9 +57,18 @@ user = {
 
 try:
 	pass
-	#client.execute(user, 'pride')
-	print(client.execute(user, 'trans'))
-	#client.execute(user, 'talktome')
+	client.execute(user1, 'pride')
+	client.execute(user1, 'trans') # alias to 'pride' command
+	client.execute(user1, 'talktome')
+	client.execute(user1, 'talktome') # spam; not unique name
+	client.execute(user1, 'talktome') # spam; not unique name
+	client.execute(user1, 'talktome') # spam; not unique name
+	client.execute(user1, 'talktome') # spam; not unique name
+	client.execute(user2, 'talktome')
+	client.execute(user3, 'talktome')
+	client.execute(user4, 'talktome')
+	client.execute(user5, 'talktome')
+
 	client.disconnect()
 except:
 	client.disconnect()

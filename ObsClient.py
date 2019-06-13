@@ -3,8 +3,6 @@ import obswebsocket, obswebsocket.requests
 import logging
 import time
 from importlib import import_module
-#from ActionShowSceneItem import ActionShowSceneItem
-from Message import Message
 from Permission import Permission
 
 class ObsClient:
@@ -24,13 +22,11 @@ class ObsClient:
 		in this class. For example a command_name 'foo' implies a method '_foo' in this 
 		class
 		"""
-		self.log.debug("User '{}' trying to excecute command '{}'...".format(user['name'], command_name))
-
 		# Verify if the command exists
 		command = self.commands.get(command_name, None)
 		if(command is None):
-			self.log.warn("User error: '{}' tried to execute unknown or misconfigured command '{}'".format(user['name'], command_name))
-			return
+			#self.log.warn("User error: '{}' tried to execute unknown or misconfigured command '{}'".format(user['name'], command_name))
+			return # TODO revisit the permissions thing in a class instance 
 
 		# Execute the function with args, returning its message
 		return command.execute(user)
@@ -68,18 +64,18 @@ class ObsClient:
 			name = command.get('name', "unknown")
 			permission_str = command.get('permission', None)
 			action = command.get('action', None)
-			votes = command.get('votes', None)
+			min_votes = command.get('min_votes', None)
 			args = command.get('args', None)
-			if(permission_str is None or action is None or votes is None or args is None):
-				self.log.warn("Command '{}': Error, missing 'permission', 'action', 'votes', or 'args' elements for command ".format(name))
+			if(permission_str is None or action is None or min_votes is None or args is None):
+				self.log.warn("Command '{}': Error, missing 'permission', 'action', 'min_votes', or 'args' elements for command ".format(name))
 				continue
 
 			# Verify the votes and permission string are valid
-			if(votes < 0):
-				self.log.warn("Command '{}': Error, votes cannot be less than zero for command {}".format(name, votes))
+			if(min_votes < 0):
+				self.log.warn("Command '{}': Error, min_votes cannot be less than zero for command {}".format(name, min_votes))
 				continue
 			else:
-				self.log.debug("Command '{}': minimum votes is {}".format(name, votes))
+				self.log.debug("Command '{}': minimum votes is {}".format(name, min_votes))
 
 			try:
 				permission = Permission[permission_str]
@@ -100,9 +96,9 @@ class ObsClient:
 			# Try to instantiate the action class
 			try:
 				self.log.debug("Command {}: args are: {}".format(name, args))
-				func = class_(self, name, permission, args) # TODO revisit the permissions thing in a class instance
-			except ValueError:
-				self.log.warn("Command '{}': Error, could not instantiate command class with args {}".format(name, args))
+				func = class_(self, name, permission, min_votes, args) # TODO revisit the permissions thing in a class instance
+			except ValueError as e:
+				self.log.warn(e)
 				continue
 
 			# Add func to internal reference

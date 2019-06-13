@@ -10,27 +10,27 @@
 	"commands": [
 		{ 
 			"name": "talktome",
-			"votes": 5,
+			"min_votes": 5,
 			"permission": "FOLLOWER",
 			"action": "SetScene",
 			"args": {
-				"name": "Just Chatting"
+				"scene": "Just Chatting"
 			}
 		},
 		{
 			"name": "pride",
-			"votes": 0,
+			"min_votes": 0,
 			"permission": "EVERYONE",
 			"action": "ShowSceneItem",
 			"args": {
 				"scene": "~ Memes",
-				"item": "pride",
+				"scene_item": "pride",
 				"duration": 2
 			}
 		},
 		{
 			"name": "trans",
-			"votes": 0,
+			"min_votes": 0,
 			"permission": "EVERYONE",
 			"action": "Alias",
 			"args": {

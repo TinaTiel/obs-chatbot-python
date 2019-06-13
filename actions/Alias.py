@@ -1,6 +1,5 @@
 import logging
 import Common
-from Message import Message
 
 class Alias:
 	"""Simply allows an alias for another function, for example the main 
@@ -21,19 +20,19 @@ class Alias:
 		self.obs_client = obs_client
 		self.command_name = command_name
 		self.permission = permission
-		self.min_votes = votes
+		self.min_votes = min_votes
 		self.votes = []
 		self._init_args(args)
 
 	def execute(self, user):
 		# this command is just an alias, no permissions or votes to evaluate
-		obs_client.execute(user, self.func_alias)
+		self.obs_client.execute(user, self.func_alias)
 
 	def _init_args(self, args):
 		"""This validates the arguments are valid for this instance, 
 		and raises a ValueError if they aren't.
 
-		args must contain:
+		Mandatory args:
 		command_name (string): Name of the command this alias should execute.
 
 		"""

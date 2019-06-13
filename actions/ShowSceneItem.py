@@ -1,7 +1,7 @@
 import obswebsocket, obswebsocket.requests
 import logging
 import time
-from Message import Message
+import Common
 
 class ShowSceneItem:
 
@@ -19,7 +19,7 @@ class ShowSceneItem:
 		self.obs_client = obs_client
 		self.command_name = command_name
 		self.permission = permission
-		self.min_votes = votes
+		self.min_votes = min_votes
 		self.votes = []
 		self._init_args(args)
 
@@ -31,57 +31,48 @@ class ShowSceneItem:
 		# first check user has permission for this command
 		has_permission = Common.eval_permission(user, self.permission)
 		if(not has_permission):
+			self.log.debug("Command {}: User has insufficient privileges".format(self.command_name, user['name']))
 			return # TODO: replace with callback on parent
 
 		# then add user to votes and evaluate votes permission
-		votes.add(user.name)
-		if(not len(votes) >= min_votes):
+		self.votes.append(user['name'])
+		if(not len(self.votes) >= self.min_votes):
+			self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, len(self.votes), self.min_votes))
 			return # TODO: replace with callback on parent
 		
 		# finally execute the command
-
-		# Validate if the user is allowed to execute this command
-		if(self._canExecute(user, permission) == False):
-			self.log.debug("User {} is NOT permitted to execute {}".format(user['name'], command_name))
-			return # TODO: replace with callback on parent
-		else:
-			self.log.debug("User {} is permitted to execute {}".format(user['name'], command_name))
-
-		# Validate args
-		scene_item = args.get('item', None)
-		duration = args.get('duration-seconds', None)
-		if(scene_item is None or duration is None):
-			self.log.warn("Config error: Missing 'item' or 'duration' for showSceneItem command")
-			return # TODO: replace with callback on parent
-
-		if(duration <= 0):
-			self.log.warn("Config error: Duration cannot be zero or negative!")
-			return # TODO: replace with callback on parent
-
-		# Get optional args
-		scene = args.get('scene', None)
-
-		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(scene_item, True, scene))
+		# show the scene
+		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.scene_item, True, self.scene))
 		if(res.status == False):
-			self.log.warn("Could not show scene item {}! Error: {}".format(scene_item, res.datain['error']))
+			self.log.warn("Could not show scene item {}! Error: {}".format(self.scene_item, res.datain['error']))
 			return # TODO: replace with callback on parent
 
-		time.sleep(duration)
-		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(scene_item, False, scene))
+		# wait the specified duration
+		time.sleep(self.duration)
+
+		# hide the scene again
+		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.scene_item, False, self.scene))
 		if(res.status == False):
-			self.log.warn("Could not hide scene item {}! Error: {}".format(scene_item, res.datain['error']))
+			self.log.warn("Could not hide scene item {}! Error: {}".format(self.scene_item, res.datain['error']))
 			return # TODO: replace with callback on parent
+
+		return # TODO: replace with callback on parent
 
 	def _init_args(self, args):
 		"""This validates the arguments are valid for this instance, 
 		and raises a ValueError if they aren't.
 
-		args must contain:
-		command_name (string): Name of the command this alias should execute.
+		Mandatory args:
+		scene item (string): Name of the scene to show.
+		duration (int): Duration (seconds) to show scene.
 
+		Optional args:
+		scene (string): Name of scene where scene item is nested. If not provided, 
+									  then the current scene is used. 
 		"""
 		self.scene_item = args.get('scene_item')
 		self.duration = args.get('duration')
+		self.scene = args.get('scene', None) # This is an optional command
 		if(self.scene_item is None or self.duration is None):
 			raise ValueError("Command {}: Args error, missing 'scene_item' or 'duration' for command".format(self.command_name))
 
