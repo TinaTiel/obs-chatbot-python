@@ -1,0 +1,41 @@
+{
+	"obs_websockets": {
+		"host": "localhost",
+		"port": "4444",
+		"password": "tinatielrocks"
+	},
+	"twitch": {
+
+	},
+	"commands": [
+		{ 
+			"name": "talktome",
+			"votes": 5,
+			"permission": "FOLLOWER",
+			"action": "SetScene",
+			"args": {
+				"name": "Just Chatting"
+			}
+		},
+		{
+			"name": "pride",
+			"votes": 0,
+			"permission": "EVERYONE",
+			"action": "ShowSceneItem",
+			"args": {
+				"scene": "~ Memes",
+				"item": "pride",
+				"duration": 2
+			}
+		},
+		{
+			"name": "trans",
+			"votes": 0,
+			"permission": "EVERYONE",
+			"action": "Alias",
+			"args": {
+				"command_name": "pride"
+			}
+		}
+	]
+}
