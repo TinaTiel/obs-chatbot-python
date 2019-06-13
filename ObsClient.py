@@ -42,7 +42,7 @@ class ObsClient:
 		"""Gets the configuration information from config.json and stores it
 		to private variables
 		"""
-		self.log.info("Loading configuration fiel...")
+		self.log.info("Loading configuration file...")
 		try:
 			self.conf_obs = conf.get('obs_websockets', None)
 			self.conf_commands = conf.get('commands', None)

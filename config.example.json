@@ -2,7 +2,7 @@
 	"obs_websockets": {
 		"host": "localhost",
 		"port": "4444",
-		"password": "tinatielrocks"
+		"password": "password"
 	},
 	"twitch": {
 
