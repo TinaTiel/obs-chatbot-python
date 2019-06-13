@@ -36,6 +36,7 @@ class SetScene():
 		if(not len(self.votes) >= self.min_votes):
 			self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, len(self.votes), self.min_votes))
 			return # TODO: replace with callback on parent
+		self.votes = set()
 		
 		# finally execute the command
 		res = self.obs_client.client.call(obswebsocket.requests.SetCurrentScene(self.scene))

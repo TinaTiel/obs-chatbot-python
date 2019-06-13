@@ -67,7 +67,9 @@ try:
 	client.execute(user2, 'talktome')
 	client.execute(user3, 'talktome')
 	client.execute(user4, 'talktome')
-	client.execute(user5, 'talktome')
+	client.execute(user5, 'talktome') # now votes reset
+
+	client.execute(user1, 'talktome')
 
 	client.disconnect()
 except:
