@@ -16,7 +16,7 @@ This project also depends on [OBS Websockets](https://obsproject.com/forum/resou
 1. Setup your Twitch Application:
    1. Signup at [Twitch Dev](https://dev.twitch.tv) with your broadcaster account.
    1. [Create a new App](https://dev.twitch.tv/console/apps) (NOT an Extension):
-       1. Use a meaningful name, such as "<Broadcaster Username> OBS ChatBot App"
+       1. Use a meaningful name, such as "Broadcaster Username OBS ChatBot App"
        1. Set the OAuth Redirect URL to something you can access, such as http://localhost
        1. Set the category to Chat Bot
    1. Once you've created the App, copy the client id and secret to "api_client_id" and "app_client_secret" in config.json. NEVER share the client secret, treat it as a password.
