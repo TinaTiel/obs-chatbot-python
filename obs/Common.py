@@ -1,6 +1,6 @@
 # Contains common/shared (static) methods
 import logging
-from Permission import Permission
+from obs.Permission import Permission
 
 log = logging.getLogger(__name__)
 

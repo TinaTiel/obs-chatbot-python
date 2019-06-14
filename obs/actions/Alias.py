@@ -1,5 +1,4 @@
 import logging
-import Common
 
 class Alias:
 	"""Simply allows an alias for another function, for example the main 

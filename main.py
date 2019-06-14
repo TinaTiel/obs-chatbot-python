@@ -1,4 +1,4 @@
-from ObsClient import ObsClient
+from obs.ObsClient import ObsClient
 import json
 import logging
 import logging.config

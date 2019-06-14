@@ -3,7 +3,7 @@ import obswebsocket, obswebsocket.requests
 import logging
 import time
 from importlib import import_module
-from Permission import Permission
+from obs.Permission import Permission
 
 class ObsClient:
 	"""This class is responsible for executing commands against OBS, given params
@@ -86,7 +86,7 @@ class ObsClient:
 
 			# Try to get the corresponding action class
 			try:
-				module = import_module("actions."+action)
+				module = import_module("obs.actions."+action)
 				class_ = getattr(module, action)
 				self.log.debug("Command {}: action is {}".format(name, class_))
 			except Exception as e:

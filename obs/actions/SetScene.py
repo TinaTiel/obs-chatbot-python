@@ -1,7 +1,7 @@
 import obswebsocket, obswebsocket.requests
 import logging
 import time
-import Common
+from obs.Common import eval_permission
 
 class SetScene():
 	def __init__(self, obs_client, command_name, permission, min_votes, args):
@@ -26,7 +26,7 @@ class SetScene():
 		"""Permanently switches to a specified scene
 		"""
 		# first check user has permission for this command
-		has_permission = Common.eval_permission(user, self.permission)
+		has_permission = eval_permission(user, self.permission)
 		if(not has_permission):
 			self.log.debug("Command {}: User has insufficient privileges".format(self.command_name, user['name']))
 			return # TODO: replace with callback on parent

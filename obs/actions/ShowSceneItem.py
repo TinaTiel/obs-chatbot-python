@@ -1,7 +1,7 @@
 import obswebsocket, obswebsocket.requests
 import logging
 import time
-import Common
+from obs.Common import eval_permission
 
 class ShowSceneItem:
 
@@ -29,7 +29,7 @@ class ShowSceneItem:
 		"""
 
 		# first check user has permission for this command
-		has_permission = Common.eval_permission(user, self.permission)
+		has_permission = eval_permission(user, self.permission)
 		if(not has_permission):
 			self.log.debug("Command {}: User has insufficient privileges".format(self.command_name, user['name']))
 			return # TODO: replace with callback on parent
