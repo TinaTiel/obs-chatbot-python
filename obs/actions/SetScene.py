@@ -35,7 +35,9 @@ class SetScene():
 		self.votes.add(user['name'])
 		if(not len(self.votes) >= self.min_votes):
 			self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, len(self.votes), self.min_votes))
-			return # TODO: replace with callback on parent
+			remaining_votes = self.min_votes - len(self.votes)
+			self.obs_client.twitch_bot.twitch_say("{} votes to {}, will {} more join them?".format(user['name'], self.command_name, remaining_votes))
+			return
 		self.votes = set()
 		
 		# finally execute the command

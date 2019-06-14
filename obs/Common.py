@@ -10,7 +10,9 @@ def eval_permission(user, required_permission):
 	See the Permission class; MODERATOR > SUBSCRIBER > FOLLOWER > EVERYONE
 	"""
 	# First determine the user's permision level
-	if(user['moderator']):
+	if(user['broadcaster']):
+		user_permission = Permission.BROADCASTER
+	elif(user['moderator']):
 		user_permission = Permission.MODERATOR
 	elif(user['subscriber']):
 		user_permission = Permission.SUBSCRIBER

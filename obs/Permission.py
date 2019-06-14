@@ -8,6 +8,7 @@ class Permission(Enum):
 	FOLLOWER = 2
 	SUBSCRIBER = 3
 	MODERATOR = 4
+	BROADCASTER = 5
 
 	def __lt__(self, other):
 		if self.__class__ is other.__class__:
