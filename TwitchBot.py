@@ -2,6 +2,7 @@ from queue import Queue, Empty
 import irc.bot
 import logging
 import threading
+import time
 from TwitchBotCore import TwitchBotCore, TwitchCommand, TwitchUser
 from TwitchApi import TwitchApi
 
@@ -200,6 +201,7 @@ class TwitchBot(object):
 
         self.log.info("Starting Twitch bot core thread.")
         self.twitch_bot_core_thread = threading.Thread(target = self._start)
+        self.twitch_bot_core_thread.name = "TwitchBotCoreThread"
         self.twitch_bot_core_thread.start()
 
     def run_forever(self):
@@ -217,6 +219,30 @@ class TwitchBot(object):
                 self.on_twitch_command(cmd)
             except KeyboardInterrupt:
                 self.twitch_shutdown()
+
+    def run_forever_win(self):
+        """Run this if you want to let the bot control the program on Windows.
+        
+        Runs eternally, forever polling for commands from the bot,
+        invoking the on_twitch_command method whenever one is received.
+        """
+        self.log.info("Twitch bot is running forever on Windows.")
+        while True:
+            try:
+                try:
+                    cmd = self.get_twitch_command(block = False)
+                except Empty:
+                    pass
+                else:
+                    self.log.info("Twitch bot received command '%s(%s)'."
+                                  % (cmd["action"], str(cmd["args"])))
+                    self.on_twitch_command(cmd)
+                time.sleep(0.1)
+            except KeyboardInterrupt:
+                self.twitch_shutdown()
+            except:
+                self.twitch_shutdown()
+                raise
 
     def run_once(self, block = True, timeout = None):
         """Run this if you want to control the program yourself.

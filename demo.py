@@ -2,6 +2,7 @@ import logging
 import time
 from TwitchBot import TwitchBot
 
+#logging.basicConfig(level=logging.DEBUG, filename='debug.log')
 logging.basicConfig(level=logging.INFO)
 
 
@@ -63,7 +64,8 @@ config = {
 def main():
     testbot = PrintCommandBot(**config)
     testbot.start()
-    testbot.run_forever()
+    testbot.run_forever_win()
+    #testbot.run_forever()
 
 
 # Example of using the Twitch bot with run_once. This

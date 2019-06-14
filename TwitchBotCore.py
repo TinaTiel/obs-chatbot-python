@@ -236,7 +236,7 @@ class TwitchBotCore(irc.bot.SingleServerIRCBot):
         # Parse badges, which are comma-delimited
         # elements in the form badge_name/badge_version.
         badges = dict()
-        if "badges" in tags:
+        if "badges" in tags and tags["badges"] is not None:
             for badge in tags["badges"].split(","):
                 try:
                     badge_name, badge_version = badge.split("/", 1)
