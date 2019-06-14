@@ -3,9 +3,9 @@ import json
 import logging
 import logging.config
 
-logging.config.fileConfig(fname='logging.conf', disable_existing_loggers=False)
-
 # Get the logger specified in the file
+#logging.config.fileConfig(fname='logging.conf', disable_existing_loggers=False)
+logging.basicConfig(level=logging.DEBUG)
 
 # Get the config data
 with open('config.json', encoding='utf-8') as json_file:
