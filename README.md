@@ -19,11 +19,13 @@ This project also depends on [OBS Websockets](https://obsproject.com/forum/resou
        1. Use a meaningful name, such as "Broadcaster Username OBS ChatBot App"
        1. Set the OAuth Redirect URL to something you can access, such as http://localhost
        1. Set the category to Chat Bot
-   1. Once you've created the App, copy the client id and secret to "api_client_id" and "app_client_secret" in config.json. NEVER share the client secret, treat it as a password.
+   1. In config.json, set `twitch.api_client_id` and `twitch.app_client_secret` from your app you just created. Note, you should NEVER share the client secret, treat it as a password.
 1. Authorize your Chat Bot access to Twitch chat:
    1. Login to Twitch as your Chat Bot account, and navigate to https://twitchapps.com/tmi to generate a chat token.
    2. In config.json, set `twitch.chat_token` to the token you receive after authorizing access to your Chat Bot.
-1. In config.json, set your OBS websocket credentials (`obs.obs_websockets.host`, `obs.obs_websockets.port`, and `obs.obs_websockets.password`).
+1. Authorize access to OBS:
+   1. If you haven't already, install  [OBS Websockets](https://obsproject.com/forum/resources/obs-websocket-remote-control-of-obs-studio-made-easy.466/) and set your credentials in _OBS > Tools > Websocket Server Settings_. 
+   1. In config.json, set your OBS websocket credentials (`obs.obs_websockets.host`, `obs.obs_websockets.port`, and `obs.obs_websockets.password`).
 1. Verify your setup is working correctly by running the bot...
    ```
    python startBot.py
@@ -32,11 +34,11 @@ This project also depends on [OBS Websockets](https://obsproject.com/forum/resou
    ```
    yourname: !test
    ```
-   If working, the bot will respond with some basic information about you and with your OBS Websockets version:
+   If working, the bot will respond in Twitch chat with some basic information about you and with your OBS Websockets version. Note this command can only be executed by the broadcaster (you).
    ```
    yourbot: All systems up and running @yourname, running OBS Websockets version 4.6.1
    ```
-1. You are now setup! See the documentation below on the commands you can setup
+You are now setup! See the documentation below on the commands you can execute.
 
 # Commands
 The configuration file `config.json` includes several examples of commands that can be configured. 
@@ -55,3 +57,10 @@ This table below describes the `action`/`args` configurations available. If the 
 
 `min_votes`: Describes the minimum number of unique votes needed to execute a command. Must be greater than zero. 
 `permission`: The minimum status required to execute a command. Can be `EVERYONE`, `FOLLOWER`, `SUBSCRIBER`, `MODERATOR`, or `BROADCASTER`. 
+
+### Extending Commands
+Commands are just classes in the `obs/actions` directory, initialized dynamically with arguments in config.json when the bot starts up. The only hard requirements for these classes are:
+1. The initializtion function must accept the `obs_client`, `command_name`, `permission`, `min_votes`, and `args` arguments. 
+2. There must be an `execute` method accepting an `user` argument. 
+
+Optionally you may use `eval_permission` and `eval_votes` if necessary. Refer to [obs-websocket-py](https://github.com/Elektordi/obs-websocket-py) and the source code here for examples.
