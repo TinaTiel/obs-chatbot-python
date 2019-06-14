@@ -1,6 +1,6 @@
 import logging
 import time
-from TwitchBot import TwitchBot
+from twitch.TwitchBot import TwitchBot
 
 #logging.basicConfig(level=logging.DEBUG, filename='debug.log')
 logging.basicConfig(level=logging.INFO)

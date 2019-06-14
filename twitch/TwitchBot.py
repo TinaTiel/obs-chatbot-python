@@ -3,8 +3,8 @@ import irc.bot
 import logging
 import threading
 import time
-from TwitchBotCore import TwitchBotCore, TwitchCommand, TwitchUser
-from TwitchApi import TwitchApi
+from twitch.TwitchBotCore import TwitchBotCore, TwitchCommand, TwitchUser
+from twitch.TwitchApi import TwitchApi
 
 
 class TwitchBot(object):

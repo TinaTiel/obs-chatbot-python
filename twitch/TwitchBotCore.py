@@ -6,7 +6,7 @@ import ssl
 import irc.bot
 import time
 import requests
-from TwitchApi import TwitchApi
+from twitch.TwitchApi import TwitchApi
 
 
 TwitchCommand = namedtuple("TwitchCommand", ["tags",

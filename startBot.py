@@ -1,5 +1,5 @@
 from obs.ObsClient import ObsClient
-from TwitchBot import TwitchBot
+from twitch.TwitchBot import TwitchBot
 import json
 import logging
 import logging.config
