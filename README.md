@@ -1,3 +1,6 @@
+# About
+OBS Chat Bot is a set of Python scripts that allows your viewers to cause actions directly in OBS during broadcasts! For example, an user may invoke a `!pride` command and your OBS instance would briefly show a rainbow flag. Or, a series of users may vote to execute the `!special` command to change scenes in some interactive fun way. The possibilities are endless as OBS Websockets.
+
 # Dependencies
 This project requires Python 3+, and dependencies are defined in requirements.txt. Install them with:
 ```
