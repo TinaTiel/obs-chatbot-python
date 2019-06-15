@@ -96,7 +96,11 @@ def main():
 	log = logging.getLogger(__name__)
 
 	with open('config.json', encoding='utf-8') as json_file:
-		data = json.load(json_file)
+		try:
+			data = json.load(json_file)
+		except Exception as e:
+			log.error("Cannot read config.json! Error message: \n" + str(e))
+			return
 
 	twitch_config = data.get('twitch', None)
 	if(twitch_config is None):
@@ -113,7 +117,7 @@ def main():
 	testbot.start()
 	testbot.run_forever_win()
 
-	testbot.obs_client.execute(broadcaster, 'pride')
+	testbot.obs_client.execute(broadcaster, 'birb')
 
 	testbot.obs_client.disconnect()
 

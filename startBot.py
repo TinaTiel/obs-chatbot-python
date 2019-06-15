@@ -39,7 +39,11 @@ def main():
 	log = logging.getLogger(__name__)
 
 	with open('config.json', encoding='utf-8') as json_file:
-		data = json.load(json_file)
+		try:
+			data = json.load(json_file)
+		except Exception as e:
+			log.error("Cannot read config.json! Error message: \n" + str(e))
+			return
 
 	twitch_config = data.get('twitch', None)
 	if(twitch_config is None):

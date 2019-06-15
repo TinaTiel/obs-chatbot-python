@@ -10,6 +10,10 @@ from obs.Permission import Permission
 #TODO: !gameshow Bot will set a value in a text file to a trivia question, and switch scene to a game show thingy. 
 #TODO: command chains
 #TODO: improvement, subclass an AbstractAction class with shared methods to interact with twitch bot, auth, votes, etc.
+#TODO: show who voted to change scenes?
+#TODO: add message to say when command executes
+#TODO: help command
+#TODO: Alias def in the function, instead of being a separate command entirely
 
 class ObsClient:
 	"""This class is responsible for executing commands against OBS, given params
