@@ -24,11 +24,11 @@ class ObsClient:
 		self.twitch_bot = twitch_bot
 
 	def execute(self, user, command_name):
-		"""Executes a given command with an user. The command is a string that is 
-		used to refer to a function pointer, whose function is defined privately 
-		in this class. For example a command_name 'foo' implies a method '_foo' in this 
-		class
+		"""Executes a given command with an user. The command is a string corresponding
+		to a class in the actions package, which is dynamically loaded if configured
+		correctly.
 		"""
+
 		# Verify if the command exists
 		command = self.commands.get(command_name, None)
 		if(command is None):
@@ -36,7 +36,7 @@ class ObsClient:
 			return self._twitch_failed()
 
 		# Execute the function with args, returning its message
-		return command.execute(user)
+		return command.execute(user) # Command class must call twitch_done() or twich_failed() on twitch_bot, it is not done here!
 
 	def disconnect(self):
 		"""Disconnects the OBS client websocket. Should be called when 
