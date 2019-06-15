@@ -1,7 +1,7 @@
 import obswebsocket, obswebsocket.requests
 import logging
 import time
-from Permission import Permission
+from obs.Permission import Permission
 
 class Action:
 
@@ -27,7 +27,7 @@ class Action:
 	def execute(self, user):
 		raise NotImplementedError("The action isn't defined!")
 
-	def _sufficient_votes(self, user):
+	def _has_enough_votes(self, user):
 		self.votes.add(user['name'])
 		if(not len(self.votes) >= self.min_votes):
 			self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, len(self.votes), self.min_votes))
@@ -54,6 +54,6 @@ class Action:
 			user_permission = Permission.EVERYONE
 		
 		result = user_permission >= self.permission
-		log.debug("User '{}' has permission {} and required permission is {}. Operation Allowed: {}".format(user['name'], user_permission, required_permission, result))
+		self.log.debug("User '{}' has permission {} and required permission is {}. Operation Allowed: {}".format(user['name'], user_permission, self.permission, result))
 
 		return result

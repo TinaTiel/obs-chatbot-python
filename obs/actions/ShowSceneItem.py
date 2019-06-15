@@ -25,7 +25,11 @@ class ShowSceneItem(Action):
 		"""
 
 		# Check user permissions and votes
-		if(not self._sufficient_votes(user) or not self._has_permission(user)):
+		if(not (
+			self._has_permission(user) 
+			and self._has_enough_votes(user) 
+			)
+		):
 			return
 		
 		# finally execute the command
