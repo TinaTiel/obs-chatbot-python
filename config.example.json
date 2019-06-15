@@ -39,6 +39,34 @@
 				"args": {
 					"scene": "Just Chatting"
 				}
+			},
+			{
+				"name": "chain",
+				"description": "Shows a bird, then shows the pride flag",
+				"aliases": [],
+				"min_votes": 0,
+				"permission": "EVERYONE",
+				"action": "Chain",
+				"args": {
+					"commands": [
+						{
+							"action": "ShowSceneItem",
+							"args": {
+								"scene": "~ Memes",
+								"scene_item": "pride",
+								"duration": 3
+							}
+						},
+						{
+							"action": "ShowSceneItem",
+							"args": {
+								"scene": "~ Memes",
+								"scene_item": "birb",
+								"duration": 3
+							}
+						}
+					]
+				}
 			}
 		]
 	}

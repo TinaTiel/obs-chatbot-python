@@ -27,7 +27,8 @@ class Chain(Action):
 		):
 			return self._twitch_failed()
 		
-		# finally execute the command
+		# finally execute the commands in the list, in order.
+		# Fail the entire chain if one link fails.
 		for command_obj in self.command_objs:
 			if(not command_obj.execute(user)):
 				self._twitch_failed()
@@ -43,10 +44,14 @@ class Chain(Action):
 		Mandatory args:
 		commands (list): list of commands to execute
 		"""
+
+		# Validate the basic piece is in place
 		self.commands = args.get('commands', None)
 		if(self.commands is None):
 			raise ValueError("Command {}: Args error, missing 'commands'".format(self.command_name))
 
+		# Since each command is essentially its own set of commands, validate the 
+		# command type and its arguments for each command in the chain
 		self.command_objs = []
 		for index, command in enumerate(self.commands):
 			self.log.debug("Index {}, command {}".format(index, command))

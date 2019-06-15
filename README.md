@@ -77,10 +77,11 @@ The elements of a command are described below:
 
 This table below describes the `action`/`args` configurations available. If the configuration is invalid, it will be printed to the command line. 
 
-| action        | What This Does                                                                                                          | mandatory args                                                                                           | optional args                                                                  |
-|---------------|-------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| SetScene      | Changes to a scene permanently                                                                                          | `scene` (string): The scene to switch to                                                                 | (none)                                                                         |
+| action | What This Does | mandatory args | optional args |
+|--------|----------------|----------------|---------------|
+| SetScene | Changes to a scene permanently | `scene` (string): The scene to switch to | (none) |
 | ShowSceneItem | Shows a scene item for a specified duration. Defaults to the item in the current scene unless parent scene is specified | `scene_item` (string): The scene item to show/hide <br> `duration` (integer): Seconds to show the scene item | `scene` (string): The scene the scene item is nested in. Depth/nesting does not matter; if a scene is included in another scene, the item will still be shown/hidden. |
+| Chain | Excecutes a series of commands above, in order | `commands` (list): List of `action` and `args` data commands, describing the commands to execute. <br> Each command inherits the parent attributes for `name`, `description`, `aliases`, `min_votes`, and `permission`; these do not need to be provided | (none) |
 
 ### Extending Commands
 Commands are just classes in the `obs/actions` directory, initialized dynamically with arguments in config.json when the bot starts up. The only hard requirements for these classes are:

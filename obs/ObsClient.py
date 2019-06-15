@@ -7,8 +7,7 @@ from obs.Permission import Permission
 from obs.actions.Help import Help
 
 #TODO: Add duration to setScene, and for both SetScene and ShowSceneItem make it possible to have infinite duration / skip sleeping.
-#TODO: !gameshow Bot will set a value in a text file to a trivia question, and switch scene to a game show thingy. 
-#TODO: command chains
+#TODO: set a value in a text file, for example an username so that it can be used in a scene as part of a chain displaying text and a gif
 #TODO: say and delay/sleep commands as part of chains
 
 class ObsClient:
