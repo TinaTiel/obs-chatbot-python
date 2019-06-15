@@ -46,11 +46,15 @@ def main():
 		log.error("Cannot initialize, missing twitch configuration information!")
 		return
 
+	obs_config = data.get('obs', None)
+	if(obs_config is None):
+		log.error("Cannot initialize, missing obs configuration information!")
+		return
 	# Initiate connection and call the commands
-	testbot = ObsCommandBot(data, twitch_config)
-	testbot.start()
-	testbot.run_forever_win()
-	#testbot.run_forever()
+	bot = ObsCommandBot(obs_config, twitch_config)
+	bot.start()
+	bot.run_forever_win()
+	#bot.run_forever()
 
 # Run main code if this module is executed from the command line.
 if __name__ == "__main__":
