@@ -38,6 +38,7 @@ class Help(Action):
 				help_str += " [aliases: {}]".format(command[2])
 			self._twitch_say(help_str)
 			self._twitch_failed() # make sure to reset the queue between each!
+		return True
 
 	def _init_args(self, args):
 		"""Nothing to do"""

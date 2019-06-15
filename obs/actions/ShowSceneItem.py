@@ -23,14 +23,16 @@ class ShowSceneItem(Action):
 			and self._has_enough_votes(user) 
 			)
 		):
-			return self._twitch_failed()
+			self._twitch_failed()
+			return False
 		
 		# finally execute the command
 		# show the scene
 		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.scene_item, True, self.scene))
 		if(res.status == False):
 			self.log.warn("Could not show scene item {}! Error: {}".format(self.scene_item, res.datain['error']))
-			return self._twitch_failed()
+			self._twitch_failed()
+			return False
 
 		# wait the specified duration
 		time.sleep(self.duration)
@@ -39,9 +41,11 @@ class ShowSceneItem(Action):
 		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.scene_item, False, self.scene))
 		if(res.status == False):
 			self.log.warn("Could not hide scene item {}! Error: {}".format(self.scene_item, res.datain['error']))
-			return self._twitch_failed()
+			self._twitch_failed()
+			return False
 
-		return self._twitch_done()
+		self._twitch_done()
+		return True
 
 	def _init_args(self, args):
 		"""This validates the arguments are valid for this instance, 

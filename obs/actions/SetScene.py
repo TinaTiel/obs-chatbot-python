@@ -20,15 +20,18 @@ class SetScene(Action):
 			and self._has_enough_votes(user) 
 			)
 		):
-			return self._twitch_failed()
+			self._twitch_failed()
+			return False
 		
 		# finally execute the command
 		res = self.obs_client.client.call(obswebsocket.requests.SetCurrentScene(self.scene))
 		if(res.status == False):
 			self.log.warn("Could not set scene! Error: {}".format(res.datain['error']))
 			self._twitch_failed()
+			return False
 
 		self._twitch_done()
+		return True
 
 	def _init_args(self, args):
 		"""This validates the arguments are valid for this instance, 
