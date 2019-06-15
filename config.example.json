@@ -16,33 +16,28 @@
 		"port": 4444,
 		"password": "password",
 		"commands": [
-			{ 
-				"name": "talktome",
-				"min_votes": 2,
-				"permission": "FOLLOWER",
-				"action": "SetScene",
-				"args": {
-					"scene": "Just Chatting"
-				}
-			},
 			{
-				"name": "pride",
+				"name": "birb",
+				"description": "See the birb!",
+				"aliases": ["beeb", "bird", "tiel", "chirp", "squawk"],
 				"min_votes": 0,
 				"permission": "EVERYONE",
 				"action": "ShowSceneItem",
 				"args": {
 					"scene": "~ Memes",
-					"scene_item": "pride",
-					"duration": 2
+					"scene_item": "birb",
+					"duration": 3
 				}
 			},
 			{
-				"name": "trans",
+				"name": "letschat",
+				"description": "Drop everything and chat with me!",
+				"aliases": [],
 				"min_votes": 0,
 				"permission": "EVERYONE",
-				"action": "Alias",
+				"action": "SetScene",
 				"args": {
-					"command_name": "pride"
+					"scene": "Just Chatting"
 				}
 			}
 		]
