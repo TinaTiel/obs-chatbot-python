@@ -1,7 +1,6 @@
 import obswebsocket, obswebsocket.requests
 import logging
 import time
-from obs.Common import eval_permission
 from obs.actions.Action import Action
 
 class ShowSceneItem(Action):
@@ -25,14 +24,8 @@ class ShowSceneItem(Action):
 		a specified duration
 		"""
 
-		# first check user has permission for this command
-		has_permission = eval_permission(user, self.permission)
-		if(not has_permission):
-			self.log.debug("Command {}: User has insufficient privileges".format(self.command_name, user['name']))
-			return # TODO: replace with callback on parent
-
-		# then add user to votes and evaluate votes permission
-		if(not self._sufficient_votes(user)):
+		# Check user permissions and votes
+		if(not self._sufficient_votes(user) or not self._has_permission(user)):
 			return
 		
 		# finally execute the command
