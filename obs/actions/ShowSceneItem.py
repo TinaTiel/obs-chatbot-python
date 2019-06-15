@@ -2,8 +2,9 @@ import obswebsocket, obswebsocket.requests
 import logging
 import time
 from obs.Common import eval_permission
+from obs.actions.Action import Action
 
-class ShowSceneItem:
+class ShowSceneItem(Action):
 
 	def __init__(self, obs_client, command_name, description, permission, min_votes, args):
 		"""Initializes this class
@@ -15,12 +16,8 @@ class ShowSceneItem:
 		args (object): Arguments for this class instance, such as scene name, duration, etc.
 
 		"""
+		super().__init__(obs_client, command_name, description, permission, min_votes, args)
 		self.log = logging.getLogger(__name__)
-		self.obs_client = obs_client
-		self.command_name = command_name
-		self.permission = permission
-		self.min_votes = min_votes
-		self.votes = set()
 		self._init_args(args)
 
 	def execute(self, user):
@@ -35,11 +32,8 @@ class ShowSceneItem:
 			return # TODO: replace with callback on parent
 
 		# then add user to votes and evaluate votes permission
-		self.votes.add(user['name'])
-		if(not len(self.votes) >= self.min_votes):
-			self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, len(self.votes), self.min_votes))
-			return # TODO: replace with callback on parent
-		self.votes = set()
+		if(not self._sufficient_votes(user)):
+			return
 		
 		# finally execute the command
 		# show the scene

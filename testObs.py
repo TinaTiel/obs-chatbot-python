@@ -118,7 +118,7 @@ def main():
 	testbot.run_forever_win()
 
 	testbot.obs_client.execute(broadcaster, 'birb')
-	testbot.obs_client.execute(broadcaster, 'tiel') #alias for birb
+	testbot.obs_client.execute(user1, 'tiel') #alias for birb
 
 	testbot.obs_client.disconnect()
 
