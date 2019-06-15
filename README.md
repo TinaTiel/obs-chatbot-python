@@ -43,12 +43,19 @@ You are now setup! See the documentation below on the commands you can configure
 # Commands
 The configuration file `config.json` includes several examples of commands that can be configured. 
 The elements of a command are described below: 
+
 `name`: Name of the chat command an user would type, without the !. Examples: 'party', 'pride', 'letschat', etc. 
+
 `description`: Description for the chat command; used in the !help command. 
+
 `aliases`: List of strings that also execute this command, for example the command _birb_ may also have aliases _tiel_ and _squawk_. 
+
 `min_votes`: Describes the minimum number of unique votes needed to execute a command. Must be greater than zero. 
+
 `permission`: The minimum status required to execute a command. Can be `EVERYONE`, `FOLLOWER`, `SUBSCRIBER`, `MODERATOR`, or `BROADCASTER`. 
+
 `action`: The overall behavior that will occur when an user executes a chat command. These are the actions available by default, they are just dynamically-loaded python classes available in obs/actions. 
+
 `args`: The arguments required to describe what the action does
 
 This table below describes the `action`/`args` configurations available. If the configuration is invalid, it will be printed to the command line. 
