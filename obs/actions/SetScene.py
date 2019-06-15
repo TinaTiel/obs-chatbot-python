@@ -5,14 +5,7 @@ from obs.actions.Action import Action
 
 class SetScene(Action):
 	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
-		"""Initializes this class
-		
-		Parameters:
-		obs_client (ObsClient): Reference to parent object
-		command_name (string): chat command associated with this class instance
-		permission (Permission): Permission level associated with command TODO: Use this??
-		args (object): Arguments for this class instance, such as scene name, duration, etc.
-
+		"""Initializes this class, see Action.py
 		"""
 		super().__init__(obs_client, command_name, aliases, description, permission, min_votes, args)
 		self.log = logging.getLogger(__name__)
@@ -27,12 +20,15 @@ class SetScene(Action):
 			and self._has_enough_votes(user) 
 			)
 		):
-			return
+			return self._twitch_failed()
 		
 		# finally execute the command
 		res = self.obs_client.client.call(obswebsocket.requests.SetCurrentScene(self.scene))
 		if(res.status == False):
 			self.log.warn("Could not set scene! Error: {}".format(res.datain['error']))
+			self._twitch_failed()
+
+		self._twitch_done()
 
 	def _init_args(self, args):
 		"""This validates the arguments are valid for this instance, 

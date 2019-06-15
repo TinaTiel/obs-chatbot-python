@@ -33,7 +33,7 @@ class ObsClient:
 		command = self.commands.get(command_name, None)
 		if(command is None):
 			#self.log.warn("User error: '{}' tried to execute unknown or misconfigured command '{}'".format(user['name'], command_name))
-			return # TODO revisit the permissions thing in a class instance 
+			return self._twitch_failed()
 
 		# Execute the function with args, returning its message
 		return command.execute(user)

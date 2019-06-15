@@ -31,7 +31,7 @@ class ObsCommandBot(TwitchBot):
 								self.twitch_say("What do you want me to say?")
 				else:
 						self.obs_client.execute(cmd["user"], cmd["action"])
-				self.twitch_failed() # Always "fail" so cooldown timer is not used.
+				#self.twitch_failed() # Always "fail" so cooldown timer is not used.
 
 def main():
 	# Set logging and get configuration information
