@@ -4,16 +4,13 @@ import logging
 import time
 from importlib import import_module
 from obs.Permission import Permission
+from obs.actions.Help import Help
 
 #TODO: Add a test command
 #TODO: Add duration to setScene, and for both SetScene and ShowSceneItem make it possible to have infinite duration / skip sleeping.
 #TODO: !gameshow Bot will set a value in a text file to a trivia question, and switch scene to a game show thingy. 
 #TODO: command chains
-#TODO: improvement, subclass an AbstractAction class with shared methods to interact with twitch bot, auth, votes, etc.
-#TODO: show who voted to change scenes?
-#TODO: add message to say when command executes
 #TODO: help command
-#TODO: Alias def in the function, instead of being a separate command entirely
 
 class ObsClient:
 	"""This class is responsible for executing commands against OBS, given params
@@ -83,6 +80,7 @@ class ObsClient:
 			action = command.get('action', None)
 			min_votes = command.get('min_votes', None)
 			args = command.get('args', None)
+			aliases = command.get('aliases', None)
 			if(command_name is None 
 				or permission_str is None 
 				or action is None 
@@ -117,23 +115,27 @@ class ObsClient:
 			# Try to instantiate the action class
 			try:
 				self.log.debug("Command {}: args are: {}".format(command_name, args))
-				func = class_(self, command_name, description, permission, min_votes, args) # TODO revisit the permissions thing in a class instance
+				command_obj = class_(self, command_name, aliases, description, permission, min_votes, args)
 			except ValueError as e:
 				self.log.warn(e)
 				continue
 
-			# Add func to internal reference
-			self.commands[command_name] = func
+			# Add command_obj to internal reference
+			self.commands[command_name] = command_obj
 
 			# If there are aliases, add them too
-			aliases = command.get('aliases', None)
+			
 			if(not aliases is None and isinstance(aliases, (list,) )):
 				self.log.debug("Command '{}': Found aliases {}".format(command_name, aliases))
 				for alias in aliases:
-					self.commands[alias] = func
+					self.commands[alias] = command_obj
 			else:
 				self.log.debug("Command '{}': No aliases".format(command_name, aliases))
 
+		# Finally after all commands have been initialized then add the help command
+		self.commands['help'] = Help(self)
+
+		# Done initializing
 		self.log.info("...Commands initialized: {}".format(
 				list( self.commands.keys()) 
 			)

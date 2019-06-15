@@ -4,7 +4,7 @@ import time
 from obs.actions.Action import Action
 
 class SetScene(Action):
-	def __init__(self, obs_client, command_name, description, permission, min_votes, args):
+	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
 		"""Initializes this class
 		
 		Parameters:
@@ -14,7 +14,7 @@ class SetScene(Action):
 		args (object): Arguments for this class instance, such as scene name, duration, etc.
 
 		"""
-		super().__init__(obs_client, command_name, description, permission, min_votes, args)
+		super().__init__(obs_client, command_name, aliases, description, permission, min_votes, args)
 		self.log = logging.getLogger(__name__)
 		self._init_args(args)
 

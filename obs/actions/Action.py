@@ -5,7 +5,7 @@ from obs.Permission import Permission
 
 class Action:
 
-	def __init__(self, obs_client, command_name, description, permission, min_votes, args):
+	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
 		"""Initializes this class
 		
 		Parameters:
@@ -20,12 +20,16 @@ class Action:
 		self.log = logging.getLogger(__name__)
 		self.obs_client = obs_client
 		self.command_name = command_name
+		self.aliases = aliases
 		self.description = description
 		self.permission = permission
 		self.min_votes = min_votes
 		self.votes = set()
 
 	def execute(self, user):
+		raise NotImplementedError("The action isn't defined!")
+
+	def _init_args(self, args):
 		raise NotImplementedError("The action isn't defined!")
 
 	def _has_enough_votes(self, user):

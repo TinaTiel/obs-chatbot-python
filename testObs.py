@@ -11,19 +11,22 @@ class MockTwitchBot():
 		self.twitch_config = twitch_config
 		self.obs_client = ObsClient(obs_config, self)
 
-	def twitch_say(self, message):
+	def _twitch_say(self, message):
 		self.log.debug("Twitch Bot: recieved say '{}'".format(message))
 
-	def twitch_done(self):
+	def _twitch_done(self):
 		self.log.debug("Twitch Bot: received 'Done'")
 
-	def twitch_failed(self):
+	def _twitch_failed(self):
 		self.log.debug("Twitch Bot: received 'Failed'")
 
-	def twitch_sleep(self, duration):
+	def _twitch_reset(self):
+		self.log.debug("Twitch Bot: received 'Reset'")
+
+	def _twitch_sleep(self, duration):
 		self.log.debug("Twitch Bot: received sleep for {} seconds".format(duration))
 
-	def twitch_shutdown(self):
+	def _twitch_shutdown(self):
 		self.log.debug("Twitch Bot: received 'Shutdown'")
 
 	def start(self):
@@ -117,10 +120,12 @@ def main():
 	testbot.start()
 	testbot.run_forever_win()
 
-	testbot.obs_client.execute(broadcaster, 'birb')
-	testbot.obs_client.execute(user1, 'tiel') #alias for birb
-	testbot.obs_client.execute(broadcaster, 'letschat')
-	testbot.obs_client.execute(broadcaster, 'letsplay')
+	#testbot.obs_client.execute(broadcaster, 'birb')
+	#testbot.obs_client.execute(user1, 'tiel') #alias for birb
+	testbot.obs_client.execute(broadcaster, 'help')
+
+	#testbot.obs_client.execute(broadcaster, 'letschat')
+	#testbot.obs_client.execute(broadcaster, 'letsplay')
 
 	testbot.obs_client.disconnect()
 
