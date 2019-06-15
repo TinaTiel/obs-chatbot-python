@@ -42,9 +42,9 @@ You are now setup! See the documentation below on the commands you can configure
 
 # Commands
 The configuration file `config.json` includes several examples of commands that can be configured. 
-The elements of a command are described below:
-`name`: Name of the chat command an user would type, without the !. Examples: 'party', 'pride', 'letschat', etc.
-`description`: Description for the chat command; used in the !help command.
+The elements of a command are described below: 
+`name`: Name of the chat command an user would type, without the !. Examples: 'party', 'pride', 'letschat', etc. 
+`description`: Description for the chat command; used in the !help command. 
 `aliases`: List of strings that also execute this command, for example the command _birb_ may also have aliases _tiel_ and _squawk_. 
 `min_votes`: Describes the minimum number of unique votes needed to execute a command. Must be greater than zero. 
 `permission`: The minimum status required to execute a command. Can be `EVERYONE`, `FOLLOWER`, `SUBSCRIBER`, `MODERATOR`, or `BROADCASTER`. 
