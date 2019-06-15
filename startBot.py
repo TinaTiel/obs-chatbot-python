@@ -31,7 +31,21 @@ class ObsCommandBot(TwitchBot):
 								self.twitch_say("What do you want me to say?")
 				else:
 						self.obs_client.execute(cmd["user"], cmd["action"])
+
+				if cmd['action'] == "status":
+					if cmd['user']['broadcaster'] == True:
+						self._report_status(cmd)
+				if cmd['action'] == 'reset':
+					self.obs_client.reconnect()
+					self._report_status(cmd)
 				#self.twitch_failed() # Always "fail" so cooldown timer is not used.
+
+		def _report_status(self, cmd):
+			self.twitch_say("Twitch Bot is up and running @{}, with OBS Websockets version {}".format(
+				cmd['user']['name'], 
+				self.obs_client.getVersion()
+			))
+			self.twitch_failed()
 
 def main():
 	# Set logging and get configuration information

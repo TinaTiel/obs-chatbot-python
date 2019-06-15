@@ -10,7 +10,6 @@ from obs.actions.Help import Help
 #TODO: Add duration to setScene, and for both SetScene and ShowSceneItem make it possible to have infinite duration / skip sleeping.
 #TODO: !gameshow Bot will set a value in a text file to a trivia question, and switch scene to a game show thingy. 
 #TODO: command chains
-#TODO: help command
 
 class ObsClient:
 	"""This class is responsible for executing commands against OBS, given params
@@ -22,6 +21,7 @@ class ObsClient:
 		self._connect()
 		self._init_commands()
 		self.twitch_bot = twitch_bot
+		self.max_attempts = 3 
 
 	def execute(self, user, command_name):
 		"""Executes a given command with an user. The command is a string corresponding
@@ -33,10 +33,40 @@ class ObsClient:
 		command = self.commands.get(command_name, None)
 		if(command is None):
 			#self.log.warn("User error: '{}' tried to execute unknown or misconfigured command '{}'".format(user['name'], command_name))
-			return self._twitch_failed()
+			return self.twitch_bot.twitch_failed()
 
 		# Execute the function with args, returning its message
-		return command.execute(user) # Command class must call twitch_done() or twich_failed() on twitch_bot, it is not done here!
+		try:
+			return command.execute(user) # Command class must call twitch_done() or twich_failed() on twitch_bot, it is not done here!
+		except Exception as e:
+			self.log.error("Could not execute command (Exception: {}), most likely an issue with the OBS connection. Trying to reconnect...".format(str(e)))
+			if(not self.reconnect()):
+				self.twitch_bot.twitch_say("Could not execute command !{} after {} attempts @{}, shutting down OBS chat bot.".format(
+					command_name,
+					self.max_attempts,
+					self.twitch_bot.channel.split("#", 1)[1]
+				))
+				raise Exception("Could not recover OBS connection!")
+			return self.execute(user, command_name)
+
+	def reconnect(self):
+		try:
+			self.disconnect()
+		except:
+			pass
+
+		attempt = 0
+		
+		while attempt < self.max_attempts:
+			self.log.warn("OBS reconnect attempt #{}".format(attempt))
+			attempt += 1
+			try:
+				self._connect()
+			except Exception as e:
+				continue
+			else:
+				return True
+		return False
 
 	def disconnect(self):
 		"""Disconnects the OBS client websocket. Should be called when 
@@ -44,6 +74,13 @@ class ObsClient:
 		"""
 		self.client.disconnect()
 		self.log.info("disconnected OBS Websocket _connection.")
+
+	def getVersion(self):
+		try:
+			message = self.client.call(obswebsocket.requests.GetVersion()).getObsWebsocketVersion()
+		except Exception as e:
+			message = "Could not communicate with OBS. Exception: " + str(e)
+		return message
 
 	def _load_config(self, conf):
 		"""Gets the configuration information from config.json and stores it
