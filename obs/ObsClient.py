@@ -77,48 +77,62 @@ class ObsClient:
 		for command in self.conf_commands:
 			
 			# Verify the necessary config elements exist at all
-			name = command.get('name', "unknown")
+			command_name = command.get('name', "unknown")
+			description = command.get('description', "")
 			permission_str = command.get('permission', None)
 			action = command.get('action', None)
 			min_votes = command.get('min_votes', None)
 			args = command.get('args', None)
-			if(permission_str is None or action is None or min_votes is None or args is None):
-				self.log.warn("Command '{}': Error, missing 'permission', 'action', 'min_votes', or 'args' elements for command ".format(name))
+			if(command_name is None 
+				or permission_str is None 
+				or action is None 
+				or min_votes is None 
+				or args is None):
+				self.log.warn("Command '{}': Error, missing 'permission', 'action', 'min_votes', or 'args' elements for command ".format(command_name))
 				continue
 
 			# Verify the votes and permission string are valid
 			if(min_votes < 0):
-				self.log.warn("Command '{}': Error, min_votes cannot be less than zero for command {}".format(name, min_votes))
+				self.log.warn("Command '{}': Error, min_votes cannot be less than zero for command {}".format(command_name, min_votes))
 				continue
 			else:
-				self.log.debug("Command '{}': minimum votes is {}".format(name, min_votes))
+				self.log.debug("Command '{}': minimum votes is {}".format(command_name, min_votes))
 
 			try:
 				permission = Permission[permission_str]
-				self.log.debug("Command '{}': permission is {}".format(name, permission))
+				self.log.debug("Command '{}': permission is {}".format(command_name, permission))
 			except Exception as e:
-				self.log.warn("Command '{}': Error, permission string '{}' is invalid, must be one of: {}".format(name, permission_str, Permission.__members__))
+				self.log.warn("Command '{}': Error, permission string '{}' is invalid, must be one of: {}".format(command_name, permission_str, Permission.__members__))
 				continue
 
 			# Try to get the corresponding action class
 			try:
 				module = import_module("obs.actions."+action)
 				class_ = getattr(module, action)
-				self.log.debug("Command {}: action is {}".format(name, class_))
+				self.log.debug("Command {}: action is {}".format(command_name, class_))
 			except Exception as e:
-				self.log.warn("Command '{}': Error, no such action {} is defined. Full error: {}".format(name, action, e))
+				self.log.warn("Command '{}': Error, no such action {} is defined. Full error: {}".format(command_name, action, e))
 				continue
 
 			# Try to instantiate the action class
 			try:
-				self.log.debug("Command {}: args are: {}".format(name, args))
-				func = class_(self, name, permission, min_votes, args) # TODO revisit the permissions thing in a class instance
+				self.log.debug("Command {}: args are: {}".format(command_name, args))
+				func = class_(self, command_name, description, permission, min_votes, args) # TODO revisit the permissions thing in a class instance
 			except ValueError as e:
 				self.log.warn(e)
 				continue
 
 			# Add func to internal reference
-			self.commands[name] = func
+			self.commands[command_name] = func
+
+			# If there are aliases, add them too
+			aliases = command.get('aliases', None)
+			if(not aliases is None and isinstance(aliases, (list,) )):
+				self.log.debug("Command '{}': Found aliases {}".format(command_name, aliases))
+				for alias in aliases:
+					self.commands[alias] = func
+			else:
+				self.log.debug("Command '{}': No aliases".format(command_name, aliases))
 
 		self.log.info("...Commands initialized: {}".format(
 				list( self.commands.keys()) 

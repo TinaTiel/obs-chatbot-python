@@ -4,7 +4,7 @@ import time
 from obs.Common import eval_permission
 
 class SetScene():
-	def __init__(self, obs_client, command_name, permission, min_votes, args):
+	def __init__(self, obs_client, command_name, description, permission, min_votes, args):
 		"""Initializes this class
 		
 		Parameters:

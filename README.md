@@ -44,6 +44,8 @@ You are now setup! See the documentation below on the commands you can configure
 The configuration file `config.json` includes several examples of commands that can be configured. 
 The elements of a command are described below:
 `name`: Name of the chat command an user would type, without the !. Examples: 'party', 'pride', 'letschat', etc.
+`description`: Description for the chat command; used in the !help command.
+`aliases`: List of strings that also execute this command, for example the command _birb_ may also have aliases _tiel_ and _squawk_. 
 `min_votes`: Describes the minimum number of unique votes needed to execute a command. Must be greater than zero. 
 `permission`: The minimum status required to execute a command. Can be `EVERYONE`, `FOLLOWER`, `SUBSCRIBER`, `MODERATOR`, or `BROADCASTER`. 
 `action`: The overall behavior that will occur when an user executes a chat command. These are the actions available by default, they are just dynamically-loaded python classes available in obs/actions. 
@@ -55,7 +57,6 @@ This table below describes the `action`/`args` configurations available. If the 
 |---------------|-------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
 | SetScene      | Changes to a scene permanently                                                                                          | `scene` (string): The scene to switch to                                                                 | (none)                                                                         |
 | ShowSceneItem | Shows a scene item for a specified duration. Defaults to the item in the current scene unless parent scene is specified | `scene_item` (string): The scene item to show/hide <br> `duration` (integer): Seconds to show the scene item | `scene` (string): The scene the scene item is nested in. Depth/nesting does not matter; if a scene is included in another scene, the item will still be shown/hidden. |
-| Alias         | Simply executes the command specified                                                                                   | `command_name` (string): The command name to execute                                                     | (none)                                                                         |
 
 ### Extending Commands
 Commands are just classes in the `obs/actions` directory, initialized dynamically with arguments in config.json when the bot starts up. The only hard requirements for these classes are:
