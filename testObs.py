@@ -119,6 +119,8 @@ def main():
 
 	testbot.obs_client.execute(broadcaster, 'birb')
 	testbot.obs_client.execute(user1, 'tiel') #alias for birb
+	testbot.obs_client.execute(broadcaster, 'letschat')
+	testbot.obs_client.execute(broadcaster, 'letsplay')
 
 	testbot.obs_client.disconnect()
 

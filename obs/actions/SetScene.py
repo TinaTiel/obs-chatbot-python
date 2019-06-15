@@ -1,9 +1,9 @@
 import obswebsocket, obswebsocket.requests
 import logging
 import time
-from obs.Common import eval_permission
+from obs.actions.Action import Action
 
-class SetScene():
+class SetScene(Action):
 	def __init__(self, obs_client, command_name, description, permission, min_votes, args):
 		"""Initializes this class
 		
@@ -14,31 +14,20 @@ class SetScene():
 		args (object): Arguments for this class instance, such as scene name, duration, etc.
 
 		"""
+		super().__init__(obs_client, command_name, description, permission, min_votes, args)
 		self.log = logging.getLogger(__name__)
-		self.obs_client = obs_client
-		self.command_name = command_name
-		self.permission = permission
-		self.min_votes = min_votes
-		self.votes = set()
 		self._init_args(args)
 
 	def execute(self, user):
 		"""Permanently switches to a specified scene
 		"""
-		# first check user has permission for this command
-		has_permission = eval_permission(user, self.permission)
-		if(not has_permission):
-			self.log.debug("Command {}: User has insufficient privileges".format(self.command_name, user['name']))
-			return # TODO: replace with callback on parent
-
-		# then add user to votes and evaluate votes permission
-		self.votes.add(user['name'])
-		if(not len(self.votes) >= self.min_votes):
-			self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, len(self.votes), self.min_votes))
-			remaining_votes = self.min_votes - len(self.votes)
-			self.obs_client.twitch_bot.twitch_say("{} votes to {}, will {} more join them?".format(user['name'], self.command_name, remaining_votes))
+		# Check user permissions and votes
+		if(not (
+			self._has_permission(user) 
+			and self._has_enough_votes(user) 
+			)
+		):
 			return
-		self.votes = set()
 		
 		# finally execute the command
 		res = self.obs_client.client.call(obswebsocket.requests.SetCurrentScene(self.scene))

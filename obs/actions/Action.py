@@ -20,6 +20,7 @@ class Action:
 		self.log = logging.getLogger(__name__)
 		self.obs_client = obs_client
 		self.command_name = command_name
+		self.description = description
 		self.permission = permission
 		self.min_votes = min_votes
 		self.votes = set()
@@ -29,12 +30,16 @@ class Action:
 
 	def _has_enough_votes(self, user):
 		self.votes.add(user['name'])
-		if(not len(self.votes) >= self.min_votes):
-			self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, len(self.votes), self.min_votes))
-			return False # TODO: replace with callback on parent
-		self.votes = set()
-		self.log.debug("Command {}: All votes received".format(self.command_name))
-		return True
+		votes_received = len(self.votes)
+		if(not votes_received >= self.min_votes):
+			self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, votes_received, self.min_votes))
+			remaining_votes = self.min_votes - votes_received
+			self._twitch_say("{} votes to {} Will {} more join them? (!{})".format(user['name'], self.description, remaining_votes, self.command_name))
+			return False
+		else:
+			self.votes = set()
+			self.log.debug("Command {}: All votes received".format(self.command_name))
+			return True
 
 	def _has_permission(self, user):
 		"""Gets the permission level of a given user and 
@@ -57,3 +62,18 @@ class Action:
 		self.log.debug("User '{}' has permission {} and required permission is {}. Operation Allowed: {}".format(user['name'], user_permission, self.permission, result))
 
 		return result
+
+	def _twitch_say(self, message):
+		self.obs_client.twitch_bot.twitch_say(message)
+
+	def _twitch_done(self):
+		self.obs_client.twitch_bot.twitch_done()
+
+	def _twitch_failed(self):
+		self.obs_client.twitch_bot.twitch_failed()
+
+	def _twitch_sleep(self, duration):
+		self.obs_client.twitch_bot.twitch_sleep()
+
+	def _twitch_shutdown(self):
+		self.obs_client.twitch_bot.twitch_shutdown()
