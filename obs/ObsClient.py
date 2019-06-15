@@ -49,13 +49,19 @@ class ObsClient:
 		to private variables
 		"""
 		self.log.info("Loading configuration file...")
-		try:
-			self.conf_obs = conf.get('obs_websockets', None)
-			self.conf_commands = conf.get('commands', None)
-			self.log.info("...Loaded configuration file.")
-		except KeyError as e:
-			self.log.error("Could not load config file, missing 'obs_websockets', or 'commands' elements!")
-			raise
+
+		self.host = conf.get('host', None)
+		self.port = conf.get('port', None)
+		self.password = conf.get('password', None)
+		self.conf_commands = conf.get('commands', None)
+
+		if(   self.host is None
+			 or self.port is None
+			 or self.password is None
+			 or self.conf_commands is None):
+			raise KeyError("Could not initialize OBS Client, missing host, port, password, or conf_commands!")
+
+		self.log.info("...Loaded configuration file.")
 
 	def _init_commands(self):
 		"""Initializes the commands as objects, so that they can have state and for
@@ -121,13 +127,10 @@ class ObsClient:
 		"""
 		self.log.info("Trying to connect to OBS Websockets...")
 
-		host = self.conf_obs.get('host')
-		port = self.conf_obs.get('port')
-		password = self.conf_obs.get('password')
 		try:
-				self.client = obswebsocket.obsws(host, port, password)
+				self.client = obswebsocket.obsws(self.host, self.port, self.password)
 				self.client.connect()
-				self.log.info("...Connected to OBS Websockets at {}:{}".format(host, port))
+				self.log.info("...Connected to OBS Websockets at {}:{}".format(self.host, self.port))
 		except Exception as e:
-			self.log.error("Could not initialize connection at {}:{} to OBS Websockets! Exception: {}".format(host, port, e))
+			self.log.error("Could not initialize connection at {}:{} to OBS Websockets! Exception: {}".format(self.host, self.port, e))
 			raise
