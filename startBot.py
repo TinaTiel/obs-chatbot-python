@@ -18,6 +18,7 @@ class ObsCommandBot(TwitchBot):
 				super().__init__(**twitch_config)
 				self.log = logging.getLogger(__name__)
 				self.obs_client = ObsClient(obs_config, self)
+				self.broadcaster = self.channel.split("#", 1)[1]
 
 		def on_twitch_command(self, cmd):
 				print("-----------------")
@@ -35,9 +36,15 @@ class ObsCommandBot(TwitchBot):
 				if cmd['action'] == "status":
 					if cmd['user']['broadcaster'] == True:
 						self._report_status(cmd)
-				if cmd['action'] == 'reset':
-					self.obs_client.reconnect()
-					self._report_status(cmd)
+
+				if cmd['action'] in ['reset', 'reconnect', 'recover']:
+					if cmd['user']['broadcaster'] == True:
+						self.twitch_say("Attempting to reconnect to OBS...")
+						if(self.obs_client.reconnect()):
+							self._report_status(cmd)
+						else:
+							self.twitch_say("Could not recover @{}, ensure OBS Websockets is available and restart the bot.".format(self.broadcaster))
+				
 				#self.twitch_failed() # Always "fail" so cooldown timer is not used.
 
 		def _report_status(self, cmd):

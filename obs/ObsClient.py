@@ -41,13 +41,14 @@ class ObsClient:
 		except Exception as e:
 			self.log.error("Could not execute command (Exception: {}), most likely an issue with the OBS connection. Trying to reconnect...".format(str(e)))
 			if(not self.reconnect()):
-				self.twitch_bot.twitch_say("Could not execute command !{} after {} attempts @{}, shutting down OBS chat bot.".format(
+				self.twitch_bot.twitch_say("Could not execute command !{} after {} attempts @{}! Ensure OBS Websockets is available and restart the bot".format(
 					command_name,
 					self.max_attempts,
 					self.twitch_bot.channel.split("#", 1)[1]
 				))
-				raise Exception("Could not recover OBS connection!")
-			return self.execute(user, command_name)
+				self.twitch_bot.twitch_failed()
+			else:
+				return self.execute(user, command_name)
 
 	def reconnect(self):
 		try:
@@ -56,9 +57,8 @@ class ObsClient:
 			pass
 
 		attempt = 0
-		
 		while attempt < self.max_attempts:
-			self.log.warn("OBS reconnect attempt #{}".format(attempt))
+			self.log.warn("OBS reconnect attempt #{}".format(attempt+1))
 			attempt += 1
 			try:
 				self._connect()
