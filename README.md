@@ -24,8 +24,8 @@ This project also depends on [OBS Websockets](https://obsproject.com/forum/resou
    1. Login to Twitch as your Chat Bot account, and navigate to https://twitchapps.com/tmi to generate a chat token.
    2. In config.json, set `twitch.chat_token` to the token you receive after authorizing access to your Chat Bot.
 1. Authorize access to OBS:
-   1. If you haven't already, install  [OBS Websockets](https://obsproject.com/forum/resources/obs-websocket-remote-control-of-obs-studio-made-easy.466/) and set your credentials in _OBS > Tools > Websocket Server Settings_. 
-   1. In config.json, set your OBS websocket credentials (`obs.obs_websockets.host`, `obs.obs_websockets.port`, and `obs.obs_websockets.password`).
+   1. If you haven't already, install  [OBS Websockets](https://obsproject.com/forum/resources/obs-websocket-remote-control-of-obs-studio-made-easy.466/) and set your credentials in OBS at _Tools > Websocket Server Settings_. 
+   1. In config.json, set your OBS websocket credentials (`obs.host`, `obs.port`, and `obs.password`).
 1. Verify your setup is working correctly by running the bot...
    ```
    python startBot.py
@@ -38,7 +38,7 @@ This project also depends on [OBS Websockets](https://obsproject.com/forum/resou
    ```
    yourbot: All systems up and running @yourname, running OBS Websockets version 4.6.1
    ```
-You are now setup! See the documentation below on the commands you can execute.
+You are now setup! See the documentation below on the commands you can configure in `obs.commands`.
 
 # Commands
 The configuration file `config.json` includes several examples of commands that can be configured. 
