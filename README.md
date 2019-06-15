@@ -40,17 +40,19 @@ This project also depends on [OBS Websockets](https://obsproject.com/forum/resou
    ```
    If working, the bot will respond in Twitch chat with some basic information about you and with your OBS Websockets version. Note this command can only be executed by the broadcaster (you).
    ```
-   yourbot: All systems up and running @yourname, with OBS Websockets version 4.6.1
+   yourname: !status
+   yourbot: Twitch Bot is up and running. Connected to OBS Websockets version 4.6.1.
    ```
    If not, you may get a message like this; this means the bot cannot connect to OBS Websockets. If OBS is running, verify that the connection information is correct.
    ```
-   Twitch Bot is up and running @tinatiel, with OBS Websockets version Could not communicate with OBS. Exception: socket is already closed.
+   yourname: !status
+   yourbot: Twitch Bot is up and running. Could not communicate with OBS. Exception: socket is already closed
    ```
    After addressing the underlying problem, you can then attempt to reconnect with the commands `reconnect`, `reset` or `recover`. If necessary, you can restart the bot with `CTRL-C` in the command line where you launched it.
    ```
-   you: !reconnect
+   yourname: !reconnect
    bot: Attempting to reconnect to OBS...
-   bot: Twitch Bot is up and running @you, with OBS Websockets version 4.6.1
+   bot: Twitch Bot is up and running. Connected to OBS Websockets version 4.6.1
    ```
 
 You are now setup! See the documentation below on the commands you can configure in `obs.commands`.

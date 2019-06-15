@@ -48,9 +48,14 @@ class ObsCommandBot(TwitchBot):
 				#self.twitch_failed() # Always "fail" so cooldown timer is not used.
 
 		def _report_status(self, cmd):
-			self.twitch_say("Twitch Bot is up and running @{}, with OBS Websockets version {}".format(
-				cmd['user']['name'], 
-				self.obs_client.getVersion()
+			obs_status = self.obs_client.getVersion()
+			if "Exception" in obs_status:
+				obs_message = obs_status
+			else:
+				obs_message = "Connected to OBS Websockets version {}.".format(obs_status)
+
+			self.twitch_say("Twitch Bot is up and running. {}".format(
+				obs_message
 			))
 			self.twitch_failed()
 
