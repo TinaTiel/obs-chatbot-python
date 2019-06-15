@@ -5,6 +5,12 @@ import time
 from importlib import import_module
 from obs.Permission import Permission
 
+#TODO: Add a test command
+#TODO: Add duration to setScene, and for both SetScene and ShowSceneItem make it possible to have infinite duration / skip sleeping.
+#TODO: !gameshow Bot will set a value in a text file to a trivia question, and switch scene to a game show thingy. 
+#TODO: command chains
+#TODO: improvement, subclass an AbstractAction class with shared methods to interact with twitch bot, auth, votes, etc.
+
 class ObsClient:
 	"""This class is responsible for executing commands against OBS, given params
 	from a configuration json file"""
