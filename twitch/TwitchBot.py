@@ -3,6 +3,7 @@ import irc.bot
 import logging
 import threading
 import time
+import os
 from twitch.TwitchBotCore import TwitchBotCore, TwitchCommand, TwitchUser
 from twitch.TwitchApi import TwitchApi
 
@@ -210,7 +211,10 @@ class TwitchBot(object):
         Runs eternally, forever polling for commands from the bot,
         invoking the on_twitch_command method whenever one is received.
         """
-        self.log.info("Twitch bot is running forever.")
+        if(os.name == 'nt'):
+            self.run_forever_win()
+
+        self.log.info("Twitch bot is running forever on Linux/OSX (not Windows).")
         while True:
             try:
                 cmd = self.get_twitch_command()

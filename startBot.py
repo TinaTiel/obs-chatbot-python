@@ -5,11 +5,10 @@ import logging
 import logging.config
 
 class ObsCommandBot(TwitchBot):
-		def __init__(self, obs_config, twitch_config, windows):
+		def __init__(self, obs_config, twitch_config):
 				super().__init__(**twitch_config)
 				self.log = logging.getLogger(__name__)
 				self.obs_client = ObsClient(obs_config, self)
-				self.windows = windows
 				self.broadcaster = self.channel.split("#", 1)[1]
 
 		def on_twitch_command(self, cmd):
@@ -86,14 +85,10 @@ def main():
 		log.error("Cannot initialize, missing obs configuration information!")
 		return
 
-	windows = data.get('windows', False)
 	# Initiate connection and call the commands
-	bot = ObsCommandBot(obs_config, twitch_config, windows)
+	bot = ObsCommandBot(obs_config, twitch_config)
 	bot.start()
-	if(windows):
-		bot.run_forever_win()
-	else:
-		bot.run_forever()
+	bot.run_forever()
 
 # Run main code if this module is executed from the command line.
 if __name__ == "__main__":

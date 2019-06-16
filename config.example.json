@@ -1,5 +1,4 @@
 {
-	"windows": true,
 	"log_level": "INFO",
 	"twitch": {
 		"server" : "irc.chat.twitch.tv",

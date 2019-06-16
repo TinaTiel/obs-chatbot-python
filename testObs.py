@@ -118,7 +118,7 @@ def main():
 	# Initiate connection and call the commands
 	testbot = MockTwitchBot(obs_config, twitch_config)
 	testbot.start()
-	testbot.run_forever_win()
+	testbot.run_forever()
 
 	#testbot.obs_client.execute(broadcaster, 'birb')
 	#testbot.obs_client.execute(user1, 'tiel') #alias for birb

@@ -6,9 +6,7 @@ This project requires Python 3+, and dependencies are defined in requirements.tx
 ```
 pip install -r requirements.txt
 ```
-This project also depends on [OBS Websockets](https://obsproject.com/forum/resources/obs-websocket-remote-control-of-obs-studio-made-easy.466/) and was tested in versions 23.1 of OBS studio and 4.6.1 of OBS Websockets. 
-
-The project was tested in Windows 7 and Linux, and by default is configured to run in Windows. To run in Linux, set the `windows` element in _config.json_ to `false`.
+This project also depends on [OBS Websockets](https://obsproject.com/forum/resources/obs-websocket-remote-control-of-obs-studio-made-easy.466/) and was tested in Windows 7 and Linux on versions 23.1 of OBS studio and 4.6.1 of OBS Websockets.
 
 # Setup / Authentication
 1. Rename `config.example.json` to `config.json`.
