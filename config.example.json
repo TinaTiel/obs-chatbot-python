@@ -23,7 +23,7 @@
 				"aliases": ["beeb", "bird", "tiel", "chirp", "squawk"],
 				"min_votes": 0,
 				"permission": "EVERYONE",
-				"action": "ShowSceneItem",
+				"action": "ShowSource",
 				"args": {
 					"scene": "~ Memes",
 					"source": "birb",
@@ -36,7 +36,7 @@
 				"aliases": [],
 				"min_votes": 0,
 				"permission": "EVERYONE",
-				"action": "SetScene",
+				"action": "ShowScene",
 				"args": {
 					"scene": "Just Chatting"
 				}
@@ -51,7 +51,7 @@
 				"args": {
 					"commands": [
 						{
-							"action": "ShowSceneItem",
+							"action": "ShowSource",
 							"args": {
 								"scene": "~ Memes",
 								"source": "pride",
@@ -71,7 +71,7 @@
 							}
 						},
 						{
-							"action": "ShowSceneItem",
+							"action": "ShowSource",
 							"args": {
 								"scene": "~ Memes",
 								"source": "birb",

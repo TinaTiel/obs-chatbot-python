@@ -28,7 +28,7 @@ class ShowSource(Action):
 		
 		# finally execute the command
 		# show the scene
-		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.source, True, self.scene))
+		res = self.obs_client.client.call(obswebsocket.requests.ShowSceneItemRender(self.source, True, self.scene))
 		if(res.status == False):
 			self.log.warn("Could not show scene item {}! Error: {}".format(self.source, res.datain['error']))
 			self._twitch_failed()
@@ -38,7 +38,7 @@ class ShowSource(Action):
 		time.sleep(self.duration)
 
 		# hide the scene again
-		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.source, False, self.scene))
+		res = self.obs_client.client.call(obswebsocket.requests.ShowSceneItemRender(self.source, False, self.scene))
 		if(res.status == False):
 			self.log.warn("Could not hide scene item {}! Error: {}".format(self.source, res.datain['error']))
 			self._twitch_failed()
