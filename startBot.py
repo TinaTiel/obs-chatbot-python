@@ -84,7 +84,7 @@ def main():
 
 	windows = data.get('windows', False)
 	# Initiate connection and call the commands
-	bot = ObsCommandBot(obs_config, twitch_config)
+	bot = ObsCommandBot(obs_config, twitch_config, windows)
 	bot.start()
 	if(windows):
 		bot.run_forever_win()

@@ -1,5 +1,5 @@
 # About
-OBS Chat Bot is a set of Python scripts that allows your viewers to cause actions directly in OBS during broadcasts! For example, an user may invoke a `!pride` command and your OBS instance would briefly show a rainbow flag. Or, a series of users may vote to execute the `!special` command to change scenes in some interactive fun way. The possibilities are endless as OBS Websockets.
+OBS Chat Bot is a set of Python scripts that allows your viewers to cause actions directly in OBS during broadcasts! For example, a viewer may invoke a `!pride` command and your OBS instance would briefly show a rainbow flag. Or, a series of viewers may vote to execute the `!special` command to change scenes in some interactive fun way.
 
 # Dependencies
 This project requires Python 3+, and dependencies are defined in requirements.txt. Install them with:
@@ -13,12 +13,12 @@ The project was tested in Windows 7 and Linux, and by default is configured to r
 # Setup / Authentication
 1. Rename `config.example.json` to `config.json`.
 1. Create a Twitch account to act as your Chat Bot, if you don't already have one.
-1. In config.json, set `twitch.username` to your Chat Bot username
-1. In config.json, set `twitch.channel` to your broadcaster username
+1. In config.json, set `twitch.viewername` to your Chat Bot viewername
+1. In config.json, set `twitch.channel` to your broadcaster viewername
 1. Setup your Twitch Application:
    1. Signup at [Twitch Dev](https://dev.twitch.tv) with your broadcaster account.
    1. [Create a new App](https://dev.twitch.tv/console/apps) (NOT an Extension):
-       1. Use a meaningful name, such as "Broadcaster Username OBS ChatBot App"
+       1. Use a meaningful name, such as "Broadcaster viewername OBS ChatBot App"
        1. Set the OAuth Redirect URL to something you can access, such as http://localhost
        1. Set the category to Chat Bot
    1. In config.json, set `twitch.api_client_id` and `twitch.app_client_secret` from your app you just created. Note, you should NEVER share the client secret, treat it as a password.
@@ -64,7 +64,7 @@ You are now setup! See the documentation below on the commands you can configure
 ## Built-In Commands
 These commands are part of the bot itsself and cannot be disabled without changing the statements in startBot.py. 
 
-`!help`: lists all available custom commands defined in _config.json_, described below. Accessible to all users.
+`!help`: lists all available custom commands defined in _config.json_, described below. Accessible to all viewers.
 
 `!say <sometext>`: Echos back the text provided. 
 
@@ -75,17 +75,17 @@ These commands are part of the bot itsself and cannot be disabled without changi
 ## Custom Commands
 Custom command can be configured by you, the broadcaster, to make OBS respond in any number of ways. The configuration file `config.json` includes several examples of commands that can be configured, and the elements of a command are described below: 
 
-`name`: Name of the chat command an user would type, without the !. Examples: 'party', 'pride', 'letschat', etc. 
+`name`: Name of the chat command a viewer would type (**_without the `!`_**). For example, if an user types _!hype_ then there must exist a command with the name _hype_.
 
 `description`: Description for the chat command; used in the !help command, and displayed during votes. 
 
-`aliases`: List of strings that also execute this command, for example the command _birb_ may also have aliases _tiel_ and _squawk_. 
+`aliases`: List of strings that also execute this command, for example the command _birb_ may also have aliases _tiel_ and _squawk_; this means viewers may also invoke the !birb command with !tiel and !squawk. 
 
 `min_votes`: Describes the minimum number of unique votes needed to execute a command. Must be greater than zero. 
 
 `permission`: The minimum status required to execute a command. Can be `EVERYONE`, `FOLLOWER`, `SUBSCRIBER`, `MODERATOR`, or `BROADCASTER`. 
 
-`action`: The overall behavior that will occur when an user executes a chat command. These are the actions available by default, they are just dynamically-loaded python classes available in obs/actions. 
+`action`: The overall behavior that will occur when a viewer executes a chat command. These are the actions available by default, they are just dynamically-loaded python classes available in obs/actions. 
 
 `args`: The arguments required to describe what the action does
 
@@ -122,24 +122,24 @@ class Foo(Action):
     self.log = logging.getLogger(__name__)
     self._init_args(args)
 
-  def execute(self, user):
+  def execute(self, viewer):
     """Make calls to OBS or whatever you want to do with Python here. These are
     always blocking tasks, so you must tell the twitch bot when you are done via
     twitch_failed() or twitch_done(); see the TwitchBot class.
     """
 
-    # Check user permissions and votes
+    # Check viewer permissions and votes
     if(not (
-      self._has_permission(user) 
-      and self._has_enough_votes(user) 
+      self._has_permission(viewer) 
+      and self._has_enough_votes(viewer) 
       )
     ):
       return self._twitch_failed()
     
-    # Check user permissions and votes
+    # Check viewer permissions and votes
     if(not (
-      self._has_permission(user) 
-      and self._has_enough_votes(user) 
+      self._has_permission(viewer) 
+      and self._has_enough_votes(viewer) 
       )
     ):
       self._twitch_failed()
@@ -234,7 +234,8 @@ And in a Chain command:
 ```
 
 # Other Configuration
-The `twitch` portion of the config.json file also provides these commands:
+The `twitch` portion of the _config.json_ file also provides these commands:
+
 `cooldown`: How long (seconds) a viewer must wait until commands can be executed once they've finished (and if the command has cooldown).
 
 `timeout`: If a command does not internally call `self._twitch_done()` or `self._twitch_failed()` this is the amount of time (seconds) the chatbot will wait. Therefore, if you anticipate some commands may take a long time to execute then you may want to set this to a higher value otherwise your command may be interrupted.
