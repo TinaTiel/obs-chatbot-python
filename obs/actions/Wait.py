@@ -4,7 +4,7 @@ import time
 from obs.actions.Action import Action
 from obs.Permission import Permission
 
-class Say(Action):
+class Wait(Action):
 
 	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
 		"""Initializes this class, see Action.py
@@ -14,7 +14,7 @@ class Say(Action):
 		self._init_args(args)
 
 	def execute(self, user):
-		"""Says specified text in chat
+		"""Waits a specified duration
 		"""
 		# Check user permissions and votes
 		if(not (
@@ -25,8 +25,8 @@ class Say(Action):
 			self._twitch_failed()
 			return False
 		
-		# finally say the messages in order, no cooldown
-		self._twitch_say(self.messages)
+		# finally wait the specified duration in seconds
+		time.sleep(self.duration)
 		self._twitch_failed()
 
 		return True
@@ -36,10 +36,11 @@ class Say(Action):
 		and raises a ValueError if they aren't.
 
 		Mandatory args:
-		messages (list): list of messages to say
+		duration (integer): Seconds to wait
 		"""
 
 		# Validate the basic piece is in place
-		self.messages = args.get('messages', None)
-		if(self.messages is None):
-			raise ValueError("Command {}: Args error, missing 'messages'".format(self.command_name))
+		self.duration = args.get('duration', None)
+
+		if(self.duration is None or self.duration < 0):
+			raise ValueError("Command {}: Args error, duration must be greater than zero".format(self.command_name))

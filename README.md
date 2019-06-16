@@ -94,8 +94,9 @@ This table below describes the `action`/`args` configurations available. If the 
 | action | What This Does | mandatory args | optional args |
 |--------|----------------|----------------|---------------|
 | SetScene | Changes to a scene permanently | `scene` (string): The scene to switch to | (none) |
-| ShowSceneItem | Shows a scene item for a specified duration. Defaults to the item in the current scene unless parent scene is specified | `source` (string): The scene item to show/hide <br> `duration` (integer): Seconds to show the scene item | `scene` (string): The scene the scene item is nested in. Depth/nesting does not matter; if a scene is included in another scene, the item will still be shown/hidden. |
+| ShowSource | Shows a scene item for a specified duration. Defaults to the item in the current scene unless parent scene is specified | `source` (string): The scene item to show/hide <br> `duration` (integer): Seconds to show the scene item | `scene` (string): The scene the scene item is nested in. Depth/nesting does not matter; if a scene is included in another scene, the item will still be shown/hidden. |
 | Say | Says a series of texts in chat, in order | `messages` (list): List of messages to say in chat <br> **If this fails** after one message then verifiy your chat bot has been granted moderator permissions in your broadcaster channel. | (none) |
+| Wait | Waits a specified duration, most useful in a `Chain` command | `duration` (integer): Seconds to wait | (none) |
 | Chain | Excecutes a series of commands above, in order | `commands` (list): List of `action` and `args` data commands, describing the commands to execute. <br> Each command inherits the parent attributes for `name`, `description`, `aliases`, `min_votes`, and `permission`; these do not need to be provided | (none) |
 
 ## Custom Command Action Classes

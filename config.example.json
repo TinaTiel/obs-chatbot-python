@@ -59,6 +59,18 @@
 							}
 						},
 						{
+							"action": "Say",
+							"args": {
+								"messages": ["Birb will happen after a few seconds..."]
+							}
+						},
+						{
+							"action": "Wait",
+							"args": {
+								"duration": 2
+							}
+						},
+						{
 							"action": "ShowSceneItem",
 							"args": {
 								"scene": "~ Memes",

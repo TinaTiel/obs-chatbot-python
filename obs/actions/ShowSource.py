@@ -3,7 +3,7 @@ import logging
 import time
 from obs.actions.Action import Action
 
-class ShowSceneItem(Action):
+class ShowSource(Action):
 
 	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
 		"""Initializes this class, see Action.py
@@ -59,8 +59,8 @@ class ShowSceneItem(Action):
 		scene (string): Name of scene where scene item is nested. If not provided, 
 									  then the current scene is used. 
 		"""
-		self.source = args.get('source')
-		self.duration = args.get('duration')
+		self.source = args.get('source', None)
+		self.duration = args.get('duration', None)
 		self.scene = args.get('scene', None) # This is an optional command
 		if(self.source is None or self.duration is None):
 			raise ValueError("Command {}: Args error, missing 'source' or 'duration' for command".format(self.command_name))
