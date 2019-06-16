@@ -236,10 +236,11 @@ And in a Chain command:
 ```
 
 # Other Configuration
-The `twitch` portion of the _config.json_ file also provides these commands:
 
-`cooldown`: How long (seconds) a viewer must wait until commands can be executed once they've finished (and if the command has cooldown).
+`log_level`: Logging level for the program, can be `CRITICAL`, `ERROR`, `WARNING`, `INFO`, or `DEBUG` per the Python 3 [logging](https://docs.python.org/3/library/logging.html) facility. When not set, it defaults to `INFO` so that program startup is shown on the command line.
 
-`timeout`: If a command does not internally call `self._twitch_done()` or `self._twitch_failed()` this is the amount of time (seconds) the chatbot will wait. Therefore, if you anticipate some commands may take a long time to execute then you may want to set this to a higher value otherwise your command may be interrupted.
+`twitch.cooldown`: How long (seconds) a viewer must wait until commands can be executed once they've finished (and if the command has cooldown).
 
-`no_cooldown`: List of commands such as _help_ that should never have cooldown / can be spammed as frequently as viewers want.
+`twitch.timeout`: If a command does not internally call `self._twitch_done()` or `self._twitch_failed()` this is the amount of time (seconds) the chatbot will wait. Therefore, if you anticipate some commands may take a long time to execute then you may want to set this to a higher value otherwise your command may be interrupted.
+
+`twitch.no_cooldown`: List of commands such as _help_ that should never have cooldown / can be spammed as frequently as viewers want.

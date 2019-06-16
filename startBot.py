@@ -4,15 +4,6 @@ import json
 import logging
 import logging.config
 
-def pretty_print_dict(d, depth = 0):
-		for k,v in d.items():
-				if isinstance(v, dict):
-						print("%s:" % k)
-						pretty_print_dict(v, depth + 1)
-				else:
-						print(("		" * depth) +
-									"%s: %s" % (k,v))
-
 class ObsCommandBot(TwitchBot):
 		def __init__(self, obs_config, twitch_config, windows):
 				super().__init__(**twitch_config)
@@ -22,9 +13,9 @@ class ObsCommandBot(TwitchBot):
 				self.broadcaster = self.channel.split("#", 1)[1]
 
 		def on_twitch_command(self, cmd):
-				print("-----------------")
-				print("Received command:")
-				pretty_print_dict(cmd)
+				
+				if(self.log.getEffectiveLevel() == logging.DEBUG):
+					self._pretty_log_dict(cmd)
 
 				if cmd["action"] == "say":
 						if cmd["args"]:
@@ -60,17 +51,30 @@ class ObsCommandBot(TwitchBot):
 			))
 			self.twitch_failed()
 
+		def _pretty_log_dict(self, d, depth = 0):
+			self.log.debug("-----------------")
+			self.log.debug("Received command:")
+			for k,v in d.items():
+				if isinstance(v, dict):
+						self.log.debug("%s:" % k)
+						self._pretty_log_dict(v, depth + 1)
+				else:
+						self.log.debug(("		" * depth) +
+									"%s: %s" % (k,v))
+
 def main():
 	# Set logging and get configuration information
-	logging.basicConfig(level=logging.DEBUG)
-	log = logging.getLogger(__name__)
 
 	with open('config.json', encoding='utf-8') as json_file:
 		try:
 			data = json.load(json_file)
 		except Exception as e:
-			log.error("Cannot read config.json! Error message: \n" + str(e))
+			print("Cannot read config.json! Error message: \n" + str(e))
 			return
+
+	log_level = getattr(logging, data.get('log_level', "INFO"))
+	logging.basicConfig(level=log_level)
+	log = logging.getLogger(__name__)
 
 	twitch_config = data.get('twitch', None)
 	if(twitch_config is None):
