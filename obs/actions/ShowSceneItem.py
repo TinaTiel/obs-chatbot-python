@@ -28,9 +28,9 @@ class ShowSceneItem(Action):
 		
 		# finally execute the command
 		# show the scene
-		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.scene_item, True, self.scene))
+		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.source, True, self.scene))
 		if(res.status == False):
-			self.log.warn("Could not show scene item {}! Error: {}".format(self.scene_item, res.datain['error']))
+			self.log.warn("Could not show scene item {}! Error: {}".format(self.source, res.datain['error']))
 			self._twitch_failed()
 			return False
 
@@ -38,9 +38,9 @@ class ShowSceneItem(Action):
 		time.sleep(self.duration)
 
 		# hide the scene again
-		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.scene_item, False, self.scene))
+		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.source, False, self.scene))
 		if(res.status == False):
-			self.log.warn("Could not hide scene item {}! Error: {}".format(self.scene_item, res.datain['error']))
+			self.log.warn("Could not hide scene item {}! Error: {}".format(self.source, res.datain['error']))
 			self._twitch_failed()
 			return False
 
@@ -59,11 +59,11 @@ class ShowSceneItem(Action):
 		scene (string): Name of scene where scene item is nested. If not provided, 
 									  then the current scene is used. 
 		"""
-		self.scene_item = args.get('scene_item')
+		self.source = args.get('source')
 		self.duration = args.get('duration')
 		self.scene = args.get('scene', None) # This is an optional command
-		if(self.scene_item is None or self.duration is None):
-			raise ValueError("Command {}: Args error, missing 'scene_item' or 'duration' for command".format(self.command_name))
+		if(self.source is None or self.duration is None):
+			raise ValueError("Command {}: Args error, missing 'source' or 'duration' for command".format(self.command_name))
 
 		if(self.duration < 0):
 			raise ValueError("Command {}: Args error, duration must be greater than zero".format(self.command_name))

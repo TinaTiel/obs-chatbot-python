@@ -26,7 +26,7 @@
 				"action": "ShowSceneItem",
 				"args": {
 					"scene": "~ Memes",
-					"scene_item": "birb",
+					"source": "birb",
 					"duration": 3
 				}
 			},
@@ -54,7 +54,7 @@
 							"action": "ShowSceneItem",
 							"args": {
 								"scene": "~ Memes",
-								"scene_item": "pride",
+								"source": "pride",
 								"duration": 3
 							}
 						},
@@ -62,7 +62,7 @@
 							"action": "ShowSceneItem",
 							"args": {
 								"scene": "~ Memes",
-								"scene_item": "birb",
+								"source": "birb",
 								"duration": 3
 							}
 						}
