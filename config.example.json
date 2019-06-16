@@ -68,6 +68,23 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "social",
+				"description": "raise the hype!",
+				"aliases": [],
+				"min_votes": 0,
+				"permission": "EVERYONE",
+				"action": "Say",
+				"args": {
+					"messages": [
+						"Contact me here:",
+						"https://twitter.com Twitter",
+						"https://youtube.com YouTube",
+						"https://instagram.com Instagram",
+						"..."
+					]
+				}
 			}
 		]
 	}
