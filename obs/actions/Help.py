@@ -31,13 +31,16 @@ class Help(Action):
 
 			unique_commands.add((value.command_name, value.description, aliases)) # tuples are hashable, but not dicts ;-)
 
+		help_strs = []
 		for command in unique_commands:
 			help_str = ""
 			help_str += "{}: {}".format("!" + command[0], command[1])
 			if(command[2] is not None):
 				help_str += " [aliases: {}]".format(command[2])
-			self._twitch_say(help_str)
-			self._twitch_failed() # make sure to reset the queue between each!
+			help_strs.append(help_str)
+		
+		self._twitch_say(help_strs)
+		self._twitch_failed() # make sure to reset the queue between each!
 		return True
 
 	def _init_args(self, args):

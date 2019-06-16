@@ -27,11 +27,9 @@ class Say(Action):
 			return False
 		
 		# finally say the messages in order, no cooldown
-		for message in self.messages:
-			self.log.debug("Saying: " + message)
-			self._twitch_say(message)
-			self._twitch_failed()
-		
+		self._twitch_say(self.messages)
+		self._twitch_failed()
+
 		return True
 
 	def _init_args(self, args):

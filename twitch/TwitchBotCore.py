@@ -321,8 +321,12 @@ class TwitchBotCore(irc.bot.SingleServerIRCBot):
                       % cmd.action)
 
         if cmd.action   == "say":
-            self.log.debug("Saying '%s'." % cmd.args)
-            self.connection.privmsg(self.channel, cmd.args)
+            args = cmd.args
+            self.log.debug("Saying '%s'." % args)
+            if isinstance(cmd.args, str):
+                args = cmd.args.splitlines()
+            for arg in args:
+                self.connection.privmsg(self.channel, arg)
         elif cmd.action == "done":
             self.log.debug("Starting cooldown timer.")
             self.cooldown_timer = self.cooldown
