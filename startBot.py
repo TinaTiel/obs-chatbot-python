@@ -14,10 +14,11 @@ def pretty_print_dict(d, depth = 0):
 									"%s: %s" % (k,v))
 
 class ObsCommandBot(TwitchBot):
-		def __init__(self, obs_config, twitch_config):
+		def __init__(self, obs_config, twitch_config, windows):
 				super().__init__(**twitch_config)
 				self.log = logging.getLogger(__name__)
 				self.obs_client = ObsClient(obs_config, self)
+				self.windows = windows
 				self.broadcaster = self.channel.split("#", 1)[1]
 
 		def on_twitch_command(self, cmd):
@@ -80,11 +81,15 @@ def main():
 	if(obs_config is None):
 		log.error("Cannot initialize, missing obs configuration information!")
 		return
+
+	windows = data.get('windows', False)
 	# Initiate connection and call the commands
 	bot = ObsCommandBot(obs_config, twitch_config)
 	bot.start()
-	bot.run_forever_win()
-	#bot.run_forever()
+	if(windows):
+		bot.run_forever_win()
+	else:
+		bot.run_forever()
 
 # Run main code if this module is executed from the command line.
 if __name__ == "__main__":

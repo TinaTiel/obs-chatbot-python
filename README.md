@@ -8,6 +8,8 @@ pip install -r requirements.txt
 ```
 This project also depends on [OBS Websockets](https://obsproject.com/forum/resources/obs-websocket-remote-control-of-obs-studio-made-easy.466/) and was tested in versions 23.1 of OBS studio and 4.6.1 of OBS Websockets. 
 
+The project was tested in Windows 7 and Linux, and by default is configured to run in Windows. To run in Linux, set the `windows` element in _config.json_ to `false`.
+
 # Setup / Authentication
 1. Rename `config.example.json` to `config.json`.
 1. Create a Twitch account to act as your Chat Bot, if you don't already have one.
@@ -58,8 +60,20 @@ This project also depends on [OBS Websockets](https://obsproject.com/forum/resou
 You are now setup! See the documentation below on the commands you can configure in `obs.commands`.
 
 # Commands
-The configuration file `config.json` includes several examples of commands that can be configured. 
-The elements of a command are described below: 
+
+## Built-In Commands
+These commands are part of the bot itsself and cannot be disabled without changing the statements in startBot.py. 
+
+`!help`: lists all available custom commands defined in _config.json_, described below. Accessible to all users.
+
+`!say <sometext>`: Echos back the text provided. 
+
+`status`: Displays the status of the bot and connection to OBS. Only the broadcaster can execute this command.
+
+`reconnect`: Tries to reconnect the bot to OBS, up to three attempts. Only the broadcaster can execute this command. Can also be invoked as `reset` or `recover`.
+
+## Custom Commands
+Custom command can be configured by you, the broadcaster, to make OBS respond in any number of ways. The configuration file `config.json` includes several examples of commands that can be configured, and the elements of a command are described below: 
 
 `name`: Name of the chat command an user would type, without the !. Examples: 'party', 'pride', 'letschat', etc. 
 
@@ -83,9 +97,146 @@ This table below describes the `action`/`args` configurations available. If the 
 | ShowSceneItem | Shows a scene item for a specified duration. Defaults to the item in the current scene unless parent scene is specified | `scene_item` (string): The scene item to show/hide <br> `duration` (integer): Seconds to show the scene item | `scene` (string): The scene the scene item is nested in. Depth/nesting does not matter; if a scene is included in another scene, the item will still be shown/hidden. |
 | Chain | Excecutes a series of commands above, in order | `commands` (list): List of `action` and `args` data commands, describing the commands to execute. <br> Each command inherits the parent attributes for `name`, `description`, `aliases`, `min_votes`, and `permission`; these do not need to be provided | (none) |
 
-### Extending Commands
-Commands are just classes in the `obs/actions` directory, initialized dynamically with arguments in config.json when the bot starts up. The only hard requirements for these classes are:
-1. The initializtion function must accept the `obs_client`, `command_name`, `permission`, `min_votes`, and `args` arguments. 
-2. There must be an `execute` method accepting an `user` argument. 
+## Custom Command Action Classes
+Command actions are subclasses of the Action class, see examples in the `obs/actions` directory, and are initialized dynamically with arguments in config.json when the bot starts up. 
 
-Optionally you may use `eval_permission` and `eval_votes` if necessary. Refer to [obs-websocket-py](https://github.com/Elektordi/obs-websocket-py) and the source code here for examples.
+When returning from an error or success on the execute() command, call `self._twitch_failed()` or `self._twitch_done()` and return a Boolean (the Boolean is required for the Chain command). After a chat command, the chat bot waits for one of these calls before accepting more chat commands; the difference is that `self._twitch_failed()` has no cooldown whereas `self._twitch_done()` has a cooldown/delay after the command completes. If you want to allow uses to submit commands continuously, return `self._twitch_failed()`, but if you want to limit spamming of commands use `self._twitch_done()`.
+
+You also have the example of saying something in chat in response to a command as well; in this case use `self._twitch_say("some message")` but remember to still call `self.twitch_failed()` or `self.twitch_done()` after each message and note that if you cannot send messages in succession ensure your bot has been added as a moderator on the broadcaster's chat.
+
+Otherwise, refer to [obs-websocket-py](https://github.com/Elektordi/obs-websocket-py) for examples of calling OBS, and refer to the source code here and below for examples of how to create your own commands.
+
+Example Class:
+```
+import logging
+import obswebsocket, obswebsocket.requests
+from obs.actions.Action import Action
+from obs.Permission import Permission
+
+class Foo(Action):
+
+  def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
+    """Initializes this class, see Action.py
+    """
+    super().__init__(obs_client, command_name, aliases, description, permission, min_votes, args)
+    self.log = logging.getLogger(__name__)
+    self._init_args(args)
+
+  def execute(self, user):
+    """Make calls to OBS or whatever you want to do with Python here. These are
+    always blocking tasks, so you must tell the twitch bot when you are done via
+    twitch_failed() or twitch_done(); see the TwitchBot class.
+    """
+
+    # Check user permissions and votes
+    if(not (
+      self._has_permission(user) 
+      and self._has_enough_votes(user) 
+      )
+    ):
+      return self._twitch_failed()
+    
+    # Check user permissions and votes
+    if(not (
+      self._has_permission(user) 
+      and self._has_enough_votes(user) 
+      )
+    ):
+      self._twitch_failed()
+      return False
+
+    # Execute an OBS command, see the obs-websocket-py documentation and NOTE that the 
+    # error returning in/out is from the perspective of the class and not this one, so 
+    # in/out are opposite of what you may expect
+    res = self.obs_client.client.call(obswebsocket.requests.SomeObsWebsocketPyClass(self.somearg, self.anotherarg))
+    if(res.status == False):
+      self.log.warn("Could not show scene item {}! Error: {}".format(self.scene_item, res.datain['error']))
+      self._twitch_failed()
+      return False
+
+    self.log.debug("Executed {} successfully".format(self.command_name))
+    self._twitch_say("You executed my custom commands!")
+    self._twitch_success()
+    return True
+
+  def _init_args(self, args):
+    """This validates the arguments are valid for this instance, 
+    and raises a ValueError if they aren't.
+    """
+    self.somearg = args.get('somearg', None)
+    self.anotherarg = args.get('anotherarg', None)
+    if(self.somearg is None or self.anotherarg is None):
+      raise ValueError("Command {}: Args error, missing 'somearg' or 'anotherarg'".format(self.command_name))
+```
+Example Config Entry:
+```
+{
+  "twitch": {
+    ...
+  },
+  "obs": {
+    "host": "localhost",
+    "port": 4444,
+    "password": "password",
+    "commands": [
+      {
+        "name": "somecommand",
+        "description": "see a custom command!",
+        "aliases": ["somedemand", "someampersand", "icantryhme"],
+        "min_votes": 0,
+        "permission": "EVERYONE",
+        "action": "Foo",
+        "args": {
+          "somearg": "someargvalue",
+          "someotherarg": "someotherargvalue"
+        }
+      },
+      ...
+    ]
+  }
+}
+```
+And in a Chain command:
+```
+{
+  "twitch": {
+    ...
+  },
+  "obs": {
+    "host": "localhost",
+    "port": 4444,
+    "password": "password",
+    "commands": [
+      {
+        "name": "somechaincommand",
+        "description": "see a custom chain command!",
+        "aliases": ["somedemand", "someampersand", "icantryhme"],
+        "min_votes": 0,
+        "permission": "EVERYONE",
+        "action": "Chain",
+        "args": {
+          "commands": [
+            {
+              "action": "Foo",
+              "args": {
+                "somearg": "someargvalue",
+                "someotherarg": "someotherargvalue"
+              }
+            },
+            ...
+          ]
+        }
+      },
+      ...
+    ]
+  }
+}
+```
+
+# Other Configuration
+The `twitch` portion of the config.json file also provides these commands:
+`cooldown`: How long (seconds) a viewer must wait until commands can be executed once they've finished (and if the command has cooldown).
+
+`timeout`: If a command does not internally call `self._twitch_done()` or `self._twitch_failed()` this is the amount of time (seconds) the chatbot will wait. Therefore, if you anticipate some commands may take a long time to execute then you may want to set this to a higher value otherwise your command may be interrupted.
+
+`no_cooldown`: List of commands such as _help_ that should never have cooldown / can be spammed as frequently as viewers want.
