@@ -1,6 +1,7 @@
 import obswebsocket, obswebsocket.requests
 import logging
 import time
+import random
 from obs.actions.Action import Action
 
 class ShowSource(Action):
@@ -28,9 +29,11 @@ class ShowSource(Action):
 		
 		# finally execute the command
 		# show the scene
-		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.source, True, self.scene))
+		choice = random.choice(self.source)
+
+		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(choice, True, self.scene))
 		if(res.status == False):
-			self.log.warn("Could not show scene item {}! Error: {}".format(self.source, res.datain['error']))
+			self.log.warn("Could not show scene item {}! Error: {}".format(choice, res.datain['error']))
 			self._twitch_failed()
 			return False
 
@@ -40,9 +43,9 @@ class ShowSource(Action):
 			time.sleep(self.duration)
 
 			# hide the scene again
-			res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.source, False, self.scene))
+			res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(choice, False, self.scene))
 			if(res.status == False):
-				self.log.warn("Could not hide scene item {}! Error: {}".format(self.source, res.datain['error']))
+				self.log.warn("Could not hide scene item {}! Error: {}".format(choice, res.datain['error']))
 				self._twitch_failed()
 				return False
 
@@ -65,8 +68,8 @@ class ShowSource(Action):
 		self.duration = args.get('duration', None) # Optional
 		self.scene = args.get('scene', None) # Optional
 
-		if(self.source is None):
-			raise ValueError("Command {}: Args error, missing 'source' for command".format(self.command_name))
+		if(self.source is None or len(self.source) == 0):
+			raise ValueError("Command {}: Args error, missing 'source' for command or is empty list".format(self.command_name))
 
 		if(self.duration is not None and self.duration < 0):
 			raise ValueError("Command {}: Args error, duration must be greater than zero".format(self.command_name))
