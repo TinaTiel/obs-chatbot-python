@@ -1,5 +1,7 @@
 import logging
 import time
+import json
+import os
 from twitch.TwitchBot import TwitchBot
 
 #logging.basicConfig(level=logging.DEBUG, filename='debug.log')
@@ -41,31 +43,14 @@ class PrintCommandBot(TwitchBot):
             self.twitch_say("I don't know that command.")
         self.twitch_failed() # Always "fail" so cooldown timer is not used.
 
-
-# Config can be read from JSON or a dictionary.
-config = {
-    "server"            : 'irc.chat.twitch.tv',
-    "port"              : 6697,
-    "username"          : "surpriseparrot",
-    "chat_token"        : "hh7hr7vrb3lg0woah53xpqmezq5mj3",
-    "channel"           : "#surpriseparrot",
-    "cooldown"          : 0.5,
-    "timeout"           : 5.0,
-    "api_client_id"     : "qjrtnlbuoz8jjo0nkor9jlaudoqsaf",
-    "api_client_secret" : "6ciw1ezkeweus76ud2u5by65njpdbr",
-    "no_cooldown"       : ["sayhi", "watermelon"]
-}
-
-
 # Example of using the Twitch bot with run_forever.
 # This allows the bot to control the execution flow
 # of your program. All you have to do is handle the
 # on_twitch_command function.
 def main():
-    testbot = PrintCommandBot(**config)
+    testbot = PrintCommandBot(**getConfig())
     testbot.start()
-    testbot.run_forever_win()
-    #testbot.run_forever()
+    testbot.run_forever()
 
 
 # Example of using the Twitch bot with run_once. This
@@ -77,7 +62,7 @@ def main():
 # (The KeyboardInterrupt could occur outside of run_once and
 #  the bot would have no way of knowing it's supposed to stop.)
 def main2():
-    testbot = PrintCommandBot(**config)
+    testbot = PrintCommandBot(**getConfig())
     testbot.start()
     while True:
         try:
@@ -95,7 +80,7 @@ def main2():
 # do something else time consuming between calls to run_once
 # or it will use 100% CPU.
 def main3():
-    testbot = PrintCommandBot(**config)
+    testbot = PrintCommandBot(**getConfig())
     testbot.start()
     while True:
         try:
@@ -105,10 +90,21 @@ def main3():
         except KeyboardInterrupt:
             testbot.twitch_shutdown()
 
+def getConfig():
+    with open('config.json', encoding='utf-8') as json_file:
+        try:
+            data = json.load(json_file)
+        except Exception as e:
+            print("Cannot read config.json! Error message: \n" + str(e))
+
+    twitch_config = data.get('twitch', None)
+    if(twitch_config is None):
+        print("Cannot initialize, missing twitch configuration information!")
+
+    return twitch_config
 
 # Run main code if this module is executed from the command line.
 if __name__ == "__main__":
     main()
     #main2()
     #main3()
- 
