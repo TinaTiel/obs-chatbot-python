@@ -83,7 +83,7 @@
 			},
 			{
 				"name": "social",
-				"description": "raise the hype!",
+				"description": "see my social info!",
 				"aliases": [],
 				"min_votes": 0,
 				"permission": "EVERYONE",
