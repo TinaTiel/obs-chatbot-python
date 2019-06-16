@@ -28,21 +28,23 @@ class ShowSource(Action):
 		
 		# finally execute the command
 		# show the scene
-		res = self.obs_client.client.call(obswebsocket.requests.ShowSceneItemRender(self.source, True, self.scene))
+		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.source, True, self.scene))
 		if(res.status == False):
 			self.log.warn("Could not show scene item {}! Error: {}".format(self.source, res.datain['error']))
 			self._twitch_failed()
 			return False
 
-		# wait the specified duration
-		time.sleep(self.duration)
+		# if a duration was specified then sleep and then hide the scene
+		if(self.duration is not None):
+			# wait the specified duration
+			time.sleep(self.duration)
 
-		# hide the scene again
-		res = self.obs_client.client.call(obswebsocket.requests.ShowSceneItemRender(self.source, False, self.scene))
-		if(res.status == False):
-			self.log.warn("Could not hide scene item {}! Error: {}".format(self.source, res.datain['error']))
-			self._twitch_failed()
-			return False
+			# hide the scene again
+			res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(self.source, False, self.scene))
+			if(res.status == False):
+				self.log.warn("Could not hide scene item {}! Error: {}".format(self.source, res.datain['error']))
+				self._twitch_failed()
+				return False
 
 		self._twitch_done()
 		return True
@@ -53,17 +55,18 @@ class ShowSource(Action):
 
 		Mandatory args:
 		scene item (string): Name of the scene to show.
-		duration (int): Duration (seconds) to show scene.
-
+		
 		Optional args:
 		scene (string): Name of scene where scene item is nested. If not provided, 
 									  then the current scene is used. 
+		duration (int): Duration (seconds) to show scene.
 		"""
 		self.source = args.get('source', None)
-		self.duration = args.get('duration', None)
-		self.scene = args.get('scene', None) # This is an optional command
-		if(self.source is None or self.duration is None):
-			raise ValueError("Command {}: Args error, missing 'source' or 'duration' for command".format(self.command_name))
+		self.duration = args.get('duration', None) # Optional
+		self.scene = args.get('scene', None) # Optional
 
-		if(self.duration < 0):
+		if(self.source is None):
+			raise ValueError("Command {}: Args error, missing 'source' for command".format(self.command_name))
+
+		if(self.duration is not None and self.duration < 0):
 			raise ValueError("Command {}: Args error, duration must be greater than zero".format(self.command_name))

@@ -24,11 +24,34 @@ class ShowScene(Action):
 			return False
 		
 		# finally execute the command
-		res = self.obs_client.client.call(obswebsocket.requests.SetCurrentScene(self.scene))
-		if(res.status == False):
-			self.log.warn("Could not set scene! Error: {}".format(res.datain['error']))
-			self._twitch_failed()
-			return False
+		# if a duration was provided, then switch back to the originating scene after duration
+		# otherwise just permanently switch to the scene
+		if(self.duration is not None):
+			starting_scene = self.obs_client.client.call(obswebsocket.requests.GetCurrentScene()).getName()
+
+			# switch to the desired scene
+			res = self.obs_client.client.call(obswebsocket.requests.SetCurrentScene(self.scene))
+			if(res.status == False):
+				self.log.warn("Could not set scene! Error: {}".format(res.datain['error']))
+				self._twitch_failed()
+				return False
+
+			# wait the specified duration
+			time.sleep(self.duration)
+
+			# switch back to the starting scene
+			res = self.obs_client.client.call(obswebsocket.requests.SetCurrentScene(starting_scene))
+			if(res.status == False):
+				self.log.warn("Could not set scene! Error: {}".format(res.datain['error']))
+				self._twitch_failed()
+				return False
+
+		else:
+			res = self.obs_client.client.call(obswebsocket.requests.SetCurrentScene(self.scene))
+			if(res.status == False):
+				self.log.warn("Could not set scene! Error: {}".format(res.datain['error']))
+				self._twitch_failed()
+				return False
 
 		self._twitch_done()
 		return True
@@ -39,7 +62,14 @@ class ShowScene(Action):
 
 		Mandatory args:
 		scene (string): Name of the scene to switch to
+
+		Optional args:
+		duration (integer): Time to show scene before returning to starting scene.
 		"""
 		self.scene = args.get('scene', None) 
+		self.duration = args.get('duration', None) # Optional
 		if(self.scene is None):
 			raise ValueError("Command {}: Args error, missing 'scene' for command".format(self.command_name))
+
+		if(self.duration is not None and self.duration < 0):
+			raise ValueError("Command {}: Args error, duration must be greater than zero".format(self.command_name))
