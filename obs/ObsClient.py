@@ -6,8 +6,6 @@ from importlib import import_module
 from obs.Permission import Permission
 from obs.actions.Help import Help
 
-#TODO: set a value in a text file, for example an username so that it can be used in a scene as part of a chain displaying text and a gif
-
 class ObsClient:
 	"""This class is responsible for executing commands against OBS, given params
 	from a configuration json file"""
