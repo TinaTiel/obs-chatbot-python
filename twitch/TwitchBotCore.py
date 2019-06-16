@@ -7,6 +7,7 @@ import irc.bot
 import time
 import requests
 from twitch.TwitchApi import TwitchApi
+import re
 
 
 TwitchCommand = namedtuple("TwitchCommand", ["tags",
@@ -165,6 +166,7 @@ class TwitchBotCore(irc.bot.SingleServerIRCBot):
 
         # According to spec, nickname can be <nickname!username@server>,
         # <nickname@server>, or <nickname>, so try all three.
+
         if "!" in source:
             name = source.split("!", 1)[0]
         elif "@" in source:
@@ -206,7 +208,8 @@ class TwitchBotCore(irc.bot.SingleServerIRCBot):
         """Parses a twitch message and turns it into a command."""
 
         # Extract command and arguments, if present.
-        cmd = e.arguments[0].lstrip("! ")
+        #cmd = e.arguments[0].lstrip("! ")
+        cmd = re.findall(r'!\w+', e.arguments[0])[0].lstrip("! ")
         if " " in cmd:
             action, args = cmd.split(" ", 1)
         else:
@@ -290,7 +293,9 @@ class TwitchBotCore(irc.bot.SingleServerIRCBot):
             return
         
         # Ignore messages that don't start with an exclamation point.
-        if not e.arguments[0].startswith('!'):
+        #if not e.arguments[0].startswith('!'):
+        if not '!' in e.arguments[0][0:3]:
+            self.log.debug("IGNORING IGNORING IGNORING")
             return
 
         # Parse the command and place it in the queue if cooldown not active.
