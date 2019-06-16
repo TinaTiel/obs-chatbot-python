@@ -81,7 +81,7 @@ Custom command can be configured by you, the broadcaster, to make OBS respond in
 
 `aliases`: List of strings that also execute this command, for example the command _birb_ may also have aliases _tiel_ and _squawk_; this means viewers may also invoke the !birb command with !tiel and !squawk. 
 
-`min_votes`: Describes the minimum number of unique votes needed to execute a command. Must be greater than zero. 
+`min_votes`: Describes the minimum number of unique votes needed to execute a command. Must be greater than zero. The Broadcaster and any Moderators skip voting validation.
 
 `permission`: The minimum status required to execute a command. Can be `EVERYONE`, `FOLLOWER`, `SUBSCRIBER`, `MODERATOR`, or `BROADCASTER`. 
 

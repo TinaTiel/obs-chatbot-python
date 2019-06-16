@@ -33,6 +33,13 @@ class Action:
 		raise NotImplementedError("The action isn't defined!")
 
 	def _has_enough_votes(self, user):
+
+		# short-circuit the whole check if the user is the broadcaster or mod
+		if(user['broadcaster'] or user['moderator']):
+			self.log.debug("Command {}: Skipping votes, {} is a moderator or broadcaster".format(self.command_name, user['name']))
+			return True
+
+		# otherwise, add the user to the vote list and determine if enough votes
 		self.votes.add(user['name'])
 		votes_received = len(self.votes)
 		if(not votes_received >= self.min_votes):
