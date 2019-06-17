@@ -97,7 +97,34 @@
 						"..."
 					]
 				}
-			}
+			},
+			{
+				"name": "randombirbfromconfig",
+				"description": "See a random birb as specified in the config!",
+				"aliases": [],
+				"min_votes": 0,
+				"permission": "EVERYONE",
+				"action": "ShowSource",
+				"args": {
+					"scene": "~ Memes",
+					"source":["bird1", "bird2", "bird3", "etc"],
+					"duration": 2
+				}
+			},
+			{
+				"name": "randombirbfromgroup",
+				"description": "See a random birb belonging to an OBS group!",
+				"aliases": [],
+				"min_votes": 0,
+				"permission": "EVERYONE",
+				"action": "ShowSource",
+				"args": {
+					"scene": "~ Memes",
+					"source": "birb group",
+					"duration": 3,
+					"pick_from_group": true
+				}
+			},
 		]
 	}
 }
