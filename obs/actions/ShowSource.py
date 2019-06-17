@@ -29,7 +29,8 @@ class ShowSource(Action):
 		
 		# finally execute the command
 		# show the scene
-		choice = random.choice(self.source)
+		#choice = random.choice(self.source)
+		choice = random.choice(self.pickable_items)
 
 		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(choice, True, self.scene))
 		if(res.status == False):
@@ -67,9 +68,27 @@ class ShowSource(Action):
 		self.source = args.get('source', None)
 		self.duration = args.get('duration', None) # Optional
 		self.scene = args.get('scene', None) # Optional
+		self.pick_from_group = args.get('pick_from_group', False) # Unless specified, assume False
 
-		if(self.source is None or len(self.source) == 0):
-			raise ValueError("Command {}: Args error, missing 'source' for command or is empty list".format(self.command_name))
+		if(self.source is None):
+			raise ValueError("Command {}: Args error, missing 'source' for command".format(self.command_name))
 
 		if(self.duration is not None and self.duration < 0):
 			raise ValueError("Command {}: Args error, duration must be greater than zero".format(self.command_name))
+
+		# If picking from the group (rather than hiding/showing the entire group contents), 
+		# then try to get the items in the group and store them.
+		if(isinstance(self.source, list)):
+			self.pickable_items = self.source
+			return
+
+		self.pickable_items = [self.source]
+		if(self.pick_from_group):
+			self.log.debug("Command {}: Group picking enabled".format(self.command_name))
+			source_settings = self.obs_client.client.call(obswebsocket.requests.GetSourceSettings(self.source))
+			if(source_settings):
+				self.log.debug("Command {}: Found source settings on source {}: {}".format(self.command_name, self.source, source_settings))
+				items = source_settings.getSourcesettings().get('items', None)
+				if(items and len(items)>0): #If this is incorrect, restart OBS
+					self.pickable_items = list(map(lambda item: item.get('name'), items)) 
+		self.log.debug("Command {}: Pickable items are: {}".format(self.command_name, self.pickable_items))
