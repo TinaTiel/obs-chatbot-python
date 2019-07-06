@@ -124,6 +124,24 @@
 					"duration": 3,
 					"pick_from_group": true
 				}
+			},
+			{
+				"name": "burg",
+				"description": "Turn me into a burger!",
+				"aliases": [],
+				"min_votes": 0,
+				"permission": "EVERYONE",
+				"action": "Toggle",
+				"args": {
+					"duration": 2,
+					"toggle_on": {
+						"source": "~ Camera - Facerig Burger"
+					},
+					"toggle_off": {
+						"source": "~ Camera - Chroma Keyed"
+					}
+					
+				}
 			}
 		]
 	}
