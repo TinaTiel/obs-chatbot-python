@@ -4,7 +4,7 @@ import time
 import random
 from obs.actions.Action import Action
 
-class ShowSource(Action):
+class HideSource(Action):
 
 	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
 		"""Initializes this class, see Action.py
@@ -28,10 +28,10 @@ class ShowSource(Action):
 			return False
 		
 		# finally execute the command
-		# show the scene
+		# hide the scene
 		choice = random.choice(self.pickable_items)
 
-		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(choice, True, self.scene))
+		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(choice, False, self.scene))
 		if(res.status == False):
 			self.log.warn("Could not show scene item {}! Error: {}".format(choice, res.datain['error']))
 			self._twitch_failed()
@@ -43,7 +43,7 @@ class ShowSource(Action):
 			time.sleep(self.duration)
 
 			# hide the scene again
-			res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(choice, False, self.scene))
+			res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(choice, True, self.scene))
 			if(res.status == False):
 				self.log.warn("Could not hide scene item {}! Error: {}".format(choice, res.datain['error']))
 				self._twitch_failed()

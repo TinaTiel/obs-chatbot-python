@@ -72,7 +72,9 @@ def main():
 			return
 
 	log_level = getattr(logging, data.get('log_level', "INFO"))
+	#logging.basicConfig(level=log_level, filename="bot.log")
 	logging.basicConfig(level=log_level)
+
 	log = logging.getLogger(__name__)
 	logging.getLogger("obswebsocket").setLevel(logging.ERROR) # OBS websocket Core is spammy
 
