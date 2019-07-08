@@ -1,5 +1,5 @@
 # About
-OBS Chat Bot is a set of Python scripts that allows your viewers to cause actions directly in OBS during broadcasts! For example, a viewer may invoke a `!pride` command and your OBS instance would briefly show a rainbow flag. Or, a series of viewers may vote to execute the `!special` command to change scenes in some interactive fun way.
+OBS Chat Bot is a set of Python scripts that allows your viewers to cause actions directly in OBS during broadcasts! For example, a viewer may invoke a `!tiel` command and your OBS instance would briefly show a bird mov file. Or, a series of viewers may vote to execute the `!special` command to change scenes in some interactive fun way.
 
 # Dependencies
 This project requires Python 3+, and dependencies are defined in requirements.txt. Install them with:
@@ -36,16 +36,16 @@ This project also depends on [OBS Websockets](https://obsproject.com/forum/resou
    ```
    ...And executing these commands in your chat (from Twitch, or OBS -- doesn't matter):
    ```
-   yourname: !status
+   yourname: !obsstatus
    ```
    If working, the bot will respond in Twitch chat with some basic information about you and with your OBS Websockets version. Note this command can only be executed by the broadcaster (you).
    ```
-   yourname: !status
+   yourname: !obsstatus
    yourbot: Twitch Bot is up and running. Connected to OBS Websockets version 4.6.1.
    ```
    If not, you may get a message like this; this means the bot cannot connect to OBS Websockets. If OBS is running, verify that the connection information is correct.
    ```
-   yourname: !status
+   yourname: !obsstatus
    yourbot: Twitch Bot is up and running. Could not communicate with OBS. Exception: socket is already closed
    ```
    After addressing the underlying problem, you can then attempt to reconnect with the commands `reconnect`, `reset` or `recover`. If necessary, you can restart the bot with `CTRL-C` in the command line where you launched it.
@@ -66,7 +66,7 @@ These commands are part of the bot itsself and cannot be disabled without changi
 
 `!say <sometext>`: Echos back the text provided. 
 
-`status`: Displays the status of the bot and connection to OBS. Only the broadcaster can execute this command.
+`obsstatus`: Displays the status of the bot and connection to OBS. Only the broadcaster can execute this command.
 
 `reconnect`: Tries to reconnect the bot to OBS, up to three attempts. Only the broadcaster can execute this command. Can also be invoked as `reset` or `recover`.
 

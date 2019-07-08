@@ -24,7 +24,7 @@ class ObsCommandBot(TwitchBot):
 				else:
 						self.obs_client.execute(cmd["user"], cmd["action"])
 
-				if cmd['action'] == "status":
+				if cmd['action'] == "obsstatus":
 					if cmd['user']['broadcaster'] == True:
 						self._report_status(cmd)
 
