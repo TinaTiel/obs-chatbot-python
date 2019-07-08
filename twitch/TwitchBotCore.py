@@ -341,7 +341,7 @@ class TwitchBotCore(irc.bot.SingleServerIRCBot):
                 # for my channel name. Channel name is variable but can be up to 25 chars
                 # and we want to add a truncated message to it. Close enough. XD
                 if(len(arg) > 450):
-                    arg = arg[:450] + " [message truncated]..."
+                    arg = arg[:450] + "...[message truncated]"
                 self.connection.privmsg(self.channel, arg)
         elif cmd.action == "done":
             self.log.debug("Starting cooldown timer.")
