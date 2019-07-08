@@ -331,6 +331,17 @@ class TwitchBotCore(irc.bot.SingleServerIRCBot):
             if isinstance(cmd.args, str):
                 args = cmd.args.splitlines()
             for arg in args:
+                # IRC limits 512 bytes per message, anything too long must be truncated
+                # problem is the python IRC lib does NOT return the message sent to the 
+                # bot's queue so we cannot determine the full size of the message as it
+                # includes the tags, channel, etc. Therefore, we approximate by limiting 
+                # the size of the string itself. 
+                # Because Fuck You that's why.
+                # Why 450? Because Twitch truncates messages at 499 characters ish
+                # for my channel name. Channel name is variable but can be up to 25 chars
+                # and we want to add a truncated message to it. Close enough. XD
+                if(len(arg) > 450):
+                    arg = arg[:450] + " [message truncated]..."
                 self.connection.privmsg(self.channel, arg)
         elif cmd.action == "done":
             self.log.debug("Starting cooldown timer.")
