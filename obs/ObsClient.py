@@ -4,7 +4,7 @@ import logging
 import time
 from importlib import import_module
 from obs.Permission import Permission
-from obs.actions.Help import Help
+#from obs.actions.Help import Help
 
 class ObsClient:
 	"""This class is responsible for executing commands against OBS, given params
@@ -165,7 +165,7 @@ class ObsClient:
 				self.log.debug("Command '{}': No aliases".format(command_name, aliases))
 
 		# Finally after all commands have been initialized then add the help command
-		self.commands['help'] = Help(self)
+		#self.commands['help'] = Help(self)
 
 		# Done initializing
 		self.log.info("...Commands initialized: {}".format(

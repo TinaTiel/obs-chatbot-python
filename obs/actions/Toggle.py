@@ -67,9 +67,6 @@ class Toggle(Action):
 		self.toggle_on = args.get('toggle_on', None)
 		self.toggle_off = args.get('toggle_off', None)
 
-		self.log.info("INIT TOGGLE ARGS ON: " + str(self.toggle_on))
-		self.log.info("INIT TOGGLE ARGS OFF: " + str(self.toggle_off))
-
 		if(self.toggle_on is None or self.toggle_off is None):
 			raise ValueError("Command {}: Args error, missing 'toggle_on' or 'toggle_off'".format(self.command_name))
 
@@ -87,7 +84,6 @@ class Toggle(Action):
 				Permission.EVERYONE, 
 				0,
 				self.toggle_on)
-			self.log.info("Initialized toggle_on_obj: " + str(self.toggle_on_obj1))
 		except ValueError as e:
 			self.log.error("ERROR: " + e)
 			raise e
@@ -101,7 +97,6 @@ class Toggle(Action):
 				Permission.EVERYONE, 
 				0,
 				self.toggle_on)
-			self.log.info("Initialized toggle_off_obj: " + str(self.toggle_off_obj1))
 		except ValueError as e:
 			self.log.error("ERROR: " + e)
 			raise e
@@ -115,7 +110,6 @@ class Toggle(Action):
 				Permission.EVERYONE, 
 				0,
 				self.toggle_off)
-			self.log.info("Initialized toggle_on_obj: " + str(self.toggle_on_obj2))
 		except ValueError as e:
 			self.log.error("ERROR: " + e)
 			raise e
@@ -129,7 +123,6 @@ class Toggle(Action):
 				Permission.EVERYONE, 
 				0,
 				self.toggle_off)
-			self.log.info("Initialized toggle_off_obj: " + str(self.toggle_off_obj2))
 		except ValueError as e:
 			self.log.error("ERROR: " + e)
 			raise e

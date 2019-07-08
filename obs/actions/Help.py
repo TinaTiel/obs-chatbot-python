@@ -6,13 +6,10 @@ from obs.Permission import Permission
 
 class Help(Action):
 
-	def __init__(self, obs_client):
-		"""Initializes this class
-		
-		Parameters:
-		command_list (List:string): List of command names and descriptions
+	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
+		"""Initializes this class, see Action.py
 		"""
-		super().__init__(obs_client, "help", [], "Show all the commands", Permission.EVERYONE, 0, None)
+		super().__init__(obs_client, command_name, aliases, description, permission, min_votes, args)
 		self.log = logging.getLogger(__name__)
 
 	def execute(self, user):

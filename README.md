@@ -62,10 +62,6 @@ You are now setup! See the documentation below on the commands you can configure
 ## Built-In Commands
 These commands are part of the bot itsself and cannot be disabled without changing the statements in startBot.py. 
 
-`!help`: lists all available custom commands defined in _config.json_, described below. Accessible to all viewers.
-
-`!say <sometext>`: Echos back the text provided. 
-
 `obsstatus`: Displays the status of the bot and connection to OBS. Only the broadcaster can execute this command.
 
 `reconnect`: Tries to reconnect the bot to OBS, up to three attempts. Only the broadcaster can execute this command. Can also be invoked as `reset` or `recover`.
@@ -91,6 +87,7 @@ This table below describes the `action`/`args` configurations available. If the 
 
 | action | What This Does | mandatory args | optional args |
 |--------|----------------|----------------|---------------|
+| Help | Responds in chat with each available command that has been configured (one message per command since IRC doesn't natively support newlines in a single chat message) | (none) | (none) |
 | ShowScene | Changes to a scene permanently | `scene` (string): The scene to switch to | `duration` (integer): Seconds to show the scene. Permanent if not specified. |
 | ShowSource / HideSource | Shows/Hides a scene item for a specified duration. Defaults to the item in the current scene unless parent scene is specified | `source` (string or list): The source to show/hide. If provided as a list, then `pick_from_group` is ignored and a scene is picked randomly from the specified list. | `scene` (string): The scene the scene item is nested in. Depth/nesting does not matter; if a scene is included in another scene, the item will still be shown/hidden. <br> `duration` (integer): Seconds to show/hide the scene source. Permanent if not specified. <br> `pick_from_group` (true/false): If `true`, then it treats the specified source as a group, picking a child source from the group to show/hide <br> **If this doesn't behave correctly after adding/removes groups/sources in OBS** try restarting OBS to clear OBS's cache. |
 | Say | Says a series of texts in chat, in order | `messages` (list): List of messages to say in chat <br> **If this fails** after one message then verifiy your chat bot has been granted moderator permissions in your broadcaster channel. | (none) |

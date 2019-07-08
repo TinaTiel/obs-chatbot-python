@@ -16,14 +16,6 @@ class ObsCommandBot(TwitchBot):
 				if(self.log.getEffectiveLevel() == logging.DEBUG):
 					self._pretty_log_dict(cmd)
 
-				if cmd["action"] == "say":
-						if cmd["args"]:
-								self.twitch_say(cmd["args"])
-						else:
-								self.twitch_say("What do you want me to say?")
-				else:
-						self.obs_client.execute(cmd["user"], cmd["action"])
-
 				if cmd['action'] == "obsstatus":
 					if cmd['user']['broadcaster'] == True:
 						self._report_status(cmd)
@@ -35,8 +27,10 @@ class ObsCommandBot(TwitchBot):
 							self._report_status(cmd)
 						else:
 							self.twitch_say("Could not recover @{}, ensure OBS Websockets is available and restart the bot.".format(self.broadcaster))
-				
-				#self.twitch_failed() # Always "fail" so cooldown timer is not used.
+
+				# Finally just execute the command specified against the OBS client
+				else:
+						self.obs_client.execute(cmd["user"], cmd["action"])
 
 		def _report_status(self, cmd):
 			obs_status = self.obs_client.getVersion()
