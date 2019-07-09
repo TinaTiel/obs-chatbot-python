@@ -2,15 +2,15 @@
 	"log_level": "INFO",
 	"twitch": {
 		"server" : "irc.chat.twitch.tv",
-    "port": 6697,
-    "username": "botusername",
-    "chat_token": "abcdefghijklmnopqrstuvwxyz1234",
-    "channel": "#broadcasterusername",
-    "cooldown": 0.5,
-    "timeout": 5.0,
-    "api_client_id": "abcdefghijklmnopqrstuvwxyz1234",
-    "api_client_secret": "abcdefghijklmnopqrstuvwxyz1234",
-    "no_cooldown": ["sayhi"]
+    		"port": 6697,
+   		"username": "botusername",
+    		"chat_token": "abcdefghijklmnopqrstuvwxyz1234",
+    		"channel": "#broadcasterusername",
+    		"cooldown": 0.5,
+    		"timeout": 5.0,
+    		"api_client_id": "abcdefghijklmnopqrstuvwxyz1234",
+    		"api_client_secret": "abcdefghijklmnopqrstuvwxyz1234",
+    		"no_cooldown": ["obstatus"]
 	},
 	"obs": {
 		"host": "localhost",
