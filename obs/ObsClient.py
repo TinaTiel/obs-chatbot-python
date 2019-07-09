@@ -23,7 +23,7 @@ class ObsClient:
 		to a class in the actions package, which is dynamically loaded if configured
 		correctly.
 		"""
-
+		command_name = command_name.lower()
 		# Verify if the command exists
 		command = self.commands.get(command_name, None)
 		if(command is None):
@@ -106,7 +106,10 @@ class ObsClient:
 		for command in self.conf_commands:
 			
 			# Verify the necessary config elements exist at all
-			command_name = command.get('name', "unknown")
+			disabled = command.get('disabled', False) # Disabled is optional, defaults to False
+			if(disabled == True):
+				continue;
+			command_name = command.get('name', "unknown").lower()
 			description = command.get('description', "")
 			permission_str = command.get('permission', None)
 			action = command.get('action', None)

@@ -69,6 +69,8 @@ These commands are part of the bot itsself and cannot be disabled without changi
 ## Custom Commands
 Custom command can be configured by you, the broadcaster, to make OBS respond in any number of ways. The configuration file `config.json` includes several examples of commands that can be configured, and the elements of a command are described below: 
 
+`disabled` (optional): When `true` then the command is not made available. Default is `false` if not provided.
+
 `name`: Name of the chat command a viewer would type (**_without the `!`_**). For example, if an user types _!hype_ then there must exist a command with the name _hype_.
 
 `description`: Description for the chat command; used in the !help command, and displayed during votes. 
