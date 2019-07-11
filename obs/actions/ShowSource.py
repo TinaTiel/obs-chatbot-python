@@ -28,9 +28,16 @@ class ShowSource(Action):
 			return False
 		
 		# finally execute the command
-		# show the scene
-		choice = random.choice(self.pickable_items)
+		
+		# get the random choice if applicable
+		if(len(self.pickable_items) == 0):
+			self.pickable_items = self.picked_items
+			self.picked_items = []
 
+		choice = self.pickable_items.pop(random.randrange(len(self.pickable_items)))
+		self.picked_items.append(choice)
+
+		# show the scene
 		res = self.obs_client.client.call(obswebsocket.requests.SetSceneItemRender(choice, True, self.scene))
 		if(res.status == False):
 			self.log.warn("Could not show scene item {}! Error: {}".format(choice, res.datain['error']))
@@ -81,6 +88,7 @@ class ShowSource(Action):
 			self.pickable_items = self.source
 			return
 
+		self.picked_items = []
 		self.pickable_items = [self.source]
 		if(self.pick_from_group):
 			self.log.debug("Command {}: Group picking enabled".format(self.command_name))
