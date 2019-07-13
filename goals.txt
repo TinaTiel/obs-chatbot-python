@@ -1,0 +1,12 @@
+GOALS 
+Testing
+ - Gherkin / Behave
+ - Mocking obs-websockets
+ - Mocking twitch/chatbot
+Composability
+ - Move Permissions to their own class
+ - Move Voting to their own class
+Don't Repeat Yourself / DRY
+ - ActionFactory
+Secrets
+ - Move secrets out of config.json
