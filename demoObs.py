@@ -4,12 +4,22 @@ import json
 import logging
 import logging.config
 
+class MockObsClient(ObsClient):
+	def _connect(self):
+		pass
+
+	def disconnect(self):
+		pass
+
+	def reconnect(self):
+		pass
+
 class MockTwitchBot():
 	def __init__(self, obs_config, twitch_config):
 		self.log = logging.getLogger(__name__)
 		self.obs_config = obs_config
 		self.twitch_config = twitch_config
-		self.obs_client = ObsClient(obs_config, self)
+		self.obs_client = MockObsClient(obs_config, self)
 
 	def twitch_say(self, message):
 		self.log.debug("Twitch Bot: recieved say '{}'".format(message))
@@ -97,6 +107,7 @@ def main():
 	# Set logging and get configuration information
 	logging.basicConfig(level=logging.DEBUG)
 	log = logging.getLogger(__name__)
+	logging.getLogger("obswebsocket").setLevel(logging.ERROR) # OBS websocket Core is spammy
 
 	with open('config.json', encoding='utf-8') as json_file:
 		try:
@@ -123,7 +134,7 @@ def main():
 	#testbot.obs_client.execute(broadcaster, 'birb')
 	#testbot.obs_client.execute(user1, 'tiel') #alias for birb
 	#testbot.obs_client.execute(broadcaster, 'help')
-	testbot.obs_client.execute(broadcaster, 'chain')
+	testbot.obs_client.execute(broadcaster, 'birb')
 
 	#testbot.obs_client.execute(broadcaster, 'letschat')
 	#testbot.obs_client.execute(broadcaster, 'letsplay')

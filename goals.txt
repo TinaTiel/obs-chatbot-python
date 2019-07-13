@@ -10,3 +10,9 @@ Don't Repeat Yourself / DRY
  - ActionFactory
 Secrets
  - Move secrets out of config.json
+Features
+ - on-demand disable/enabled
+ - on-demand reload config
+ - progressive voting
+ - voting feature
+ - String arg parsing

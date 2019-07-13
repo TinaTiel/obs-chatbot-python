@@ -52,27 +52,27 @@ class Action:
 			self.log.debug("Command {}: All votes received".format(self.command_name))
 			return True
 
-	def _has_permission(self, user):
-		"""Gets the permission level of a given user and 
-		checks if their permission is at least the required permission. 
-		See the Permission class; MODERATOR > SUBSCRIBER > FOLLOWER > EVERYONE
-		"""
-		# First determine the user's permision level
-		if(user['broadcaster']):
-			user_permission = Permission.BROADCASTER
-		elif(user['moderator']):
-			user_permission = Permission.MODERATOR
-		elif(user['subscriber']):
-			user_permission = Permission.SUBSCRIBER
-		elif(user['follower']):
-			user_permission = Permission.FOLLOWER
-		else:
-			user_permission = Permission.EVERYONE
+	# def _has_permission(self, user):
+	# 	"""Gets the permission level of a given user and 
+	# 	checks if their permission is at least the required permission. 
+	# 	See the Permission class; MODERATOR > SUBSCRIBER > FOLLOWER > EVERYONE
+	# 	"""
+	# 	# First determine the user's permision level
+	# 	if(user['broadcaster']):
+	# 		user_permission = Permission.BROADCASTER
+	# 	elif(user['moderator']):
+	# 		user_permission = Permission.MODERATOR
+	# 	elif(user['subscriber']):
+	# 		user_permission = Permission.SUBSCRIBER
+	# 	elif(user['follower']):
+	# 		user_permission = Permission.FOLLOWER
+	# 	else:
+	# 		user_permission = Permission.EVERYONE
 		
-		result = user_permission >= self.permission
-		self.log.debug("User '{}' has permission {} and required permission is {}. Operation Allowed: {}".format(user['name'], user_permission, self.permission, result))
+	# 	result = user_permission >= self.permission
+	# 	self.log.debug("User '{}' has permission {} and required permission is {}. Operation Allowed: {}".format(user['name'], user_permission, self.permission, result))
 
-		return result
+	# 	return result
 
 	def _twitch_say(self, message):
 		self.obs_client.twitch_bot.twitch_say(message)

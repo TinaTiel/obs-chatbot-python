@@ -1,2 +1,1 @@
-obs-websocket-py==0.4
-irc==17.1
+-r requirements/common.txt

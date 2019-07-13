@@ -4,6 +4,7 @@ import logging
 import time
 from importlib import import_module
 from obs.Permission import Permission
+from obs.Permissable import Permissable
 #from obs.actions.Help import Help
 
 class ObsClient:
@@ -132,10 +133,10 @@ class ObsClient:
 				self.log.debug("Command '{}': minimum votes is {}".format(command_name, min_votes))
 
 			try:
-				permission = Permission[permission_str]
-				self.log.debug("Command '{}': permission is {}".format(command_name, permission))
+				permissable = Permissable(permission_str)
+				self.log.debug("Command '{}': permission is {}".format(command_name, permissable))
 			except Exception as e:
-				self.log.warn("Command '{}': Error, permission string '{}' is invalid, must be one of: {}".format(command_name, permission_str, Permission.__members__))
+				self.log.warn("Command '{}': {}".format(command_name, e))
 				continue
 
 			# Try to get the corresponding action class
@@ -150,7 +151,7 @@ class ObsClient:
 			# Try to instantiate the action class
 			try:
 				self.log.debug("Command {}: args are: {}".format(command_name, args))
-				command_obj = class_(self, command_name, aliases, description, permission, min_votes, args)
+				command_obj = class_(self, command_name, aliases, description, permissable, min_votes, args)
 			except ValueError as e:
 				self.log.warn(e)
 				continue
