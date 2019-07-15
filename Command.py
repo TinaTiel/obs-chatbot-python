@@ -12,8 +12,9 @@ class Command():
 
 	def execute(self, user, args):
 		# If not permitted, fail immediately
+
 		if(not self._permit(user)):
-			return Result(State.FAILURE)
+			return Result(State.FAILURE, ["Failed restrictions"])
 
 		# Parse the args
 		results = []
@@ -65,3 +66,4 @@ class Result():
 class State(Enum):
 	FAILURE = 1
 	SUCCESS = 2
+	WORKING = 3
