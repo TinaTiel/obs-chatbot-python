@@ -15,4 +15,16 @@ class RestrictionUserStatus(Restriction):
 		self.min_permission = min_permission
 
 	def permit(self, user):
-		pass
+
+		if(user.broadcaster):
+			user_status = Permission.BROADCASTER
+		elif(user.moderator):
+			user_status = Permission.MODERATOR
+		elif(user.subscriber):
+			user_status = Permission.SUBSCRIBER
+		elif(user.follower):
+			user_status = Permission.FOLLOWER
+		else:
+			user_status = Permission.EVERYONE
+
+		return user_status >= self.min_permission
