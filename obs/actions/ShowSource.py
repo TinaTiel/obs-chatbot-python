@@ -6,10 +6,10 @@ from obs.actions.Action import Action
 
 class ShowSource(Action):
 
-	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
+	def __init__(self, obs_client, command_name, aliases, description, permissable, votable, args):
 		"""Initializes this class, see Action.py
 		"""
-		super().__init__(obs_client, command_name, aliases, description, permission, min_votes, args)
+		super().__init__(obs_client, command_name, aliases, description, permissable, votable, args)
 		self.log = logging.getLogger(__name__)
 		self._init_args(args)
 
@@ -20,8 +20,8 @@ class ShowSource(Action):
 
 		# Check user permissions and votes
 		if(not (
-			self._has_permission(user) 
-			and self._has_enough_votes(user) 
+			self.permissable.has_permission(user) 
+			and self.votable.has_enough_votes(user) 
 			)
 		):
 			self._twitch_failed()
@@ -92,10 +92,13 @@ class ShowSource(Action):
 		self.pickable_items = [self.source]
 		if(self.pick_from_group):
 			self.log.debug("Command {}: Group picking enabled".format(self.command_name))
-			source_settings = self.obs_client.client.call(obswebsocket.requests.GetSourceSettings(self.source))
-			if(source_settings):
-				self.log.debug("Command {}: Found source settings on source {}: {}".format(self.command_name, self.source, source_settings))
-				items = source_settings.getSourcesettings().get('items', None)
-				if(items and len(items)>0): #If this is incorrect, restart OBS
-					self.pickable_items = list(map(lambda item: item.get('name'), items)) 
+			try:
+				source_settings = self.obs_client.client.call(obswebsocket.requests.GetSourceSettings(self.source))
+				if(source_settings is not None):
+					self.log.debug("Command {}: Found source settings on source {}: {}".format(self.command_name, self.source, source_settings))
+					items = source_settings.getSourcesettings().get('items', None)
+					if(items and len(items)>0): #If this is incorrect, restart OBS
+						self.pickable_items = list(map(lambda item: item.get('name'), items))
+			except Exception as e:
+				raise ValueError("Command {}: Could not get source settings for source '{}' in scene '{}'.".format(self.command_name, self.source, self.scene))
 		self.log.debug("Command {}: Pickable items are: {}".format(self.command_name, self.pickable_items))

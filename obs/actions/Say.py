@@ -6,10 +6,10 @@ from obs.Permission import Permission
 
 class Say(Action):
 
-	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
+	def __init__(self, obs_client, command_name, aliases, description, permissable, votable, args):
 		"""Initializes this class, see Action.py
 		"""
-		super().__init__(obs_client, command_name, aliases, description, permission, min_votes, args)
+		super().__init__(obs_client, command_name, aliases, description, permissable, votable, args)
 		self.log = logging.getLogger(__name__)
 		self._init_args(args)
 
@@ -18,8 +18,8 @@ class Say(Action):
 		"""
 		# Check user permissions and votes
 		if(not (
-			self._has_permission(user) 
-			and self._has_enough_votes(user) 
+			self.permissable.has_permission(user) 
+			and self.votable.has_enough_votes(user) 
 			)
 		):
 			self._twitch_failed()

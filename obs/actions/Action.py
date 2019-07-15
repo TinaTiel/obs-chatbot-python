@@ -5,7 +5,7 @@ from obs.Permission import Permission
 
 class Action:
 
-	def __init__(self, obs_client, command_name, aliases, description, permission, min_votes, args):
+	def __init__(self, obs_client, command_name, aliases, description, permissable, votable, args):
 		"""Initializes this class
 		
 		Parameters:
@@ -22,9 +22,11 @@ class Action:
 		self.command_name = command_name
 		self.aliases = aliases
 		self.description = description
-		self.permission = permission
-		self.min_votes = min_votes
-		self.votes = set()
+		self.permissable = permissable
+		self.votable = votable
+		#self.permission = permission
+		#self.min_votes = min_votes
+		#self.votes = set()
 
 	def execute(self, user):
 		raise NotImplementedError("The action isn't defined!")
@@ -32,25 +34,25 @@ class Action:
 	def _init_args(self, args):
 		raise NotImplementedError("The action isn't defined!")
 
-	def _has_enough_votes(self, user):
+	# def _has_enough_votes(self, user):
 
-		# short-circuit the whole check if the user is the broadcaster or mod
-		if(user['broadcaster'] or user['moderator']):
-			self.log.debug("Command {}: Skipping votes, {} is a moderator or broadcaster".format(self.command_name, user['name']))
-			return True
+	# 	# short-circuit the whole check if the user is the broadcaster or mod
+	# 	if(user['broadcaster'] or user['moderator']):
+	# 		self.log.debug("Command {}: Skipping votes, {} is a moderator or broadcaster".format(self.command_name, user['name']))
+	# 		return True
 
-		# otherwise, add the user to the vote list and determine if enough votes
-		self.votes.add(user['name'])
-		votes_received = len(self.votes)
-		if(not votes_received >= self.min_votes):
-			self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, votes_received, self.min_votes))
-			remaining_votes = self.min_votes - votes_received
-			self._twitch_say("{} votes to {} Will {} more join them? (!{})".format(user['name'], self.description, remaining_votes, self.command_name))
-			return False
-		else:
-			self.votes = set()
-			self.log.debug("Command {}: All votes received".format(self.command_name))
-			return True
+	# 	# otherwise, add the user to the vote list and determine if enough votes
+	# 	self.votes.add(user['name'])
+	# 	votes_received = len(self.votes)
+	# 	if(not votes_received >= self.min_votes):
+	# 		self.log.debug("Command {}: Insufficient votes, {} received of {} required.".format(self.command_name, votes_received, self.min_votes))
+	# 		remaining_votes = self.min_votes - votes_received
+	# 		self._twitch_say("{} votes to {} Will {} more join them? (!{})".format(user['name'], self.description, remaining_votes, self.command_name))
+	# 		return False
+	# 	else:
+	# 		self.votes = set()
+	# 		self.log.debug("Command {}: All votes received".format(self.command_name))
+	# 		return True
 
 	# def _has_permission(self, user):
 	# 	"""Gets the permission level of a given user and 
