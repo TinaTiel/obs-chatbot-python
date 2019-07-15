@@ -13,7 +13,7 @@ class TestCommands(unittest.TestCase):
 		'''
 		A Command having no restrictions always executes
 		'''
-		user = User()
+		user = User("foo")
 		action = Action()
 		action.execute = MagicMock()
 
@@ -32,7 +32,7 @@ class TestCommands(unittest.TestCase):
 		'''
 		A Command having all passing restrictions executes
 		'''
-		user = User()
+		user = User("foo")
 		action = Action()
 		action.execute = MagicMock()
 
@@ -53,7 +53,7 @@ class TestCommands(unittest.TestCase):
 		'''
 		A Command having any failing restriction doesn't execute
 		'''
-		user = User()
+		user = User("foo")
 		action = Action()
 		action.execute = MagicMock()
 
@@ -78,7 +78,7 @@ class TestCommands(unittest.TestCase):
 		and can be grouped by quotes
 		'''
 		# Given a command with many actions
-		user = User()
+		user = User("foo")
 		restriction = Restriction()
 		action = Action()
 		action.execute = MagicMock()
@@ -97,7 +97,7 @@ class TestCommands(unittest.TestCase):
 			No arguments can be supplied
 			'''
 			# Given a command with many actions
-			user = User()
+			user = User("foo")
 			restriction = Restriction()
 			action = Action()
 			action.execute = MagicMock()

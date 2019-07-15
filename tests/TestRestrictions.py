@@ -7,11 +7,11 @@ from Permission import *
 class TestRestrictions(unittest.TestCase):
 
 	def setUp(self):
-		self.user_public = User()
-		self.user_follower = User(follower=True)
-		self.user_subscriber = User(subscriber=True)
-		self.user_moderator = User(moderator=True)
-		self.user_broadcaster = User(broadcaster=True)
+		self.user_public = User("public")
+		self.user_follower = User(username="follower", follower=True)
+		self.user_subscriber = User(username="subscriber", subscriber=True)
+		self.user_moderator = User(username="moderator", moderator=True)
+		self.user_broadcaster = User(username="broadcaster", broadcaster=True)
 
 	def test_restriction_userStatus_Everyone(self):
 		'''
@@ -27,19 +27,67 @@ class TestRestrictions(unittest.TestCase):
 		self.assertTrue(restriction.permit(self.user_moderator))
 		self.assertTrue(restriction.permit(self.user_broadcaster))
 
-	# def test_restriction_userStatus_Follower(self):
-	# 	self.assertTrue(False) 
+	def test_restriction_userStatus_Follower(self):
+		# Given a restriction to followers
+		restriction = RestrictionUserStatus(Permission.FOLLOWER)
 
-	# def test_restriction_userStatus_Subscriber(self):
-	# 	self.assertTrue(False) 
+		# Only followers and above are permitted
+		self.assertFalse(restriction.permit(self.user_public))
+		self.assertTrue(restriction.permit(self.user_follower))
+		self.assertTrue(restriction.permit(self.user_subscriber))
+		self.assertTrue(restriction.permit(self.user_moderator))
+		self.assertTrue(restriction.permit(self.user_broadcaster))
 
-	# def test_restriction_userStatus_Moderator(self):
-	# 	self.assertTrue(False) 
+	def test_restriction_userStatus_Subscriber(self):
+		# Given a restriction to subscribers
+		restriction = RestrictionUserStatus(Permission.SUBSCRIBER)
 
-	# def test_restriction_userStatus_Broadcaster(self):
-	# 	self.assertTrue(False) 
+		# Only subscribers and above are permitted
+		self.assertFalse(restriction.permit(self.user_public))
+		self.assertFalse(restriction.permit(self.user_follower))
+		self.assertTrue(restriction.permit(self.user_subscriber))
+		self.assertTrue(restriction.permit(self.user_moderator))
+		self.assertTrue(restriction.permit(self.user_broadcaster))
 
-	# def test_restriction_voting(self):
+	def test_restriction_userStatus_Moderator(self):
+		# Given a restriction to moderators
+		restriction = RestrictionUserStatus(Permission.MODERATOR)
+
+		# Only moderators and above are permitted
+		self.assertFalse(restriction.permit(self.user_public))
+		self.assertFalse(restriction.permit(self.user_follower))
+		self.assertFalse(restriction.permit(self.user_subscriber))
+		self.assertTrue(restriction.permit(self.user_moderator))
+		self.assertTrue(restriction.permit(self.user_broadcaster))
+
+	def test_restriction_userStatus_Broadcaster(self):
+		# Given a restriction to broadcaster
+		restriction = RestrictionUserStatus(Permission.BROADCASTER)
+
+		# Only broadcaster is permitted
+		self.assertFalse(restriction.permit(self.user_public))
+		self.assertFalse(restriction.permit(self.user_follower))
+		self.assertFalse(restriction.permit(self.user_subscriber))
+		self.assertFalse(restriction.permit(self.user_moderator))
+		self.assertTrue(restriction.permit(self.user_broadcaster))
+
+	def test_restriction_voting_uniques(self):
+		# Given vote restriction with unique votes required
+		restriction = RestrictionVoting(5)
+
+		# When the same user votes multiple times
+		self.assertEqual(False, restriction.permit(self.user_public))
+		self.assertEqual(False, restriction.permit(self.user_public))
+		self.assertEqual(False, restriction.permit(self.user_public))
+
+		# Then all those votes are counted
+		self.assertEqual(3, restriction.votes)
+
+		# And permit is True only after the min votes are met
+		self.assertEqual(False, restriction.permit(self.user_public))
+		self.assertEqual(True, restriction.permit(self.user_public))
+
+	# def test_restriction_voting_duplicates(self):
 	# 	self.assertTrue(False)
 
 	# def test_restriction_userPoints(self):

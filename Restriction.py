@@ -28,3 +28,16 @@ class RestrictionUserStatus(Restriction):
 			user_status = Permission.EVERYONE
 
 		return user_status >= self.min_permission
+
+class RestrictionVoting(Restriction):
+	def __init__(self, min_votes, uniques=True):
+		if(not isinstance(min_votes, int) or min_votes < 0):
+			raise ValueError("Minimum votes must be greater than 0!")
+		self.min_votes = min_votes
+		self.uniques = uniques
+
+	def votes(self):
+		pass
+
+	def permit(self, user):
+		pass
