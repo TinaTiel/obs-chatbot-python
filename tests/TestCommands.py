@@ -11,8 +11,7 @@ class TestCommands(unittest.TestCase):
 
 	def test_restrictions_none(self):
 		'''
-		A Command can have any number of restrictions, which either
-		succeed or fail. If any fails, then the command doesn't execute.
+		A Command having no restrictions always executes
 		'''
 		user = User()
 		action = Action()
@@ -31,8 +30,7 @@ class TestCommands(unittest.TestCase):
 
 	def test_restrictions_passing(self):
 		'''
-		A Command can have any number of restrictions, which either
-		succeed or fail. If any fails, then the command doesn't execute.
+		A Command having all passing restrictions executes
 		'''
 		user = User()
 		action = Action()
@@ -53,8 +51,7 @@ class TestCommands(unittest.TestCase):
 
 	def test_restrictions_failing(self):
 		'''
-		A Command can have any number of restrictions, which either
-		succeed or fail. If any fails, then the command doesn't execute.
+		A Command having any failing restriction doesn't execute
 		'''
 		user = User()
 		action = Action()
@@ -97,8 +94,7 @@ class TestCommands(unittest.TestCase):
 
 	def test_actions_no_args(self):
 			'''
-			Arguments are separated by spaces
-			and can be grouped by quotes
+			No arguments can be supplied
 			'''
 			# Given a command with many actions
 			user = User()
