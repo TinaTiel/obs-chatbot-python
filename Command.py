@@ -1,4 +1,5 @@
 from enum import Enum
+import shlex
 
 class Command():
 
@@ -10,8 +11,11 @@ class Command():
 
 	def execute(self, user, args):
 		results = []
+		args_list = []
+		if(args is not None):
+			args_list = shlex.split(args)
 		for action in self.actions:
-			results.append(action.execute(user, args.split(" ")))
+			results.append(action.execute(user, args_list))
 		return results
 
 

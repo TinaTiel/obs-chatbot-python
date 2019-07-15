@@ -246,5 +246,5 @@ And in a Chain command:
 # Testing
 ```
 pip install -r requirements/dev.txt
-python -m unittest discover tests
+python -m unittest discover tests -v
 ```
