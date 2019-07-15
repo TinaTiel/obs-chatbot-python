@@ -34,7 +34,10 @@ class Command():
 		return Result(State.SUCCESS, results)
 
 	def _permit(self, user):
-		pass
+		for restriction in self.restrictions:
+			if not restriction.permit(user):
+				return False
+		return True
 
 
 class Action():
