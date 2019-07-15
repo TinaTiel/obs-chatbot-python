@@ -28,7 +28,7 @@ class Action():
 		return Result.SUCCESS
 
 
-class Resriction():
+class Restriction():
 	pass
 
 

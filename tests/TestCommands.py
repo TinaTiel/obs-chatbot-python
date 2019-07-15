@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import *
 from Command import *
+from User import *
 
 class TestCommands(unittest.TestCase):
 
@@ -13,9 +14,11 @@ class TestCommands(unittest.TestCase):
 		and can be grouped by quotes
 		'''
 		# Given a command with many actions
+		user = User()
+		restriction = Restriction()
 		action = Action()
 		action.execute = MagicMock()
-		command = Command("test", "descr", [action, action, action], None)
+		command = Command("test", "descr", [action, action, action], restriction)
 		self.assertEqual(3, len(command.actions))
 		
 		# When the command is executed with many args
