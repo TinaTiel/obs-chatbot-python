@@ -6,8 +6,8 @@ class Command():
 	def __init__(self, name, description, actions, restrictions):
 		self.name = name
 		self.description = description
-		self.actions = actions
-		self.restrictions = restrictions
+		self.actions = actions if isinstance(actions, list) else []
+		self.restrictions = restrictions if isinstance(restrictions, list) else []
 
 	def execute(self, user, args):
 		results = []
@@ -25,7 +25,7 @@ class Action():
 		pass
 
 	def execute(self, user, args):
-		return Result.SUCCESS
+		pass
 
 
 class Restriction():
