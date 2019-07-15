@@ -71,23 +71,29 @@ class TestRestrictions(unittest.TestCase):
 		self.assertFalse(restriction.permit(self.user_moderator))
 		self.assertTrue(restriction.permit(self.user_broadcaster))
 
-	def test_restriction_voting_uniques(self):
+	def test_restriction_voting_duplicates(self):
 		# Given vote restriction with unique votes required
-		restriction = RestrictionVoting(5)
+		restriction = RestrictionVoting(5, False)
 
 		# When the same user votes multiple times
-		self.assertEqual(False, restriction.permit(self.user_public))
-		self.assertEqual(False, restriction.permit(self.user_public))
-		self.assertEqual(False, restriction.permit(self.user_public))
+		self.assertFalse(restriction.permit(self.user_public))
+		self.assertFalse(restriction.permit(self.user_public))
+		self.assertFalse(restriction.permit(self.user_public))
 
 		# Then all those votes are counted
-		self.assertEqual(3, restriction.votes)
+		self.assertEqual(3, len(restriction.votes))
 
-		# And permit is True only after the min votes are met
-		self.assertEqual(False, restriction.permit(self.user_public))
-		self.assertEqual(True, restriction.permit(self.user_public))
+		# And permit is True only after the min votes are met, then votes reset
+		self.assertFalse(restriction.permit(self.user_public))
+		self.assertEqual(4, len(restriction.votes))
+		
+		self.assertTrue(restriction.permit(self.user_public))
+		self.assertEqual(0, len(restriction.votes))
 
-	# def test_restriction_voting_duplicates(self):
+		# And vote count resets after passing min votes
+
+
+	# def test_restriction_voting_uniques(self):
 	# 	self.assertTrue(False)
 
 	# def test_restriction_userPoints(self):

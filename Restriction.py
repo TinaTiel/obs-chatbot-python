@@ -35,9 +35,24 @@ class RestrictionVoting(Restriction):
 			raise ValueError("Minimum votes must be greater than 0!")
 		self.min_votes = min_votes
 		self.uniques = uniques
-
-	def votes(self):
-		pass
+		self._reset_votes()
 
 	def permit(self, user):
-		pass
+		self._add_vote(user)
+		if(len(self.votes) >= self.min_votes):
+			self._reset_votes()
+			return True
+		else:
+			return False
+
+	def _reset_votes(self):
+		if(self.uniques):
+			self.votes = set()
+		else:
+			self.votes = list()
+
+	def _add_vote(self, user):
+		if(isinstance(self.votes, list)):
+			self.votes.append(user.username)
+		else:
+			self.votes.add(user.username)
