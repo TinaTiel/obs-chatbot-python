@@ -242,3 +242,9 @@ And in a Chain command:
 `twitch.timeout`: If a command does not internally call `self._twitch_done()` or `self._twitch_failed()` this is the amount of time (seconds) the chatbot will wait. Therefore, if you anticipate some commands may take a long time to execute then you may want to set this to a higher value otherwise your command may be interrupted.
 
 `twitch.no_cooldown`: List of commands such as _help_ that should never have cooldown / can be spammed as frequently as viewers want.
+
+# Testing
+```
+pip install -r requirements/dev.txt
+behave
+```
