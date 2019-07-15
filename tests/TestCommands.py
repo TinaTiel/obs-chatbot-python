@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import *
 from Command import *
 from User import *
+from Restriction import *
 
 class TestCommands(unittest.TestCase):
 

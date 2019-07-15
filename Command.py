@@ -50,13 +50,6 @@ class Action():
 		pass
 
 
-class Restriction():
-	def __init__(self):
-		pass
-
-	def permit(self, user):
-		pass
-
 class Result():
 	def __init__(self, state, messages=[]):
 		self.state = state
