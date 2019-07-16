@@ -20,6 +20,6 @@ class TestManagers(unittest.TestCase):
 		# Otherwise if all are required
 		# No errors occur
 		try:
-			command_manager.register({'name': 'foo', 'requirements': [], 'actions': []})
+			command_manager.register({'name': 'foo', 'actions': [], 'restrictions': [] })
 		except ValueError:
 			self.fail("command manager register() failed unexpectedly!")
