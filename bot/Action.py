@@ -12,3 +12,6 @@ class Action():
 		for restriction in restrictions:
 			self.restrictions.append(restriction)
 			restriction.action = self
+
+	def _execute(self, user, args):
+		pass
