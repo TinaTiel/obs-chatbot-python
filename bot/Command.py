@@ -1,5 +1,5 @@
-from enum import Enum
 import shlex
+from bot.Result import *
 
 class Command():
 
@@ -51,15 +51,3 @@ class Command():
 			if not restriction.permit(user):
 				return False
 		return True
-
-
-class Result():
-	def __init__(self, state, messages=[]):
-		self.state = state
-		self.messages = messages
-
-
-class State(Enum):
-	FAILURE = 1
-	SUCCESS = 2
-	WORKING = 3
