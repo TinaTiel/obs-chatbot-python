@@ -53,15 +53,6 @@ class Command():
 		return True
 
 
-class Action():
-
-	def __init__(self):
-		pass
-
-	def execute(self, user, args):
-		pass
-
-
 class Result():
 	def __init__(self, state, messages=[]):
 		self.state = state
