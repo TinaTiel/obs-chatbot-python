@@ -1,8 +1,6 @@
 import unittest
 from unittest.mock import *
-from bot.User import *
-from bot.Restriction import *
-from bot.Permission import *
+from bot import *
 
 class TestRestrictions(unittest.TestCase):
 
@@ -143,3 +141,21 @@ class TestRestrictions(unittest.TestCase):
 
 		# But an user belonging to the whitelist is allowed
 		self.assertTrue(restriction.permit(User("foo")))
+
+	def test_progressive_voting(self):
+		'''
+		Sometimes we may want to have a series of votes for the same command
+		for example at each stage something happens and it build up to a finale
+		'''
+
+		# Given a command with actions
+		action1 = Action()
+		action2 = Action()
+		action3 = Action()
+		restriction = RestrictionProgressiveVoting([2,2,2])
+		command = Command("buildup", "progressive voting!", [action1,action2,action3], [restriction])
+
+		# And a restriction (allowing duplicates for simplicity here)
+
+		# Then as votes accumulate, actions execute each once in that order
+

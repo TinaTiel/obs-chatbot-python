@@ -78,9 +78,13 @@ class TestCommands(unittest.TestCase):
 		# Given a command with many actions
 		user = User("foo")
 		restriction = Restriction()
-		action = Action()
-		action.execute = MagicMock()
-		command = Command("name", "descr", ["alias"], [action, action, action], restriction)
+		action1 = Action()
+		action2 = Action()
+		action3 = Action()
+		action1.execute = MagicMock()
+		action2.execute = MagicMock()
+		action3.execute = MagicMock()
+		command = Command("name", "descr", ["alias"], [action1, action2, action3], restriction)
 		self.assertEqual(3, len(command.actions))
 		
 		# When the command is executed with many args
@@ -97,9 +101,13 @@ class TestCommands(unittest.TestCase):
 			# Given a command with many actions
 			user = User("foo")
 			restriction = Restriction()
-			action = Action()
-			action.execute = MagicMock()
-			command = Command("name", "descr", ["alias"], [action, action, action], restriction)
+			action1 = Action()
+			action2 = Action()
+			action3 = Action()
+			action1.execute = MagicMock()
+			action2.execute = MagicMock()
+			action3.execute = MagicMock()
+			command = Command("name", "descr", ["alias"], [action1, action2, action3], restriction)
 			self.assertEqual(3, len(command.actions))
 			
 			# When the command is executed with no args

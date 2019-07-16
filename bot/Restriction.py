@@ -9,7 +9,7 @@ class Restriction():
 
 class RestrictionUserStatus(Restriction):
 	'''
-	Restriction is based on user status
+	Restriction is based on user status in Twitch
 	'''
 	def __init__(self, min_permission=Permission.BROADCASTER):
 		self.min_permission = min_permission
@@ -57,6 +57,7 @@ class RestrictionVoting(Restriction):
 		else:
 			self.votes.add(user.username)
 
+
 class RestrictionWhitelist(Restriction):
 	def __init__(self, whitelist):
 		if(not isinstance(whitelist, list)):
@@ -65,3 +66,10 @@ class RestrictionWhitelist(Restriction):
 
 	def permit(self, user):
 		return user.username in self.whitelist
+
+class RestrictionProgressiveVoting():
+	def __init__(self, vote_mins):
+		pass
+
+	def permit(self, user):
+		pass
