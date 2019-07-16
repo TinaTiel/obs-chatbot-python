@@ -100,6 +100,32 @@ class TestCommands(unittest.TestCase):
 		self.assertEqual(State.FAILURE, result)
 		commandFail.actions[0].execute.assert_not_called()
 
+	def test_any_failing_action_causes_command_failure(self):
+		'''
+		If any command fails during execution then the command as a whole should fail
+		'''
+		# Given a command with several actions
+
+		actionPass1 = Action()
+		actionPass1.execute = MagicMock(return_value=Result(State.SUCCESS))
+
+		actionFail = Action()
+		actionFail.execute = MagicMock(return_value=Result(State.FAILURE))
+
+		actionPass2 = Action()
+		actionPass2.execute = MagicMock(return_value=Result(State.SUCCESS))
+
+		command = Command("name", "descr", ["alias"], [actionPass1, actionFail, actionPass2], None)
+
+		# When executed with a failing action
+		result = command.execute(User("foo"), None)
+
+		# Then the command reports a failure and only the first two commands executed
+		self.assertEqual(State.FAILURE, result.state)
+		actionPass1.execute.assert_called_once()
+		actionFail.execute.assert_called_once()
+		actionPass2.execute.assert_not_called()
+
 	def test_actions_many_args(self):
 		'''
 		Arguments are separated by spaces
