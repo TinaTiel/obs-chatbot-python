@@ -9,4 +9,6 @@ class Action():
 		pass
 
 	def add_restrictions(self, restrictions):
-		pass
+		for restriction in restrictions:
+			self.restrictions.append(restriction)
+			restriction.action = self
