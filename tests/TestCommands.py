@@ -22,6 +22,20 @@ class TestCommands(unittest.TestCase):
 		self.assertEqual("command name", r2.command.name)
 		self.assertEqual("command name", r3.command.name)
 
+	def test_actions_have_parent_command_reference(self):
+		'''
+		Each restriction added to a command must have a reference to its parent command
+		'''
+		# Given a command with several restrictions
+		a1 = Action()
+		a2 = Action()
+		a3 = Action()
+		command = Command("command name", "descr", ["alias"], [a1, a2, a3], None)
+
+		# Each restriction has a reference to the command
+		self.assertEqual("command name", a1.command.name)
+		self.assertEqual("command name", a2.command.name)
+		self.assertEqual("command name", a3.command.name)
 
 	def test_restrictions_none(self):
 		'''
