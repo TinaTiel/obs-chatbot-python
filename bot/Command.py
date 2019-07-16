@@ -7,6 +7,8 @@ class Command():
 		self.name = name
 		self.description = description
 		self.aliases = aliases if isinstance(aliases, list) else []
+		self.actions = []
+		self.restrictions = []
 		self.add_actions(actions if isinstance(actions, list) else [])
 		self.add_restrictions(restrictions if isinstance(restrictions, list) else [])
 
@@ -34,17 +36,21 @@ class Command():
 		# Return success
 		return Result(State.SUCCESS, results)
 
+	def add_actions(self, actions):
+		for action in actions:
+			self.actions.append(action)
+			action.command = self
+
+	def add_restrictions(self, restrictions):
+		for restriction in restrictions:
+			self.restrictions.append(restriction)
+			restriction.command = self
+
 	def _permit(self, user):
 		for restriction in self.restrictions:
 			if not restriction.permit(user):
 				return False
 		return True
-
-	def add_actions(self, actions):
-		pass
-
-	def add_restrictions(self, restrictions):
-		pass
 
 
 class Action():
