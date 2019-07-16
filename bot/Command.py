@@ -3,7 +3,7 @@ from bot.Result import *
 
 class Command():
 
-	def __init__(self, name, description, aliases=[], actions=[], restrictions=[]):
+	def __init__(self, name, description="", aliases=[], actions=[], restrictions=[]):
 		self.name = name
 		self.description = description
 		self.aliases = aliases if isinstance(aliases, list) else []
@@ -51,3 +51,27 @@ class Command():
 			if not restriction.permit(user):
 				return False
 		return True
+
+class CommandManager():
+
+	def __init__(self, configs):
+		pass
+
+	def register(self, config):
+		'''
+		builds and registers a command with this manager
+		'''
+		# Get required args
+		name = config.get('name', None)
+		actions = config.get('actions', None)
+		restrictions = config.get('restrictions', None)
+
+		# Get optional args
+		description = config.get('description', "")
+		aliases = config.get('aliases', [])
+
+	def execute(self, command_name, user, args):
+		'''
+		Executes a particular command
+		'''
+		pass
