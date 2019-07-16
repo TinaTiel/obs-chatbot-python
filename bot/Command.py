@@ -65,7 +65,8 @@ class CommandManager():
 		name = config.get('name', None)
 		actions = config.get('actions', None)
 		restrictions = config.get('restrictions', None)
-
+		if(name is None or actions is None or restrictions is None):
+			raise ValueError("Command is missing name, actions, or restrictions.")
 		# Get optional args
 		description = config.get('description', "")
 		aliases = config.get('aliases', [])
