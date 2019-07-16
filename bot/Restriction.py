@@ -5,7 +5,7 @@ class Restriction():
 		pass
 
 	def permit(self, user):
-		pass
+		raise NotImplementedError("Tell me what the restriction is you poopyhead!")
 
 class RestrictionUserStatus(Restriction):
 	'''
@@ -66,10 +66,3 @@ class RestrictionWhitelist(Restriction):
 
 	def permit(self, user):
 		return user.username in self.whitelist
-
-class RestrictionProgressiveVoting():
-	def __init__(self, vote_mins):
-		pass
-
-	def permit(self, user):
-		pass

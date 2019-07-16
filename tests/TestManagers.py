@@ -11,15 +11,15 @@ class TestManagers(unittest.TestCase):
 		# Given config missing name, restrictions, or actions
 		# When initialized
 		# Expect a value error
-
-		self.assertRaises(ValueError, CommandManager, {})
-		self.assertRaises(ValueError, CommandManager, {'name': 'foo'})
-		self.assertRaises(ValueError, CommandManager, {'name': 'foo', 'restrictions': []})
-		self.assertRaises(ValueError, CommandManager, {'name': 'foo', 'actions': []})
-		self.assertNotRaises(ValueError, CommandManager, {'name': 'foo', 'requirements': [], 'actions': []})
+		command_manager = CommandManager()
+		self.assertRaises(ValueError, command_manager.register, {})
+		self.assertRaises(ValueError, command_manager.register, {'name': 'foo'})
+		self.assertRaises(ValueError, command_manager.register, {'name': 'foo', 'restrictions': []})
+		self.assertRaises(ValueError, command_manager.register, {'name': 'foo', 'actions': []})
 
 		# Otherwise if all are required
-
-		# When initialized
-
 		# No errors occur
+		try:
+			command_manager.register({'name': 'foo', 'requirements': [], 'actions': []})
+		except ValueError:
+			self.fail("command manager register() failed unexpectedly!")
