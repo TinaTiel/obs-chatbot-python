@@ -7,8 +7,8 @@ class Command():
 		self.name = name
 		self.description = description
 		self.aliases = aliases if isinstance(aliases, list) else []
-		self.actions = actions if isinstance(actions, list) else []
-		self.restrictions = restrictions if isinstance(restrictions, list) else []
+		self.add_actions(actions if isinstance(actions, list) else [])
+		self.add_restrictions(restrictions if isinstance(restrictions, list) else [])
 
 	def execute(self, user, args):
 		# If not permitted, fail immediately
@@ -39,6 +39,12 @@ class Command():
 			if not restriction.permit(user):
 				return False
 		return True
+
+	def add_actions(self, actions):
+		pass
+
+	def add_restrictions(self, restrictions):
+		pass
 
 
 class Action():
