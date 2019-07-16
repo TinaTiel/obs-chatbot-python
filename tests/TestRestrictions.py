@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import *
-from User import *
-from Restriction import *
-from Permission import *
+from bot.User import *
+from bot.Restriction import *
+from bot.Permission import *
 
 class TestRestrictions(unittest.TestCase):
 

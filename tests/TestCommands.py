@@ -1,8 +1,6 @@
 import unittest
 from unittest.mock import *
-from Command import *
-from User import *
-from Restriction import *
+from bot import *
 
 class TestCommands(unittest.TestCase):
 

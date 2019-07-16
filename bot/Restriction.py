@@ -1,4 +1,4 @@
-from Permission import *
+from bot.Permission import *
 
 class Restriction():
 	def __init__(self):
@@ -64,4 +64,4 @@ class RestrictionWhitelist(Restriction):
 		self.whitelist = whitelist
 
 	def permit(self, user):
-		pass
+		return user.username in self.whitelist
