@@ -28,6 +28,9 @@ class TestRestrictions(unittest.TestCase):
 		self.assertTrue(restriction.permit(self.user_broadcaster))
 
 	def test_restriction_userStatus_Follower(self):
+		'''
+		Followers and higher are allowed
+		'''
 		# Given a restriction to followers
 		restriction = RestrictionUserStatus(Permission.FOLLOWER)
 
@@ -39,6 +42,9 @@ class TestRestrictions(unittest.TestCase):
 		self.assertTrue(restriction.permit(self.user_broadcaster))
 
 	def test_restriction_userStatus_Subscriber(self):
+		'''
+		Subscribers and higher are allowed
+		'''
 		# Given a restriction to subscribers
 		restriction = RestrictionUserStatus(Permission.SUBSCRIBER)
 
@@ -50,6 +56,9 @@ class TestRestrictions(unittest.TestCase):
 		self.assertTrue(restriction.permit(self.user_broadcaster))
 
 	def test_restriction_userStatus_Moderator(self):
+		'''
+		Moderators and higher are allowed
+		'''
 		# Given a restriction to moderators
 		restriction = RestrictionUserStatus(Permission.MODERATOR)
 
@@ -61,6 +70,9 @@ class TestRestrictions(unittest.TestCase):
 		self.assertTrue(restriction.permit(self.user_broadcaster))
 
 	def test_restriction_userStatus_Broadcaster(self):
+		'''
+		Only broadcaster is allowed
+		'''
 		# Given a restriction to broadcaster
 		restriction = RestrictionUserStatus(Permission.BROADCASTER)
 
@@ -72,6 +84,9 @@ class TestRestrictions(unittest.TestCase):
 		self.assertTrue(restriction.permit(self.user_broadcaster))
 
 	def test_restriction_voting_duplicates(self):
+		'''
+		Voting-based permission, duplicate votes allowed
+		'''
 		# Given vote restriction with unique votes required
 		restriction = RestrictionVoting(5, False)
 
@@ -91,6 +106,9 @@ class TestRestrictions(unittest.TestCase):
 		self.assertEqual(0, len(restriction.votes))
 
 	def test_restriction_voting_uniques(self):
+		'''
+		Voting based permission, but requires unique votes
+		'''
 		# Given vote restriction with unique votes required
 		restriction = RestrictionVoting(5, True)
 
@@ -109,7 +127,19 @@ class TestRestrictions(unittest.TestCase):
 		self.assertTrue(restriction.permit(User("trigger")))
 		self.assertEqual(0, len(restriction.votes))
 		# But when unique voters vote then it is counted and triggers permit
-		
 
-	# def test_restriction_userPoints(self):
-	# 	self.assertTrue(False)
+	def test_restriction_whitelist(self):
+		'''
+		Whitelist based restriction, good for makeshift integrations
+		such as whitelisting Patreons or otherwise specific folks
+		'''
+
+		# Given a whitelist
+		whitelist = ["foo"]
+		restriction = RestrictionWhitelist(whitelist)
+
+		# An user not a member of the whitelist is denied
+		self.assertFalse(restriction.permit(User("bar")))
+
+		# But an user belonging to the whitelist is allowed
+		self.assertTrue(restriction.permit(User("foo")))

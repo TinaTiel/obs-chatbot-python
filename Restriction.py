@@ -56,3 +56,12 @@ class RestrictionVoting(Restriction):
 			self.votes.append(user.username)
 		else:
 			self.votes.add(user.username)
+
+class RestrictionWhitelist(Restriction):
+	def __init__(self, whitelist):
+		if(not isinstance(whitelist, list)):
+			raise ValueError("Whitelist has to be a list")
+		self.whitelist = whitelist
+
+	def permit(self, user):
+		pass
