@@ -7,6 +7,22 @@ class TestCommands(unittest.TestCase):
 	def setUp(self):
 		pass
 
+	def test_restrictions_have_parent_command_reference(self):
+		'''
+		Each restriction added to a command must have a reference to its parent command
+		'''
+		# Given a command with several restrictions
+		r1 = Restriction()
+		r2 = Restriction()
+		r3 = Restriction()
+		command = Command("command name", "descr", ["alias"], None, [r1, r2, r3])
+
+		# Each restriction has a reference to the command
+		self.assertEqual("command name", r1.command.name)
+		self.assertEqual("command name", r2.command.name)
+		self.assertEqual("command name", r3.command.name)
+
+
 	def test_restrictions_none(self):
 		'''
 		A Command having no restrictions always executes
