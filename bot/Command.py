@@ -1,9 +1,10 @@
 import shlex
 from bot.Result import *
+from bot.Executor import *
 
 class Command():
 
-	def __init__(self, name, description="", aliases=[], actions=[], restrictions=[]):
+	def __init__(self, name, description="", aliases=[], actions=[], restrictions=[], executor=ExecutorDefault()):
 		self.name = name
 		self.description = description
 		self.aliases = aliases if isinstance(aliases, list) else []
@@ -62,17 +63,54 @@ class CommandManager():
 		builds and registers a command with this manager
 		'''
 		# Get required args
-		name = config.get('name', None)
-		actions = config.get('actions', None)
-		restrictions = config.get('restrictions', None)
-		if(name is None or actions is None or restrictions is None):
-			raise ValueError("Command is missing name, actions, or restrictions.")
-		# Get optional args
-		description = config.get('description', "")
-		aliases = config.get('aliases', [])
+		
+		# Build restrictions and actions
+		# restrictions = self._build_restrictions(restrictions_confs)
+		pass
+
 
 	def execute(self, command_name, user, args):
 		'''
 		Executes a particular command
 		'''
+		pass
+
+	def build_command(self, command_conf):
+		# name = config.get('name', None)
+		# action_confs = config.get('actions', None)
+		# restriction_confs = config.get('restrictions', None)
+		# if(name is None or action_confs is None or restriction_confs is None):
+		# 	raise ValueError("Command is missing name, actions, or restrictions.")
+		# # Get optional args
+		# description = config.get('description', "")
+		# aliases = config.get('aliases', [])
+
+		# restrictions = [self._build_restriction for conf in restriction_confs]
+		# actions = [self._build_action for conf in action_confs]
+
+		# return Command(name, description, aliases, actions, restrictions)
+		pass
+
+	def build_restriction(self, restriction_conf):
+		# # Get the required config
+		# restr_type = conf.get('type', None)
+		# restr_args = conf.get('args', None)
+		# if(restr_type is None or restr_args is None):
+		# 	raise ValueError("Missing type or args")
+		
+		# # Locate the Restriction type class
+		# try:
+		# 	module = import_module("bot.Restriction."+restr_type)
+		# 	class_ = getattr(module, restr_type)
+		# except Exception as e:
+		# 	raise ValueError("Could not locate Restriction type '{}'".format(restr_type))
+
+		# # Instantiate the Restriction class
+		# try:
+		# 	restriction = class_(restr_args**) # Maybe??
+		# except ValueError as e:
+		# 	raise e
+		pass
+
+	def build_action(self, action_conf):
 		pass

@@ -173,5 +173,18 @@ class TestCommands(unittest.TestCase):
 			for action in command.actions:
 				action.execute.assert_called_with(user, [])
 
+	def test_default_executor(self):
+		'''
+		Default executor is to execute all Actions in order per request
+		'''
+		pass
+
+	def test_gated_executor(self):
+		'''
+		Gated executor executes one action per request, only advancing to the 
+		next action at the next request if the prior action executed with SUCCESS
+		'''
+		pass
+
 if __name__ == '__main__':
 	unittest.main()
