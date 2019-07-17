@@ -54,6 +54,5 @@ class TestManagers(unittest.TestCase):
 		except ValueError:
 			self.fail("command manager build_allow() failed unexpectedly!")
 
-
 if __name__ == '__main__':
 	unittest.main()

@@ -82,16 +82,11 @@ class CommandManager():
 		if(allow_type is None or args is None):
 			raise ValueError("Command 'allows' configuration is missing 'type' or 'args' configurations.")
 
-		# Try to load specified type
+		# Try to load specified type & instantiate it
 		class_ = self._get_class("Allow", allow_type)
+		allow = class_(args)
 
-		# Try to instantiate the action class
-		# try:
-		# 	self.log.debug("Command {}: args are: {}".format(command_name, args))
-		# 	command_obj = class_(self, command_name, aliases, description, permission, min_votes, args)
-		# except ValueError as e:
-		# 	self.log.warn(e)
-		# 	continue
+		return allow
 
 	def _get_class(self, module_name, class_name):
 		try:

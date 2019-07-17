@@ -16,7 +16,7 @@ class TestAllows(unittest.TestCase):
 		The general public is allowed
 		'''
 		# Given a allow to the general public
-		allow = AllowUserStatus(Permission.EVERYONE)
+		allow = AllowUserStatus(**{"min_status": Permission.EVERYONE})
 
 		# All users are permitted
 		self.assertTrue(allow.permit(self.user_public))
@@ -30,7 +30,7 @@ class TestAllows(unittest.TestCase):
 		Followers and higher are allowed
 		'''
 		# Given a allow to followers
-		allow = AllowUserStatus(Permission.FOLLOWER)
+		allow = AllowUserStatus(**{"min_status": Permission.FOLLOWER})
 
 		# Only followers and above are permitted
 		self.assertFalse(allow.permit(self.user_public))
@@ -44,7 +44,7 @@ class TestAllows(unittest.TestCase):
 		Subscribers and higher are allowed
 		'''
 		# Given a allow to subscribers
-		allow = AllowUserStatus(Permission.SUBSCRIBER)
+		allow = AllowUserStatus(**{"min_status": Permission.SUBSCRIBER})
 
 		# Only subscribers and above are permitted
 		self.assertFalse(allow.permit(self.user_public))
@@ -58,7 +58,7 @@ class TestAllows(unittest.TestCase):
 		Moderators and higher are allowed
 		'''
 		# Given a allow to moderators
-		allow = AllowUserStatus(Permission.MODERATOR)
+		allow = AllowUserStatus(**{"min_status": Permission.MODERATOR})
 
 		# Only moderators and above are permitted
 		self.assertFalse(allow.permit(self.user_public))
@@ -72,7 +72,7 @@ class TestAllows(unittest.TestCase):
 		Only broadcaster is allowed
 		'''
 		# Given a allow to broadcaster
-		allow = AllowUserStatus(Permission.BROADCASTER)
+		allow = AllowUserStatus(**{"min_status": Permission.BROADCASTER})
 
 		# Only broadcaster is permitted
 		self.assertFalse(allow.permit(self.user_public))
@@ -86,7 +86,7 @@ class TestAllows(unittest.TestCase):
 		Voting-based permission, duplicate votes allowed
 		'''
 		# Given vote allow with unique votes required
-		allow = AllowVoting(5, False)
+		allow = AllowVoting(**{"min_votes": 5, "uniques": False})
 
 		# When the same user votes multiple times
 		self.assertFalse(allow.permit(self.user_public))
@@ -108,7 +108,7 @@ class TestAllows(unittest.TestCase):
 		Voting based permission, but requires unique votes
 		'''
 		# Given vote allow with unique votes required
-		allow = AllowVoting(5, True)
+		allow = AllowVoting(**{"min_votes": 5})
 
 		# When the same user votes multiple times
 		self.assertFalse(allow.permit(self.user_public))
@@ -134,7 +134,7 @@ class TestAllows(unittest.TestCase):
 
 		# Given a whitelist
 		whitelist = ["foo"]
-		allow = AllowWhitelist(whitelist)
+		allow = AllowWhitelist(**{"whitelist": whitelist})
 
 		# An user not a member of the whitelist is denied
 		self.assertFalse(allow.permit(User("bar")))

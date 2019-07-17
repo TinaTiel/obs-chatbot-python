@@ -1,7 +1,7 @@
 from bot.Permission import *
 
 class Allow():
-	def __init__(self):
+	def __init__(self, **kwargs):
 		pass
 
 	def permit(self, user):
@@ -11,8 +11,8 @@ class AllowUserStatus(Allow):
 	'''
 	Allow is based on user status in Twitch
 	'''
-	def __init__(self, min_permission=Permission.BROADCASTER):
-		self.min_permission = min_permission
+	def __init__(self, **kwargs):
+		self.min_status = kwargs.get('min_status', Permission.BROADCASTER)
 
 	def permit(self, user):
 
@@ -27,10 +27,14 @@ class AllowUserStatus(Allow):
 		else:
 			user_status = Permission.EVERYONE
 
-		return user_status >= self.min_permission
+		return user_status >= self.min_status
 
 class AllowVoting(Allow):
-	def __init__(self, min_votes, uniques=True):
+	def __init__(self, **kwargs):
+		min_votes = kwargs.get('min_votes', 9999)
+		uniques = kwargs.get('uniques', True)
+		# min_votes
+		# uniques
 		if(not isinstance(min_votes, int) or min_votes < 0):
 			raise ValueError("Minimum votes must be greater than 0!")
 		self.min_votes = min_votes
@@ -59,7 +63,9 @@ class AllowVoting(Allow):
 
 
 class AllowWhitelist(Allow):
-	def __init__(self, whitelist):
+	def __init__(self, **kwargs):
+		# whitelist
+		whitelist = kwargs.get('whitelist', [])
 		if(not isinstance(whitelist, list)):
 			raise ValueError("Whitelist has to be a list")
 		self.whitelist = whitelist
