@@ -7,6 +7,11 @@ class TestManagers(unittest.TestCase):
 	def setUp(self):
 		self.known_allow_type = "AllowUserStatus"
 
+	def fake_build(self, config):
+		pass
+
+	@patch.object(CommandManager, 'build_allow', fake_build)    # Patching out the inner methods of build_command
+	@patch.object(CommandManager, 'build_executor', fake_build) # Patching out the inner methods of build_command
 	def test_command_requires_name_and_execute_args(self):
 
 		command_manager = CommandManager()

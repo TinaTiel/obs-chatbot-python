@@ -97,4 +97,8 @@ class CommandManager():
 			raise ValueError("Could not load specified {} type '{}': {}".format(module_name, class_name, e))
 
 	def build_executor(self, conf):
-		pass
+		# Get required confs
+		executor_type = conf.get('type', None)
+		args = conf.get('args', None)
+		if(executor_type is None or args is None):
+			raise ValueError("Command 'allows' configuration is missing 'type' or 'args' configurations.")
