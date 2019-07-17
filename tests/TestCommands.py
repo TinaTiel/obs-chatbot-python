@@ -9,7 +9,7 @@ class TestCommands(unittest.TestCase):
 
 	def test_restrictions_none(self):
 		'''
-		A Command having no restrictions always executes
+		A Command having no restrictions never executes
 		'''
 		user = User("foo")
 		executor = Executor([])
@@ -22,8 +22,9 @@ class TestCommands(unittest.TestCase):
 		# When executed
 		result = commandNoRestrictions.execute(user, None)
 
-		# Then the command excecutes (we don't test for success or failure because that depends on the executor's results)
-		executor.execute.assert_called()
+		# Then the command does NOT execute any available actions and returns a FAILURE
+		executor.execute.assert_not_called()
+		self.assertEqual(State.FAILURE, result.state)
 
 	def test_restrictions_passing(self):
 		'''
