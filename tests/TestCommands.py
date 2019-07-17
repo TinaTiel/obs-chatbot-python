@@ -46,7 +46,7 @@ class TestCommands(unittest.TestCase):
 		executor.execute = MagicMock()
 
 		# Given a command with no restrictions
-		commandNoRestrictions = Command("name", "descr", ["alias"], [executor], None)
+		commandNoRestrictions = Command("name", "descr", ["alias"], executor, None)
 		self.assertEqual(0, len(commandNoRestrictions.restrictions))
 
 		# When executed
@@ -67,7 +67,7 @@ class TestCommands(unittest.TestCase):
 		# Given a command with passing restrictions
 		restrictionPass = Restriction()
 		restrictionPass.permit = MagicMock(return_value=True)
-		commandPass = Command("name", "descr", ["alias"], [executor], [restrictionPass, restrictionPass])
+		commandPass = Command("name", "descr", ["alias"], executor, [restrictionPass, restrictionPass])
 		self.assertEqual(2, len(commandPass.restrictions))
 
 		# When executed
@@ -90,7 +90,7 @@ class TestCommands(unittest.TestCase):
 		restrictionPass.permit = MagicMock(return_value=True)
 		restrictionFail = Restriction()
 		restrictionFail.permit = MagicMock(return_value=False)
-		commandFail = Command("name", "descr", ["alias"], [executor], [restrictionPass, restrictionFail, restrictionPass])
+		commandFail = Command("name", "descr", ["alias"], executor, [restrictionPass, restrictionFail, restrictionPass])
 		self.assertEqual(3, len(commandFail.restrictions))
 
 		# When executed
@@ -126,7 +126,7 @@ class TestCommands(unittest.TestCase):
 		execFail.execute.assert_called_once()
 		execPass2.execute.assert_not_called()
 
-	def test_actions_many_args(self):
+	def test_execution_many_args(self):
 		'''
 		Arguments are separated by spaces
 		and can be grouped by quotes
@@ -134,21 +134,15 @@ class TestCommands(unittest.TestCase):
 		# Given a command with many actions
 		user = User("foo")
 		restriction = Restriction()
-		exec1 = Executor([])
-		exec2 = Executor([])
-		exec3 = Executor([])
-		exec1.execute = MagicMock()
-		exec2.execute = MagicMock()
-		exec3.execute = MagicMock()
-		command = Command("name", "descr", ["alias"], [exec1, exec2, exec3], restriction)
-		self.assertEqual(3, len(command.actions))
+		executor = Executor([])
+		executor.execute = MagicMock()
+		command = Command("name", "descr", ["alias"], executor, restriction)
 		
-		# When the command is executed with many args
+		# When the command is executed with many args in one string
 		command.execute(user, "foo 'bar bar' \"baz baz\"")
 
-		# Then each action is executed with those args
-		for executor in command.executors:
-			executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
+		# Then the executor is executed with a list of arg strings
+		executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
 
 	# def test_actions_no_args(self):
 	# 		'''

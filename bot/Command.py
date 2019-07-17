@@ -4,13 +4,13 @@ from bot.Executor import *
 
 class Command():
 
-	def __init__(self, name, description="", aliases=[], actions=[], restrictions=[]):
+	def __init__(self, name, description="", aliases=[], executors=[], restrictions=[]):
 		self.name = name
 		self.description = description
 		self.aliases = aliases if isinstance(aliases, list) else []
-		self.actions = []
+		self.executors = []
 		self.restrictions = []
-		self.add_actions(actions if isinstance(actions, list) else [])
+		self.add_executors(executors if isinstance(executors, list) else [])
 		self.add_restrictions(restrictions if isinstance(restrictions, list) else [])
 
 	def execute(self, user, args):
@@ -25,7 +25,7 @@ class Command():
 		if(args is not None):
 			args_list = shlex.split(args)
 
-		# Execute each action with user and args
+		# Execute each executor with user and args
 		for action in self.actions:
 			result = action.execute(user, args_list)
 			results.append(result)
@@ -37,10 +37,10 @@ class Command():
 		# Return success
 		return Result(State.SUCCESS, results)
 
-	def add_actions(self, actions):
-		for action in actions:
-			self.actions.append(action)
-			action.command = self
+	def add_executors(self, executors):
+		for executor in executors:
+			self.executors.append(executor)
+			executor.command = self
 
 	def add_restrictions(self, restrictions):
 		for restriction in restrictions:
