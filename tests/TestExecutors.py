@@ -76,9 +76,6 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(1, a1.execute.call_count)
 		self.assertEqual(0, a2.execute.call_count)
 		self.assertEqual(0, a3.execute.call_count)
-		# a1.execute.assert_called_once()
-		# a2.execute.assert_not_called()
-		# a3.execute.assert_not_called()
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(1, len(result.messages))
 
@@ -86,9 +83,6 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(1, a1.execute.call_count)
 		self.assertEqual(1, a2.execute.call_count)
 		self.assertEqual(0, a3.execute.call_count)
-		# a1.execute.assert_not_called()
-		# a2.execute.assert_called_once()
-		# a3.execute.assert_not_called()
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(1, len(result.messages))
 
@@ -96,9 +90,6 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(1, a1.execute.call_count)
 		self.assertEqual(1, a2.execute.call_count)
 		self.assertEqual(1, a3.execute.call_count)
-		# a1.execute.assert_not_called()
-		# a2.execute.assert_not_called()
-		# a3.execute.assert_called_once()
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(1, len(result.messages))
 
@@ -107,9 +98,6 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(2, a1.execute.call_count)
 		self.assertEqual(1, a2.execute.call_count)
 		self.assertEqual(1, a3.execute.call_count)
-		# a1.execute.assert_called_once()
-		# a2.execute.assert_not_called()
-		# a3.execute.assert_not_called()
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(1, len(result.messages))
 
@@ -117,9 +105,6 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(2, a1.execute.call_count)
 		self.assertEqual(2, a2.execute.call_count)
 		self.assertEqual(1, a3.execute.call_count)
-		# a1.execute.assert_not_called()
-		# a2.execute.assert_called_once()
-		# a3.execute.assert_not_called()
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(1, len(result.messages))
 
@@ -127,9 +112,6 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(2, a1.execute.call_count)
 		self.assertEqual(2, a2.execute.call_count)
 		self.assertEqual(2, a3.execute.call_count)
-		# a1.execute.assert_not_called()
-		# a2.execute.assert_not_called()
-		# a3.execute.assert_called_once()
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(1, len(result.messages))
 

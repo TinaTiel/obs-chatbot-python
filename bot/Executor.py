@@ -30,7 +30,8 @@ class GatedExecutor():
 
 		# Otherwise if just the actions are empty, then re-initialize them
 		if(len(self.actions) == 0):
-			[self.actions.appendleft(x) for x in self.executed.pop()]
+			while(len(self.executed) > 0):
+				self.actions.appendleft(self.executed.pop())
 
 		# process the first item in the queue
 		# if it executes successfully then added it to the executed queue
