@@ -7,7 +7,7 @@ class TestExecutors(unittest.TestCase):
 	def setUp(self):
 		pass
 
-	def test_default_executor_success(self):
+	def test_all_executor_success(self):
 		'''
 		Default executor is to execute all Actions in order per request
 		'''
@@ -18,7 +18,7 @@ class TestExecutors(unittest.TestCase):
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = Executor([a1, a2, a3])
+		executor = ExecuteAll([a1, a2, a3])
 
 		# When executed 
 		result = executor.execute(User("foo"), None)
@@ -32,7 +32,7 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(3, len(result.messages))
 
-	def test_default_executor_failure(self):
+	def test_all_executor_failure(self):
 		'''
 		Default executor is to execute all Actions in order per request
 		'''
@@ -43,7 +43,7 @@ class TestExecutors(unittest.TestCase):
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.FAILURE))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = Executor([a1, a2, a3])
+		executor = ExecuteAll([a1, a2, a3])
 
 		# When executed 
 		result = executor.execute(User("foo"), None)
@@ -69,7 +69,7 @@ class TestExecutors(unittest.TestCase):
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = GatedExecutor([a1, a2, a3])
+		executor = ExecuteGated([a1, a2, a3])
 
 		# When executed only the next action in the list is executed
 		result = executor.execute(User("foo"), None)
@@ -127,7 +127,7 @@ class TestExecutors(unittest.TestCase):
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.FAILURE))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = GatedExecutor([a1, a2, a3])
+		executor = ExecuteGated([a1, a2, a3])
 
 		# When executed only the next action in the list is executed
 		result = executor.execute(User("foo"), None)
@@ -194,10 +194,10 @@ class TestExecutors(unittest.TestCase):
 		a5.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a6.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a7.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = Executor([a1, 
-												Executor([a2, 
+		executor = ExecuteAll([a1, 
+												ExecuteAll([a2, 
 																	a3, 
-																	Executor([a4, 
+																	ExecuteAll([a4, 
 																						a5]),
 																	a6]), 
 												a7]) # etc...

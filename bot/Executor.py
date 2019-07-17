@@ -3,6 +3,13 @@ from collections import deque
 
 class Executor():
 	def __init__(self, actions):
+		pass
+
+	def execute(self, user, args_list):
+		pass
+
+class ExecuteAll(Executor):
+	def __init__(self, actions):
 		self.actions = actions
 
 	def execute(self, user, args_list):
@@ -18,7 +25,7 @@ class Executor():
 		# Return success
 		return Result(State.SUCCESS, results)
 
-class GatedExecutor():
+class ExecuteGated(Executor):
 	def __init__(self, actions):
 		self.executed = list()
 		self.actions = deque(actions)
