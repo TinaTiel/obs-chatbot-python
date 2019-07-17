@@ -7,7 +7,7 @@ class TestManagers(unittest.TestCase):
 	def setUp(self):
 		self.known_allow_type = "AllowUserStatus"
 
-	def test_name_and_executor_are_required(self):
+	def test_command_requires_name_and_execute_args(self):
 
 		command_manager = CommandManager()
 		self.assertRaises(ValueError, command_manager.build_command, {})
@@ -53,6 +53,11 @@ class TestManagers(unittest.TestCase):
 			command_manager.build_allow({"type": self.known_allow_type, "args": {}})
 		except ValueError:
 			self.fail("command manager build_allow() failed unexpectedly!")
+
+	def test_executor_params(self):
+		# type and args are required
+		pass
+
 
 if __name__ == '__main__':
 	unittest.main()

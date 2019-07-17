@@ -16,7 +16,7 @@ class Command():
 		# If not permitted, fail immediately
 
 		if(not self._permit(user)):
-			return Result(State.FAILURE, ["Failed allows"])
+			return Result(State.FAILURE, ["Failed Allows/Permissions"])
 
 		# Parse the args
 		results = []
@@ -84,7 +84,7 @@ class CommandManager():
 
 		# Try to load specified type & instantiate it
 		class_ = self._get_class("Allow", allow_type)
-		allow = class_(args)
+		allow = class_(**args)
 
 		return allow
 
