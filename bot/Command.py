@@ -75,25 +75,11 @@ class CommandManager():
 		return Command(name, executor, allows, description, aliases)
 
 	def build_allow(self, conf):
-		# # Get the required config
-		# restr_type = conf.get('type', None)
-		# restr_args = conf.get('args', None)
-		# if(restr_type is None or restr_args is None):
-		# 	raise ValueError("Missing type or args")
-		
-		# # Locate the Allow type class
-		# try:
-		# 	module = import_module("bot.Allow."+restr_type)
-		# 	class_ = getattr(module, restr_type)
-		# except Exception as e:
-		# 	raise ValueError("Could not locate Allow type '{}'".format(restr_type))
-
-		# # Instantiate the Allow class
-		# try:
-		# 	allow = class_(restr_args**) # Maybe??
-		# except ValueError as e:
-		# 	raise e
-		pass
+		# Get required confs
+		allow_type = conf.get('type', None)
+		args = conf.get('args', None)
+		if(allow_type is None or args is None):
+			raise ValueError("Command 'allows' configuration is missing 'type' or 'args' configurations.")
 
 	def build_executor(self, conf):
 		pass
