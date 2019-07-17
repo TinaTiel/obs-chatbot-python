@@ -61,16 +61,16 @@ class CommandManager():
 	def build_command(self, conf):
 		# Get required confs
 		name = conf.get('name', None)
-		exec_conf = conf.get('execute', None)
 		allow_confs = conf.get('allows', None)
+		exec_conf = conf.get('execute', None)
 		if(name is None or exec_conf is None or allow_confs is None):
 			raise ValueError("Command is missing 'name', 'execute', or 'allows' configurations.")
 		# Get optional confs
 		description = conf.get('description', "")
 		aliases = conf.get('aliases', [])
 
-		executor = self.build_executor(exec_conf)
 		allows = [self.build_allow(conf) for conf in allow_confs]
+		executor = self.build_executor(exec_conf)
 
 		return Command(name, executor, allows, description, aliases)
 
