@@ -73,6 +73,21 @@ class TestManagers(unittest.TestCase):
 		except ValueError:
 			self.fail("command manager build_executor() failed unexpectedly!")
 
+	def test_execute_params_valid_type(self):
+
+		command_manager = CommandManager()
+
+		# Given an invalid type, expect a ValueError
+		self.assertRaises(ValueError, command_manager.build_executor, {"type": "asdfasdfasdfasdfasdfasdf", "args": {}})
+		self.assertRaises(ValueError, command_manager.build_executor, {"type": "Action", "args": {}})
+
+		# Otherwise given a valid type (from the Executor module), no errors
+		try:
+			command_manager.build_executor({"type": "ExecuteAll", "args": {}})
+			command_manager.build_executor({"type": "ExecuteGated", "args": {}})
+		except ValueError:
+			self.fail("command manager build_executor() failed unexpectedly")
+
 
 if __name__ == '__main__':
 	unittest.main()
