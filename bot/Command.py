@@ -9,7 +9,7 @@ class Command():
 		self.executor = executor
 		self.restrictions = restrictions
 		self.description = description
-		self.aliases = aliases if isinstance(aliases, list) else [aliases]
+		self.aliases = aliases
 
 	def execute(self, user, args):
 		# If not permitted, fail immediately
@@ -27,6 +27,10 @@ class Command():
 		return self.executor.execute(user, args_list)
 
 	def _permit(self, user):
+		# if no restrictions, never permit
+		if(len(self.restrictions) == 0):
+			return False
+		# otherwise only succeed if all restrictions permit
 		for restriction in self.restrictions:
 			if not restriction.permit(user):
 				return False

@@ -5,7 +5,9 @@ from bot import *
 class TestCommands(unittest.TestCase):
 
 	def setUp(self):
-		pass
+		self.no_restriction = Restriction()
+		self.no_restriction.permit = MagicMock(return_value=True)
+		
 
 	def test_restrictions_none(self):
 		'''
@@ -78,7 +80,7 @@ class TestCommands(unittest.TestCase):
 		user = User("foo")
 		executor = Executor([])
 		executor.execute = MagicMock()
-		command = Command("name", executor)
+		command = Command("name", executor, [self.no_restriction])
 		
 		# When the command is executed with many args in one string
 		command.execute(user, "foo 'bar bar' \"baz baz\"")
@@ -94,7 +96,7 @@ class TestCommands(unittest.TestCase):
 		user = User("foo")
 		executor = Executor([])
 		executor.execute = MagicMock()
-		command = Command("name", executor)
+		command = Command("name", executor, [self.no_restriction])
 		
 		# When the command is executed with many args in one string
 		command.execute(user, None)
