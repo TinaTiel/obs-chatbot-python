@@ -178,5 +178,51 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(1, len(result.messages))
 
+	def test_executors_can_contain_executors(self):
+		# Given the default Executor and a list of succeeding Actions AND an Executor containing Executors
+		a1 = Action()
+		a2 = Action()
+		a3 = Action()
+		a4 = Action()
+		a5 = Action()
+		a6 = Action()
+		a7 = Action()
+		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a4.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a5.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a6.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a7.execute = MagicMock(return_value=Result(State.SUCCESS))
+		executor = Executor([a1, 
+												Executor([a2, 
+																	a3, 
+																	Executor([a4, 
+																						a5]),
+																	a6]), 
+												a7]) # etc...
+
+		# When executed 
+		result = executor.execute(User("foo"), None)
+
+		# Then each action is executed in order including those contained in an Executor
+		a1.execute.assert_called_once()
+		a2.execute.assert_called_once()
+		a3.execute.assert_called_once()
+		a4.execute.assert_called_once()
+		a5.execute.assert_called_once()
+		a6.execute.assert_called_once()
+		a7.execute.assert_called_once()
+
+		# And when all execute then a SUCCESS is returned including for nested executors
+		self.assertEqual(State.SUCCESS, result.state)
+		self.assertEqual(3, len(result.messages))
+
+		self.assertEqual(State.SUCCESS, result.messages[1].state)
+		self.assertEqual(4, len(result.messages[1].messages))
+
+		self.assertEqual(State.SUCCESS, result.messages[1].messages[2].state)
+		self.assertEqual(2, len(result.messages[1].messages[2].messages))
+
 if __name__ == '__main__':
 	unittest.main()
