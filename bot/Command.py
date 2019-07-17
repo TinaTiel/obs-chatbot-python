@@ -4,14 +4,12 @@ from bot.Executor import *
 
 class Command():
 
-	def __init__(self, name, description="", aliases=[], executors=[], restrictions=[]):
+	def __init__(self, name, executor, restrictions=[], description="", aliases=[]):
 		self.name = name
+		self.executor = executor
+		self.restrictions = restrictions
 		self.description = description
-		self.aliases = aliases if isinstance(aliases, list) else []
-		self.executors = []
-		self.restrictions = []
-		self.add_executors(executors if isinstance(executors, list) else [])
-		self.add_restrictions(restrictions if isinstance(restrictions, list) else [])
+		self.aliases = aliases if isinstance(aliases, list) else [aliases]
 
 	def execute(self, user, args):
 		# If not permitted, fail immediately
@@ -25,27 +23,8 @@ class Command():
 		if(args is not None):
 			args_list = shlex.split(args)
 
-		# Execute each executor with user and args
-		for action in self.actions:
-			result = action.execute(user, args_list)
-			results.append(result)
-
-			# If an action failed, exit early
-			if(result.state == State.FAILURE):
-				return Result(State.FAILURE, results)
-
-		# Return success
-		return Result(State.SUCCESS, results)
-
-	def add_executors(self, executors):
-		for executor in executors:
-			self.executors.append(executor)
-			executor.command = self
-
-	def add_restrictions(self, restrictions):
-		for restriction in restrictions:
-			self.restrictions.append(restriction)
-			restriction.command = self
+		# Execute with user and args
+		return self.executor.execute(user, args_list)
 
 	def _permit(self, user):
 		for restriction in self.restrictions:
