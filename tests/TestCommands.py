@@ -5,21 +5,21 @@ from bot import *
 class TestCommands(unittest.TestCase):
 
 	def setUp(self):
-		self.no_restriction = Allow()
-		self.no_restriction.permit = MagicMock(return_value=True)
+		self.allow_always = Allow()
+		self.allow_always.permit = MagicMock(return_value=True)
 		
 
-	def test_restrictions_none(self):
+	def test_allows_none(self):
 		'''
-		A Command having no restrictions never executes
+		A Command having no allows never executes
 		'''
 		user = User("foo")
 		executor = Executor([])
 		executor.execute = MagicMock()
 
-		# Given a command with no restrictions
+		# Given a command with no allows
 		commandNoAllows = Command("name", executor)
-		self.assertEqual(0, len(commandNoAllows.restrictions))
+		self.assertEqual(0, len(commandNoAllows.allows))
 
 		# When executed
 		result = commandNoAllows.execute(user, None)
@@ -28,19 +28,19 @@ class TestCommands(unittest.TestCase):
 		executor.execute.assert_not_called()
 		self.assertEqual(State.FAILURE, result.state)
 
-	def test_restrictions_passing(self):
+	def test_allows_passing(self):
 		'''
-		A Command having all passing restrictions executes
+		A Command having all passing allows executes
 		'''
 		user = User("foo")
 		executor = Executor([])
 		executor.execute = MagicMock()
 
-		# Given a command with passing restrictions
-		restrictionPass = Allow()
-		restrictionPass.permit = MagicMock(return_value=True)
-		commandPass = Command("name", executor, [restrictionPass, restrictionPass])
-		self.assertEqual(2, len(commandPass.restrictions))
+		# Given a command with passing allows
+		allowPass = Allow()
+		allowPass.permit = MagicMock(return_value=True)
+		commandPass = Command("name", executor, [allowPass, allowPass])
+		self.assertEqual(2, len(commandPass.allows))
 
 		# When executed
 		result = commandPass.execute(user, None)
@@ -48,21 +48,21 @@ class TestCommands(unittest.TestCase):
 		# Then the command executes
 		executor.execute.assert_called()
 
-	def test_restrictions_failing(self):
+	def test_allows_failing(self):
 		'''
-		A Command having any failing restriction doesn't execute
+		A Command having any failing allow doesn't execute
 		'''
 		user = User("foo")
 		executor = Executor([])
 		executor.execute = MagicMock()
 
-		# Given a command with a failing restriction
-		restrictionPass = Allow()
-		restrictionPass.permit = MagicMock(return_value=True)
-		restrictionFail = Allow()
-		restrictionFail.permit = MagicMock(return_value=False)
-		commandFail = Command("name", executor, [restrictionPass, restrictionFail, restrictionPass])
-		self.assertEqual(3, len(commandFail.restrictions))
+		# Given a command with a failing allow
+		allowPass = Allow()
+		allowPass.permit = MagicMock(return_value=True)
+		allowFail = Allow()
+		allowFail.permit = MagicMock(return_value=False)
+		commandFail = Command("name", executor, [allowPass, allowFail, allowPass])
+		self.assertEqual(3, len(commandFail.allows))
 
 		# When executed
 		result = commandFail.execute(user, None)
@@ -80,7 +80,7 @@ class TestCommands(unittest.TestCase):
 		user = User("foo")
 		executor = Executor([])
 		executor.execute = MagicMock()
-		command = Command("name", executor, [self.no_restriction])
+		command = Command("name", executor, [self.allow_always])
 		
 		# When the command is executed with many args in one string
 		command.execute(user, "foo 'bar bar' \"baz baz\"")
@@ -96,7 +96,7 @@ class TestCommands(unittest.TestCase):
 		user = User("foo")
 		executor = Executor([])
 		executor.execute = MagicMock()
-		command = Command("name", executor, [self.no_restriction])
+		command = Command("name", executor, [self.allow_always])
 		
 		# When the command is executed with many args in one string
 		command.execute(user, None)

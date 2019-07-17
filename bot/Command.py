@@ -4,10 +4,10 @@ from bot.Executor import *
 
 class Command():
 
-	def __init__(self, name, executor, restrictions=[], description="", aliases=[]):
+	def __init__(self, name, executor, allows=[], description="", aliases=[]):
 		self.name = name
 		self.executor = executor
-		self.restrictions = restrictions
+		self.allows = allows
 		self.description = description
 		self.aliases = aliases
 
@@ -15,7 +15,7 @@ class Command():
 		# If not permitted, fail immediately
 
 		if(not self._permit(user)):
-			return Result(State.FAILURE, ["Failed restrictions"])
+			return Result(State.FAILURE, ["Failed allows"])
 
 		# Parse the args
 		results = []
@@ -27,12 +27,12 @@ class Command():
 		return self.executor.execute(user, args_list)
 
 	def _permit(self, user):
-		# if no restrictions, never permit
-		if(len(self.restrictions) == 0):
+		# if no allows, never permit
+		if(len(self.allows) == 0):
 			return False
-		# otherwise only succeed if all restrictions permit
-		for restriction in self.restrictions:
-			if not restriction.permit(user):
+		# otherwise only succeed if all allows permit
+		for allow in self.allows:
+			if not allow.permit(user):
 				return False
 		return True
 
@@ -47,8 +47,8 @@ class CommandManager():
 		'''
 		# Get required args
 		
-		# Build restrictions and actions
-		# restrictions = self._build_restrictions(restrictions_confs)
+		# Build allows and actions
+		# allows = self._build_allows(allows_confs)
 		pass
 
 
@@ -59,22 +59,23 @@ class CommandManager():
 		pass
 
 	def build_command(self, command_conf):
-		# name = config.get('name', None)
-		# action_confs = config.get('actions', None)
-		# restriction_confs = config.get('restrictions', None)
-		# if(name is None or action_confs is None or restriction_confs is None):
-		# 	raise ValueError("Command is missing name, actions, or restrictions.")
-		# # Get optional args
-		# description = config.get('description', "")
-		# aliases = config.get('aliases', [])
+		# Get required confs
+		name = config.get('name', None)
+		action_confs = config.get('allow', None)
+		allow_confs = config.get('allows', None)
+		if(name is None or action_confs is None or allow_confs is None):
+			raise ValueError("Command is missing name, actions, or allows.")
+		# Get optional confs
+		description = config.get('description', "")
+		aliases = config.get('aliases', [])
 
-		# restrictions = [self._build_restriction for conf in restriction_confs]
-		# actions = [self._build_action for conf in action_confs]
+		allows = [self._build_allow for conf in allow_confs]
+		actions = [self._build_action for conf in action_confs]
 
-		# return Command(name, description, aliases, actions, restrictions)
+		return Command(name, description, aliases, actions, allows)
 		pass
 
-	def build_restriction(self, restriction_conf):
+	def build_allow(self, allow_conf):
 		# # Get the required config
 		# restr_type = conf.get('type', None)
 		# restr_args = conf.get('args', None)
@@ -90,7 +91,7 @@ class CommandManager():
 
 		# # Instantiate the Allow class
 		# try:
-		# 	restriction = class_(restr_args**) # Maybe??
+		# 	allow = class_(restr_args**) # Maybe??
 		# except ValueError as e:
 		# 	raise e
 		pass

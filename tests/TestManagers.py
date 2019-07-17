@@ -10,17 +10,16 @@ class TestManagers(unittest.TestCase):
 	# def test_name_and_executor_are_required(self):
 
 	# 	command_manager = CommandManager()
-	# 	self.assertRaises(ValueError, command_manager.register, {})
-	# 	self.assertRaises(ValueError, command_manager.register, {"name": "foo"})
-	# 	self.assertRaises(ValueError, command_manager.register, {"name": "foo", "descr": ""})
-	# 	self.assertRaises(ValueError, command_manager.register, {"name": "foo", "descr": "", "aliases": []})
-	# 	self.assertRaises(ValueError, command_manager.register, {"name": "foo", "descr": "", "aliases": [], "allow":[]})
-
+	# 	self.assertRaises(ValueError, command_manager.build_command, {})
+	# 	self.assertRaises(ValueError, command_manager.build_command, {"name": "foo"})
+	# 	self.assertRaises(ValueError, command_manager.build_command, {"name": "foo", "descr": ""})
+	# 	self.assertRaises(ValueError, command_manager.build_command, {"name": "foo", "descr": "", "aliases": []})
+	# 	self.assertRaises(ValueError, command_manager.build_command, {"name": "foo", "descr": "", "aliases": [], "allow":[]})
 
 	# 	# Otherwise if all are required
 	# 	# No errors occur
 	# 	try:
-	# 		command_manager.register({'name': 'foo', 'exec': {}, 'allow': [] })
+	# 		command_manager.build_command({'name': 'foo', 'exec': {}, 'allow': [] })
 	# 	except ValueError:
 	# 		self.fail("command manager register() failed unexpectedly!")
 
