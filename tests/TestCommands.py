@@ -25,26 +25,25 @@ class TestCommands(unittest.TestCase):
 		# Then the command excecutes (we don't test for success or failure because that depends on the executor's results)
 		executor.execute.assert_called()
 
-	# def test_restrictions_passing(self):
-	# 	'''
-	# 	A Command having all passing restrictions executes
-	# 	'''
-	# 	user = User("foo")
-	# 	executor = Executor([])
-	# 	executor.execute = MagicMock()
+	def test_restrictions_passing(self):
+		'''
+		A Command having all passing restrictions executes
+		'''
+		user = User("foo")
+		executor = Executor([])
+		executor.execute = MagicMock()
 
-	# 	# Given a command with passing restrictions
-	# 	restrictionPass = Restriction()
-	# 	restrictionPass.permit = MagicMock(return_value=True)
-	# 	commandPass = Command("name", "descr", ["alias"], executor, [restrictionPass, restrictionPass])
-	# 	self.assertEqual(2, len(commandPass.restrictions))
+		# Given a command with passing restrictions
+		restrictionPass = Restriction()
+		restrictionPass.permit = MagicMock(return_value=True)
+		commandPass = Command("name", executor, [restrictionPass, restrictionPass])
+		self.assertEqual(2, len(commandPass.restrictions))
 
-	# 	# When executed
-	# 	result = commandPass.execute(user, None)
+		# When executed
+		result = commandPass.execute(user, None)
 
-	# 	# Then the command executes available actions
-	# 	self.assertEqual(State.SUCCESS, result.state)
-	# 	executor.execute.assert_called()
+		# Then the command executes
+		executor.execute.assert_called()
 
 	# def test_restrictions_failing(self):
 	# 	'''
