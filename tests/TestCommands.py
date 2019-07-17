@@ -45,28 +45,28 @@ class TestCommands(unittest.TestCase):
 		# Then the command executes
 		executor.execute.assert_called()
 
-	# def test_restrictions_failing(self):
-	# 	'''
-	# 	A Command having any failing restriction doesn't execute
-	# 	'''
-	# 	user = User("foo")
-	# 	executor = Executor([])
-	# 	executor.execute = MagicMock()
+	def test_restrictions_failing(self):
+		'''
+		A Command having any failing restriction doesn't execute
+		'''
+		user = User("foo")
+		executor = Executor([])
+		executor.execute = MagicMock()
 
-	# 	# Given a command with a failing restriction
-	# 	restrictionPass = Restriction()
-	# 	restrictionPass.permit = MagicMock(return_value=True)
-	# 	restrictionFail = Restriction()
-	# 	restrictionFail.permit = MagicMock(return_value=False)
-	# 	commandFail = Command("name", "descr", ["alias"], executor, [restrictionPass, restrictionFail, restrictionPass])
-	# 	self.assertEqual(3, len(commandFail.restrictions))
+		# Given a command with a failing restriction
+		restrictionPass = Restriction()
+		restrictionPass.permit = MagicMock(return_value=True)
+		restrictionFail = Restriction()
+		restrictionFail.permit = MagicMock(return_value=False)
+		commandFail = Command("name", executor, [restrictionPass, restrictionFail, restrictionPass])
+		self.assertEqual(3, len(commandFail.restrictions))
 
-	# 	# When executed
-	# 	result = commandFail.execute(user, None).state
+		# When executed
+		result = commandFail.execute(user, None)
 
-	# 	# Then the command does NOT execute any available actions
-	# 	self.assertEqual(State.FAILURE, result)
-	# 	executor.execute.assert_not_called()
+		# Then the command does NOT execute any available actions and returns a FAILURE
+		executor.execute.assert_not_called()
+		self.assertEqual(State.FAILURE, result.state)
 
 	# def test_only_one_root_executor_allowed(self):
 	# 	'''
