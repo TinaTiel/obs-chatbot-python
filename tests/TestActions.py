@@ -78,3 +78,6 @@ class TestActions(unittest.TestCase):
 		# Then the action does NOT execute & returns FAILURE
 		self.assertEqual(State.FAILURE, result)
 		action._execute.assert_not_called()
+
+if __name__ == '__main__':
+	unittest.main()

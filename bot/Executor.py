@@ -1,5 +1,13 @@
-class ExecutorDefault():
-	pass
+class Executor():
+	def __init__(self, actions):
+		pass
+
+	def execute(self, user, args):
+		pass
 
 class ExecutorGated():
-	pass
+	def __init__(self, actions):
+		pass
+
+	def execute(self, user, args):
+		pass

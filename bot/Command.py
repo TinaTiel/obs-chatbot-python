@@ -4,7 +4,7 @@ from bot.Executor import *
 
 class Command():
 
-	def __init__(self, name, description="", aliases=[], actions=[], restrictions=[], executor=ExecutorDefault()):
+	def __init__(self, name, description="", aliases=[], actions=[], restrictions=[]):
 		self.name = name
 		self.description = description
 		self.aliases = aliases if isinstance(aliases, list) else []

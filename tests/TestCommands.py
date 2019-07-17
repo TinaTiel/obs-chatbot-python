@@ -22,20 +22,20 @@ class TestCommands(unittest.TestCase):
 		self.assertEqual("command name", r2.command.name)
 		self.assertEqual("command name", r3.command.name)
 
-	def test_actions_have_parent_command_reference(self):
-		'''
-		Each restriction added to a command must have a reference to its parent command
-		'''
-		# Given a command with several restrictions
-		a1 = Action()
-		a2 = Action()
-		a3 = Action()
-		command = Command("command name", "descr", ["alias"], [a1, a2, a3], None)
+	# def test_actions_have_parent_command_reference(self):
+	# 	'''
+	# 	Each restriction added to a command must have a reference to its parent command
+	# 	'''
+	# 	# Given a command with several restrictions
+	# 	a1 = Action()
+	# 	a2 = Action()
+	# 	a3 = Action()
+	# 	command = Command("command name", "descr", ["alias"], [a1, a2, a3], None)
 
-		# Each restriction has a reference to the command
-		self.assertEqual("command name", a1.command.name)
-		self.assertEqual("command name", a2.command.name)
-		self.assertEqual("command name", a3.command.name)
+	# 	# Each restriction has a reference to the command
+	# 	self.assertEqual("command name", a1.command.name)
+	# 	self.assertEqual("command name", a2.command.name)
+	# 	self.assertEqual("command name", a3.command.name)
 
 	def test_restrictions_none(self):
 		'''
@@ -100,91 +100,78 @@ class TestCommands(unittest.TestCase):
 		self.assertEqual(State.FAILURE, result)
 		commandFail.actions[0].execute.assert_not_called()
 
-	def test_any_failing_action_causes_command_failure(self):
-		'''
-		If any command fails during execution then the command as a whole should fail
-		'''
-		# Given a command with several actions
+	# def test_any_failing_action_causes_command_failure(self):
+	# 	'''
+	# 	If any command fails during execution then the command as a whole should fail
+	# 	'''
+	# 	# Given a command with several actions
 
-		actionPass1 = Action()
-		actionPass1.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	actionPass1 = Action()
+	# 	actionPass1.execute = MagicMock(return_value=Result(State.SUCCESS))
 
-		actionFail = Action()
-		actionFail.execute = MagicMock(return_value=Result(State.FAILURE))
+	# 	actionFail = Action()
+	# 	actionFail.execute = MagicMock(return_value=Result(State.FAILURE))
 
-		actionPass2 = Action()
-		actionPass2.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	actionPass2 = Action()
+	# 	actionPass2.execute = MagicMock(return_value=Result(State.SUCCESS))
 
-		command = Command("name", "descr", ["alias"], [actionPass1, actionFail, actionPass2], None)
+	# 	command = Command("name", "descr", ["alias"], [actionPass1, actionFail, actionPass2], None)
 
-		# When executed with a failing action
-		result = command.execute(User("foo"), None)
+	# 	# When executed with a failing action
+	# 	result = command.execute(User("foo"), None)
 
-		# Then the command reports a failure and only the first two commands executed
-		self.assertEqual(State.FAILURE, result.state)
-		actionPass1.execute.assert_called_once()
-		actionFail.execute.assert_called_once()
-		actionPass2.execute.assert_not_called()
+	# 	# Then the command reports a failure and only the first two commands executed
+	# 	self.assertEqual(State.FAILURE, result.state)
+	# 	actionPass1.execute.assert_called_once()
+	# 	actionFail.execute.assert_called_once()
+	# 	actionPass2.execute.assert_not_called()
 
-	def test_actions_many_args(self):
-		'''
-		Arguments are separated by spaces
-		and can be grouped by quotes
-		'''
-		# Given a command with many actions
-		user = User("foo")
-		restriction = Restriction()
-		action1 = Action()
-		action2 = Action()
-		action3 = Action()
-		action1.execute = MagicMock()
-		action2.execute = MagicMock()
-		action3.execute = MagicMock()
-		command = Command("name", "descr", ["alias"], [action1, action2, action3], restriction)
-		self.assertEqual(3, len(command.actions))
+	# def test_actions_many_args(self):
+	# 	'''
+	# 	Arguments are separated by spaces
+	# 	and can be grouped by quotes
+	# 	'''
+	# 	# Given a command with many actions
+	# 	user = User("foo")
+	# 	restriction = Restriction()
+	# 	action1 = Action()
+	# 	action2 = Action()
+	# 	action3 = Action()
+	# 	action1.execute = MagicMock()
+	# 	action2.execute = MagicMock()
+	# 	action3.execute = MagicMock()
+	# 	command = Command("name", "descr", ["alias"], [action1, action2, action3], restriction)
+	# 	self.assertEqual(3, len(command.actions))
 		
-		# When the command is executed with many args
-		command.execute(user, "foo 'bar bar' \"baz baz\"")
+	# 	# When the command is executed with many args
+	# 	command.execute(user, "foo 'bar bar' \"baz baz\"")
 
-		# Then each action is executed with those args
-		for action in command.actions:
-			action.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
+	# 	# Then each action is executed with those args
+	# 	for action in command.actions:
+	# 		action.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
 
-	def test_actions_no_args(self):
-			'''
-			No arguments can be supplied
-			'''
-			# Given a command with many actions
-			user = User("foo")
-			restriction = Restriction()
-			action1 = Action()
-			action2 = Action()
-			action3 = Action()
-			action1.execute = MagicMock()
-			action2.execute = MagicMock()
-			action3.execute = MagicMock()
-			command = Command("name", "descr", ["alias"], [action1, action2, action3], restriction)
-			self.assertEqual(3, len(command.actions))
+	# def test_actions_no_args(self):
+	# 		'''
+	# 		No arguments can be supplied
+	# 		'''
+	# 		# Given a command with many actions
+	# 		user = User("foo")
+	# 		restriction = Restriction()
+	# 		action1 = Action()
+	# 		action2 = Action()
+	# 		action3 = Action()
+	# 		action1.execute = MagicMock()
+	# 		action2.execute = MagicMock()
+	# 		action3.execute = MagicMock()
+	# 		command = Command("name", "descr", ["alias"], [action1, action2, action3], restriction)
+	# 		self.assertEqual(3, len(command.actions))
 			
-			# When the command is executed with no args
-			command.execute(user, None)
+	# 		# When the command is executed with no args
+	# 		command.execute(user, None)
 
-			# Then each action is executed with no args
-			for action in command.actions:
-				action.execute.assert_called_with(user, [])
-
-	def test_default_executor(self):
-		'''
-		Default executor is to execute all Actions in order per request
-		'''
-		pass
-
-	def test_gated_executor(self):
-		'''
-		Gated executor executes one action per request, only advancing to the 
-		next action at the next request if the prior action executed with SUCCESS
-		'''
-		pass
+	# 		# Then each action is executed with no args
+	# 		for action in command.actions:
+	# 			action.execute.assert_called_with(user, [])
 
 if __name__ == '__main__':
 	unittest.main()

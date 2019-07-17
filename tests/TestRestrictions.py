@@ -141,3 +141,6 @@ class TestRestrictions(unittest.TestCase):
 
 		# But an user belonging to the whitelist is allowed
 		self.assertTrue(restriction.permit(User("foo")))
+
+if __name__ == '__main__':
+	unittest.main()

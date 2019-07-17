@@ -23,3 +23,6 @@ class TestManagers(unittest.TestCase):
 	# 		command_manager.register({'name': 'foo', 'actions': [], 'restrictions': [] })
 	# 	except ValueError:
 	# 		self.fail("command manager register() failed unexpectedly!")
+
+if __name__ == '__main__':
+	unittest.main()
