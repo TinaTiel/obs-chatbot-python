@@ -54,9 +54,19 @@ class TestManagers(unittest.TestCase):
 		except ValueError:
 			self.fail("command manager build_allow() failed unexpectedly!")
 
-	def test_executor_params(self):
+	def test_execute_params(self):
 		# type and args are required
-		pass
+		command_manager = CommandManager()
+		self.assertRaises(ValueError, command_manager.build_executor, {})
+		self.assertRaises(ValueError, command_manager.build_executor, {"type": self.known_allow_type})
+		self.assertRaises(ValueError, command_manager.build_executor, {"args": {}})
+
+		# Otherwise if all are required
+		# No errors occur
+		try:
+			command_manager.build_executor({'type': self.known_allow_type, 'args': {}})
+		except ValueError:
+			self.fail("command manager build_executor() failed unexpectedly!")
 
 
 if __name__ == '__main__':
