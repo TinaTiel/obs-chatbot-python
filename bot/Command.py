@@ -4,7 +4,7 @@ from bot.Executor import *
 
 class Command():
 
-	def __init__(self, name, executor, allows=[], description="", aliases=[]):
+	def __init__(self, name, executor, allows, description="", aliases=[]):
 		self.name = name
 		self.executor = executor
 		self.allows = allows
@@ -58,24 +58,23 @@ class CommandManager():
 		'''
 		pass
 
-	def build_command(self, command_conf):
+	def build_command(self, conf):
 		# Get required confs
-		name = config.get('name', None)
-		action_confs = config.get('allow', None)
-		allow_confs = config.get('allows', None)
-		if(name is None or action_confs is None or allow_confs is None):
-			raise ValueError("Command is missing name, actions, or allows.")
+		name = conf.get('name', None)
+		exec_conf = conf.get('execute', None)
+		allow_confs = conf.get('allows', None)
+		if(name is None or exec_conf is None or allow_confs is None):
+			raise ValueError("Command is missing 'name', 'execute', or 'allows' configurations.")
 		# Get optional confs
-		description = config.get('description', "")
-		aliases = config.get('aliases', [])
+		description = conf.get('description', "")
+		aliases = conf.get('aliases', [])
 
-		allows = [self._build_allow for conf in allow_confs]
-		actions = [self._build_action for conf in action_confs]
+		executor = self.build_executor(exec_conf)
+		allows = [self.build_allow(conf) for conf in allow_confs]
 
-		return Command(name, description, aliases, actions, allows)
-		pass
+		return Command(name, executor, allows, description, aliases)
 
-	def build_allow(self, allow_conf):
+	def build_allow(self, conf):
 		# # Get the required config
 		# restr_type = conf.get('type', None)
 		# restr_args = conf.get('args', None)
@@ -96,5 +95,5 @@ class CommandManager():
 		# 	raise e
 		pass
 
-	def build_action(self, action_conf):
+	def build_executor(self, conf):
 		pass

@@ -18,7 +18,7 @@ class TestCommands(unittest.TestCase):
 		executor.execute = MagicMock()
 
 		# Given a command with no allows
-		commandNoAllows = Command("name", executor)
+		commandNoAllows = Command("name", executor, [])
 		self.assertEqual(0, len(commandNoAllows.allows))
 
 		# When executed
