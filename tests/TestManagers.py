@@ -25,7 +25,7 @@ class TestManagers(unittest.TestCase):
 		try:
 			command_manager.build_command({'name': 'foo', 'execute': {}, 'allows': [] })
 		except ValueError:
-			self.fail("command manager register() failed unexpectedly!")
+			self.fail("command manager build_command() failed unexpectedly!")
 
 	def test_allow_params(self):
 		# type and args are required
@@ -39,7 +39,21 @@ class TestManagers(unittest.TestCase):
 		try:
 			command_manager.build_allow({'type': 'foo', 'args': {}})
 		except ValueError:
-			self.fail("command manager register() failed unexpectedly!")
+			self.fail("command manager build_allow() failed unexpectedly!")
+
+	def test_allow_params_valid_type(self):
+
+		command_manager = CommandManager()
+		
+		# Given an invalid type, expect a ValueError
+		self.assertRaises(ValueError, command_manager.build_allow, {"type": "idontexistfasdfasdfasdfasdf", "args": {}})
+
+		# Given a valid type, expect no errors
+		try:
+			command_manager.build_allow({"type": "AllowUserStatus", "args": {}})
+		except ValueError:
+			self.fail("command manager build_allow() failed unexpectedly!")
+
 
 if __name__ == '__main__':
 	unittest.main()
