@@ -11,7 +11,7 @@ class TestExecutors(unittest.TestCase):
 		'''
 		Default executor is to execute all Actions in order per request
 		'''
-		# Given the default Executor and a list of Actions
+		# Given the default Executor and a list of succeeding Actions
 		a1 = Action()
 		a2 = Action()
 		a3 = Action()
@@ -36,7 +36,7 @@ class TestExecutors(unittest.TestCase):
 		'''
 		Default executor is to execute all Actions in order per request
 		'''
-		# Given the default Executor and a list of Actions
+		# Given the default Executor and a list of Actions including a failure
 		a1 = Action()
 		a2 = Action()
 		a3 = Action()
@@ -57,12 +57,43 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(State.FAILURE, result.state)
 		self.assertEqual(2, len(result.messages))
 
-	def test_gated_executor(self):
+	def test_gated_executor_success(self):
 		'''
 		Gated executor executes one action per request, only advancing to the 
 		next action at the next request if the prior action executed with SUCCESS
 		'''
-		pass
+		# Given the Gated Executor and a list of succeeding actions
+		a1 = Action()
+		a2 = Action()
+		a3 = Action()
+		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+		executor = GatedExecutor([a1, a2, a3])
+
+		# When executed only the next action in the list is executed
+		result = executor.execute(User("foo"), None)
+		a1.execute.assert_called_once()
+		a2.execute.assert_not_called()
+		a3.execute.assert_not_called()
+		self.assertEqual(State.SUCCESS, result.state)
+		self.assertEqual(1, len(result.messages))
+
+		result = executor.execute(User("foo"), None)
+		a1.execute.assert_not_called()
+		a2.execute.assert_called_once()
+		a3.execute.assert_not_called()
+		self.assertEqual(State.SUCCESS, result.state)
+		self.assertEqual(1, len(result.messages))
+
+		result = executor.execute(User("foo"), None)
+		a1.execute.assert_not_called()
+		a2.execute.assert_not_called()
+		a3.execute.assert_called_once()
+		self.assertEqual(State.SUCCESS, result.state)
+		self.assertEqual(1, len(result.messages))
+
+	#TODO: Identify actions and executors for logging etc?
 
 if __name__ == '__main__':
 	unittest.main()

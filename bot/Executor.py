@@ -17,7 +17,7 @@ class Executor():
 		# Return success
 		return Result(State.SUCCESS, results)
 
-class ExecutorGated():
+class GatedExecutor():
 	def __init__(self, actions):
 		pass
 
