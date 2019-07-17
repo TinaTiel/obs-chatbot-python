@@ -1,6 +1,7 @@
 import shlex
 from bot.Result import *
 from bot.Executor import *
+from importlib import import_module
 
 class Command():
 
@@ -80,6 +81,25 @@ class CommandManager():
 		args = conf.get('args', None)
 		if(allow_type is None or args is None):
 			raise ValueError("Command 'allows' configuration is missing 'type' or 'args' configurations.")
+
+		# Try to load specified type
+		class_ = self._get_class("Allow", allow_type)
+
+		# Try to instantiate the action class
+		# try:
+		# 	self.log.debug("Command {}: args are: {}".format(command_name, args))
+		# 	command_obj = class_(self, command_name, aliases, description, permission, min_votes, args)
+		# except ValueError as e:
+		# 	self.log.warn(e)
+		# 	continue
+
+	def _get_class(self, module_name, class_name):
+		try:
+			module_ = import_module("bot." + module_name)
+			class_ = getattr(module_, class_name)
+			return class_
+		except Exception as e:
+			raise ValueError("Could not load specified {} type '{}': {}".format(module_name, class_name, e))
 
 	def build_executor(self, conf):
 		pass
