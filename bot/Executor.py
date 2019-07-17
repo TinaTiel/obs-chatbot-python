@@ -4,7 +4,7 @@ class Executor():
 	def __init__(self, actions):
 		self.actions = actions
 
-	def execute(self, user, args):
+	def execute(self, user, args_list):
 		results = []
 		for action in self.actions:
 			result = action.execute(user, args_list)
@@ -21,5 +21,5 @@ class ExecutorGated():
 	def __init__(self, actions):
 		pass
 
-	def execute(self, user, args):
+	def execute(self, user, args_list):
 		pass
