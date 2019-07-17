@@ -7,29 +7,29 @@ class TestCommands(unittest.TestCase):
 	def setUp(self):
 		pass
 
-	def test_restrictions_have_parent_command_reference(self):
-		'''
-		Each restriction added to a command must have a reference to its parent command
-		'''
-		# Given a command with several restrictions
-		r1 = Restriction()
-		r2 = Restriction()
-		r3 = Restriction()
-		command = Command("command name", "descr", ["alias"], None, [r1, r2, r3])
+	# def test_restrictions_have_parent_command_reference(self):
+	# 	'''
+	# 	Each restriction added to a command must have a reference to its parent command
+	# 	'''
+	# 	# Given a command with several restrictions
+	# 	r1 = Restriction()
+	# 	r2 = Restriction()
+	# 	r3 = Restriction()
+	# 	command = Command("command name", "descr", ["alias"], None, [r1, r2, r3])
 
-		# Each restriction has a reference to the command
-		self.assertEqual("command name", r1.command.name)
-		self.assertEqual("command name", r2.command.name)
-		self.assertEqual("command name", r3.command.name)
+	# 	# Each restriction has a reference to the command
+	# 	self.assertEqual("command name", r1.command.name)
+	# 	self.assertEqual("command name", r2.command.name)
+	# 	self.assertEqual("command name", r3.command.name)
 
 	# def test_actions_have_parent_command_reference(self):
 	# 	'''
 	# 	Each restriction added to a command must have a reference to its parent command
 	# 	'''
 	# 	# Given a command with several restrictions
-	# 	a1 = Action()
-	# 	a2 = Action()
-	# 	a3 = Action()
+	# 	a1 = Executor([])
+	# 	a2 = Executor([])
+	# 	a3 = Executor([])
 	# 	command = Command("command name", "descr", ["alias"], [a1, a2, a3], None)
 
 	# 	# Each restriction has a reference to the command
@@ -42,11 +42,11 @@ class TestCommands(unittest.TestCase):
 		A Command having no restrictions always executes
 		'''
 		user = User("foo")
-		action = Action()
-		action.execute = MagicMock()
+		executor = Executor([])
+		executor.execute = MagicMock()
 
 		# Given a command with no restrictions
-		commandNoRestrictions = Command("name", "descr", ["alias"], [action], None)
+		commandNoRestrictions = Command("name", "descr", ["alias"], [executor], None)
 		self.assertEqual(0, len(commandNoRestrictions.restrictions))
 
 		# When executed
@@ -61,13 +61,13 @@ class TestCommands(unittest.TestCase):
 		A Command having all passing restrictions executes
 		'''
 		user = User("foo")
-		action = Action()
-		action.execute = MagicMock()
+		executor = Executor([])
+		executor.execute = MagicMock()
 
 		# Given a command with passing restrictions
 		restrictionPass = Restriction()
 		restrictionPass.permit = MagicMock(return_value=True)
-		commandPass = Command("name", "descr", ["alias"], [action], [restrictionPass, restrictionPass])
+		commandPass = Command("name", "descr", ["alias"], [executor], [restrictionPass, restrictionPass])
 		self.assertEqual(2, len(commandPass.restrictions))
 
 		# When executed
@@ -82,15 +82,15 @@ class TestCommands(unittest.TestCase):
 		A Command having any failing restriction doesn't execute
 		'''
 		user = User("foo")
-		action = Action()
-		action.execute = MagicMock()
+		executor = Executor([])
+		executor.execute = MagicMock()
 
 		# Given a command with a failing restriction
 		restrictionPass = Restriction()
 		restrictionPass.permit = MagicMock(return_value=True)
 		restrictionFail = Restriction()
 		restrictionFail.permit = MagicMock(return_value=False)
-		commandFail = Command("name", "descr", ["alias"], [action], [restrictionPass, restrictionFail, restrictionPass])
+		commandFail = Command("name", "descr", ["alias"], [executor], [restrictionPass, restrictionFail, restrictionPass])
 		self.assertEqual(3, len(commandFail.restrictions))
 
 		# When executed
@@ -100,55 +100,55 @@ class TestCommands(unittest.TestCase):
 		self.assertEqual(State.FAILURE, result)
 		commandFail.actions[0].execute.assert_not_called()
 
-	# def test_any_failing_action_causes_command_failure(self):
-	# 	'''
-	# 	If any command fails during execution then the command as a whole should fail
-	# 	'''
-	# 	# Given a command with several actions
+	def test_any_failing_executor_causes_command_failure(self):
+		'''
+		If any command fails during execution then the command as a whole should fail
+		'''
+		# Given a command with several actions
 
-	# 	actionPass1 = Action()
-	# 	actionPass1.execute = MagicMock(return_value=Result(State.SUCCESS))
+		execPass1 = Executor([])
+		execPass1.execute = MagicMock(return_value=Result(State.SUCCESS))
 
-	# 	actionFail = Action()
-	# 	actionFail.execute = MagicMock(return_value=Result(State.FAILURE))
+		execFail = Executor([])
+		execFail.execute = MagicMock(return_value=Result(State.FAILURE))
 
-	# 	actionPass2 = Action()
-	# 	actionPass2.execute = MagicMock(return_value=Result(State.SUCCESS))
+		execPass2 = Executor([])
+		execPass2.execute = MagicMock(return_value=Result(State.SUCCESS))
 
-	# 	command = Command("name", "descr", ["alias"], [actionPass1, actionFail, actionPass2], None)
+		command = Command("name", "descr", ["alias"], [execPass1, execFail, execPass2], None)
 
-	# 	# When executed with a failing action
-	# 	result = command.execute(User("foo"), None)
+		# When executed with a failing action
+		result = command.execute(User("foo"), None)
 
-	# 	# Then the command reports a failure and only the first two commands executed
-	# 	self.assertEqual(State.FAILURE, result.state)
-	# 	actionPass1.execute.assert_called_once()
-	# 	actionFail.execute.assert_called_once()
-	# 	actionPass2.execute.assert_not_called()
+		# Then the command reports a failure and only the first two commands executed
+		self.assertEqual(State.FAILURE, result.state)
+		execPass1.execute.assert_called_once()
+		execFail.execute.assert_called_once()
+		execPass2.execute.assert_not_called()
 
-	# def test_actions_many_args(self):
-	# 	'''
-	# 	Arguments are separated by spaces
-	# 	and can be grouped by quotes
-	# 	'''
-	# 	# Given a command with many actions
-	# 	user = User("foo")
-	# 	restriction = Restriction()
-	# 	action1 = Action()
-	# 	action2 = Action()
-	# 	action3 = Action()
-	# 	action1.execute = MagicMock()
-	# 	action2.execute = MagicMock()
-	# 	action3.execute = MagicMock()
-	# 	command = Command("name", "descr", ["alias"], [action1, action2, action3], restriction)
-	# 	self.assertEqual(3, len(command.actions))
+	def test_actions_many_args(self):
+		'''
+		Arguments are separated by spaces
+		and can be grouped by quotes
+		'''
+		# Given a command with many actions
+		user = User("foo")
+		restriction = Restriction()
+		exec1 = Executor([])
+		exec2 = Executor([])
+		exec3 = Executor([])
+		exec1.execute = MagicMock()
+		exec2.execute = MagicMock()
+		exec3.execute = MagicMock()
+		command = Command("name", "descr", ["alias"], [exec1, exec2, exec3], restriction)
+		self.assertEqual(3, len(command.actions))
 		
-	# 	# When the command is executed with many args
-	# 	command.execute(user, "foo 'bar bar' \"baz baz\"")
+		# When the command is executed with many args
+		command.execute(user, "foo 'bar bar' \"baz baz\"")
 
-	# 	# Then each action is executed with those args
-	# 	for action in command.actions:
-	# 		action.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
+		# Then each action is executed with those args
+		for executor in command.executors:
+			executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
 
 	# def test_actions_no_args(self):
 	# 		'''
@@ -157,13 +157,13 @@ class TestCommands(unittest.TestCase):
 	# 		# Given a command with many actions
 	# 		user = User("foo")
 	# 		restriction = Restriction()
-	# 		action1 = Action()
-	# 		action2 = Action()
-	# 		action3 = Action()
-	# 		action1.execute = MagicMock()
-	# 		action2.execute = MagicMock()
-	# 		action3.execute = MagicMock()
-	# 		command = Command("name", "descr", ["alias"], [action1, action2, action3], restriction)
+	# 		exec1 = Executor([])
+	# 		exec2 = Executor([])
+	# 		exec3 = Executor([])
+	# 		exec1.execute = MagicMock()
+	# 		exec2.execute = MagicMock()
+	# 		exec3.execute = MagicMock()
+	# 		command = Command("name", "descr", ["alias"], [exec1, exec2, exec3], restriction)
 	# 		self.assertEqual(3, len(command.actions))
 			
 	# 		# When the command is executed with no args
