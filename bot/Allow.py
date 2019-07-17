@@ -1,15 +1,15 @@
 from bot.Permission import *
 
-class Restriction():
+class Allow():
 	def __init__(self):
 		pass
 
 	def permit(self, user):
 		raise NotImplementedError("Tell me what the restriction is you poopyhead!")
 
-class RestrictionUserStatus(Restriction):
+class AllowUserStatus(Allow):
 	'''
-	Restriction is based on user status in Twitch
+	Allow is based on user status in Twitch
 	'''
 	def __init__(self, min_permission=Permission.BROADCASTER):
 		self.min_permission = min_permission
@@ -29,7 +29,7 @@ class RestrictionUserStatus(Restriction):
 
 		return user_status >= self.min_permission
 
-class RestrictionVoting(Restriction):
+class AllowVoting(Allow):
 	def __init__(self, min_votes, uniques=True):
 		if(not isinstance(min_votes, int) or min_votes < 0):
 			raise ValueError("Minimum votes must be greater than 0!")
@@ -58,7 +58,7 @@ class RestrictionVoting(Restriction):
 			self.votes.add(user.username)
 
 
-class RestrictionWhitelist(Restriction):
+class AllowWhitelist(Allow):
 	def __init__(self, whitelist):
 		if(not isinstance(whitelist, list)):
 			raise ValueError("Whitelist has to be a list")

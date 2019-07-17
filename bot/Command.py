@@ -81,14 +81,14 @@ class CommandManager():
 		# if(restr_type is None or restr_args is None):
 		# 	raise ValueError("Missing type or args")
 		
-		# # Locate the Restriction type class
+		# # Locate the Allow type class
 		# try:
-		# 	module = import_module("bot.Restriction."+restr_type)
+		# 	module = import_module("bot.Allow."+restr_type)
 		# 	class_ = getattr(module, restr_type)
 		# except Exception as e:
-		# 	raise ValueError("Could not locate Restriction type '{}'".format(restr_type))
+		# 	raise ValueError("Could not locate Allow type '{}'".format(restr_type))
 
-		# # Instantiate the Restriction class
+		# # Instantiate the Allow class
 		# try:
 		# 	restriction = class_(restr_args**) # Maybe??
 		# except ValueError as e:

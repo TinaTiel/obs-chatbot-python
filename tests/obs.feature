@@ -20,12 +20,12 @@ Feature: Command execution
 		When that command is executed
 		Then actions are executed in order
 
-	Scenario: Command with Restrictions
+	Scenario: Command with Allows
 		Given a command with restrictions
 		When that command is executed
 		Then it executes with "failure"
 
-	Scenario: Command with No Restrictions
+	Scenario: Command with No Allows
 		Given a command with no restrictions
 		When that command is executed
 		Then it executes with "success"

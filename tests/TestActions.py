@@ -12,9 +12,9 @@ class TestActions(unittest.TestCase):
 		Each restriction added to an action must have a reference to its parent action
 		'''
 		# Given a command with several restrictions
-		r1 = Restriction()
-		r2 = Restriction()
-		r3 = Restriction()
+		r1 = Allow()
+		r2 = Allow()
+		r3 = Allow()
 		action = Action([r1, r2, r3])
 
 		# Each restriction has a reference to the command
@@ -43,7 +43,7 @@ class TestActions(unittest.TestCase):
 		A Command having all passing restrictions executes
 		'''
 		# Given an action with passing restrictions
-		restrictionPass = Restriction()
+		restrictionPass = Allow()
 		restrictionPass.permit = MagicMock(return_value=True)
 
 		action = Action([restrictionPass])
@@ -62,10 +62,10 @@ class TestActions(unittest.TestCase):
 		A Command having any failing restriction doesn't execute
 		'''
 		# Given an action with passing and failing restrictions
-		restrictionPass = Restriction()
+		restrictionPass = Allow()
 		restrictionPass.permit = MagicMock(return_value=True)
 
-		restrictionFail = Restriction()
+		restrictionFail = Allow()
 		restrictionFail.permit = MagicMock(return_value=False)
 
 		action = Action([restrictionPass, restrictionFail])

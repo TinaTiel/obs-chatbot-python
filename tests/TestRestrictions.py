@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import *
 from bot import *
 
-class TestRestrictions(unittest.TestCase):
+class TestAllows(unittest.TestCase):
 
 	def setUp(self):
 		self.user_public = User("public")
@@ -16,7 +16,7 @@ class TestRestrictions(unittest.TestCase):
 		The general public is allowed
 		'''
 		# Given a restriction to the general public
-		restriction = RestrictionUserStatus(Permission.EVERYONE)
+		restriction = AllowUserStatus(Permission.EVERYONE)
 
 		# All users are permitted
 		self.assertTrue(restriction.permit(self.user_public))
@@ -30,7 +30,7 @@ class TestRestrictions(unittest.TestCase):
 		Followers and higher are allowed
 		'''
 		# Given a restriction to followers
-		restriction = RestrictionUserStatus(Permission.FOLLOWER)
+		restriction = AllowUserStatus(Permission.FOLLOWER)
 
 		# Only followers and above are permitted
 		self.assertFalse(restriction.permit(self.user_public))
@@ -44,7 +44,7 @@ class TestRestrictions(unittest.TestCase):
 		Subscribers and higher are allowed
 		'''
 		# Given a restriction to subscribers
-		restriction = RestrictionUserStatus(Permission.SUBSCRIBER)
+		restriction = AllowUserStatus(Permission.SUBSCRIBER)
 
 		# Only subscribers and above are permitted
 		self.assertFalse(restriction.permit(self.user_public))
@@ -58,7 +58,7 @@ class TestRestrictions(unittest.TestCase):
 		Moderators and higher are allowed
 		'''
 		# Given a restriction to moderators
-		restriction = RestrictionUserStatus(Permission.MODERATOR)
+		restriction = AllowUserStatus(Permission.MODERATOR)
 
 		# Only moderators and above are permitted
 		self.assertFalse(restriction.permit(self.user_public))
@@ -72,7 +72,7 @@ class TestRestrictions(unittest.TestCase):
 		Only broadcaster is allowed
 		'''
 		# Given a restriction to broadcaster
-		restriction = RestrictionUserStatus(Permission.BROADCASTER)
+		restriction = AllowUserStatus(Permission.BROADCASTER)
 
 		# Only broadcaster is permitted
 		self.assertFalse(restriction.permit(self.user_public))
@@ -86,7 +86,7 @@ class TestRestrictions(unittest.TestCase):
 		Voting-based permission, duplicate votes allowed
 		'''
 		# Given vote restriction with unique votes required
-		restriction = RestrictionVoting(5, False)
+		restriction = AllowVoting(5, False)
 
 		# When the same user votes multiple times
 		self.assertFalse(restriction.permit(self.user_public))
@@ -108,7 +108,7 @@ class TestRestrictions(unittest.TestCase):
 		Voting based permission, but requires unique votes
 		'''
 		# Given vote restriction with unique votes required
-		restriction = RestrictionVoting(5, True)
+		restriction = AllowVoting(5, True)
 
 		# When the same user votes multiple times
 		self.assertFalse(restriction.permit(self.user_public))
@@ -134,7 +134,7 @@ class TestRestrictions(unittest.TestCase):
 
 		# Given a whitelist
 		whitelist = ["foo"]
-		restriction = RestrictionWhitelist(whitelist)
+		restriction = AllowWhitelist(whitelist)
 
 		# An user not a member of the whitelist is denied
 		self.assertFalse(restriction.permit(User("bar")))

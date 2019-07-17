@@ -5,7 +5,7 @@ from bot import *
 class TestCommands(unittest.TestCase):
 
 	def setUp(self):
-		self.no_restriction = Restriction()
+		self.no_restriction = Allow()
 		self.no_restriction.permit = MagicMock(return_value=True)
 		
 
@@ -18,11 +18,11 @@ class TestCommands(unittest.TestCase):
 		executor.execute = MagicMock()
 
 		# Given a command with no restrictions
-		commandNoRestrictions = Command("name", executor)
-		self.assertEqual(0, len(commandNoRestrictions.restrictions))
+		commandNoAllows = Command("name", executor)
+		self.assertEqual(0, len(commandNoAllows.restrictions))
 
 		# When executed
-		result = commandNoRestrictions.execute(user, None)
+		result = commandNoAllows.execute(user, None)
 
 		# Then the command does NOT execute any available actions and returns a FAILURE
 		executor.execute.assert_not_called()
@@ -37,7 +37,7 @@ class TestCommands(unittest.TestCase):
 		executor.execute = MagicMock()
 
 		# Given a command with passing restrictions
-		restrictionPass = Restriction()
+		restrictionPass = Allow()
 		restrictionPass.permit = MagicMock(return_value=True)
 		commandPass = Command("name", executor, [restrictionPass, restrictionPass])
 		self.assertEqual(2, len(commandPass.restrictions))
@@ -57,9 +57,9 @@ class TestCommands(unittest.TestCase):
 		executor.execute = MagicMock()
 
 		# Given a command with a failing restriction
-		restrictionPass = Restriction()
+		restrictionPass = Allow()
 		restrictionPass.permit = MagicMock(return_value=True)
-		restrictionFail = Restriction()
+		restrictionFail = Allow()
 		restrictionFail.permit = MagicMock(return_value=False)
 		commandFail = Command("name", executor, [restrictionPass, restrictionFail, restrictionPass])
 		self.assertEqual(3, len(commandFail.restrictions))
