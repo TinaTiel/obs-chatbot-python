@@ -88,6 +88,17 @@ class CommandManager():
 
 		return allow
 
+	def build_executor(self, conf):
+		# Get required confs
+		executor_type = conf.get('type', None)
+		args = conf.get('args', None)
+		if(executor_type is None or args is None):
+			raise ValueError("Command 'allows' configuration is missing 'type' or 'args' configurations.")
+
+		# Try to load specified type & instantiate it
+		class_ = self._get_class("Executor", executor_type)
+		executor = class_(**args)
+
 	def _get_class(self, module_name, class_name):
 		try:
 			module_ = import_module("bot." + module_name)
@@ -95,10 +106,3 @@ class CommandManager():
 			return class_
 		except Exception as e:
 			raise ValueError("Could not load specified {} type '{}': {}".format(module_name, class_name, e))
-
-	def build_executor(self, conf):
-		# Get required confs
-		executor_type = conf.get('type', None)
-		args = conf.get('args', None)
-		if(executor_type is None or args is None):
-			raise ValueError("Command 'allows' configuration is missing 'type' or 'args' configurations.")

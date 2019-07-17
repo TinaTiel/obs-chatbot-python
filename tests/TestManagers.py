@@ -69,7 +69,7 @@ class TestManagers(unittest.TestCase):
 		# Otherwise if all are required
 		# No errors occur
 		try:
-			command_manager.build_executor({'type': self.known_allow_type, 'args': {}})
+			command_manager.build_executor({'type': "ExecuteAll", 'args': {"actions":[]}})
 		except ValueError:
 			self.fail("command manager build_executor() failed unexpectedly!")
 
@@ -83,8 +83,8 @@ class TestManagers(unittest.TestCase):
 
 		# Otherwise given a valid type (from the Executor module), no errors
 		try:
-			command_manager.build_executor({"type": "ExecuteAll", "args": {}})
-			command_manager.build_executor({"type": "ExecuteGated", "args": {}})
+			command_manager.build_executor({"type": "ExecuteAll", "args": {"actions":[]}})
+			command_manager.build_executor({"type": "ExecuteGated", "args": {"actions":[]}})
 		except ValueError:
 			self.fail("command manager build_executor() failed unexpectedly")
 

@@ -18,7 +18,7 @@ class TestExecutors(unittest.TestCase):
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteAll([a1, a2, a3])
+		executor = ExecuteAll(**{"actions": [a1, a2, a3]})
 
 		# When executed 
 		result = executor.execute(User("foo"), None)
@@ -43,7 +43,7 @@ class TestExecutors(unittest.TestCase):
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.FAILURE))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteAll([a1, a2, a3])
+		executor = ExecuteAll(**{"actions": [a1, a2, a3]})
 
 		# When executed 
 		result = executor.execute(User("foo"), None)
@@ -69,7 +69,7 @@ class TestExecutors(unittest.TestCase):
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteGated([a1, a2, a3])
+		executor = ExecuteGated(**{"actions": [a1, a2, a3]})
 
 		# When executed only the next action in the list is executed
 		result = executor.execute(User("foo"), None)
@@ -127,7 +127,7 @@ class TestExecutors(unittest.TestCase):
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.FAILURE))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteGated([a1, a2, a3])
+		executor = ExecuteGated(**{"actions": [a1, a2, a3]})
 
 		# When executed only the next action in the list is executed
 		result = executor.execute(User("foo"), None)
@@ -194,13 +194,13 @@ class TestExecutors(unittest.TestCase):
 		a5.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a6.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a7.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteAll([a1, 
-												ExecuteAll([a2, 
+		executor = ExecuteAll(**{"actions":[a1, 
+												ExecuteAll(**{"actions":[a2, 
 																	a3, 
-																	ExecuteAll([a4, 
-																						a5]),
-																	a6]), 
-												a7]) # etc...
+																	ExecuteAll(**{"actions":[a4, 
+																						a5]}),
+																	a6]}), 
+												a7]}) # etc...
 
 		# When executed 
 		result = executor.execute(User("foo"), None)

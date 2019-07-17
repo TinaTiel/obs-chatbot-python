@@ -9,7 +9,10 @@ class Executor():
 		pass
 
 class ExecuteAll(Executor):
-	def __init__(self, actions):
+	def __init__(self, **kwargs):
+		actions = kwargs.get("actions", None)
+		if(actions is None):
+			raise ValueError("Executor must have 'actions'.")
 		self.actions = actions
 
 	def execute(self, user, args_list):
@@ -26,7 +29,10 @@ class ExecuteAll(Executor):
 		return Result(State.SUCCESS, results)
 
 class ExecuteGated(Executor):
-	def __init__(self, actions):
+	def __init__(self, **kwargs):
+		actions = kwargs.get("actions", None)
+		if(actions is None):
+			raise ValueError("Executor must have 'actions'.")
 		self.executed = list()
 		self.actions = deque(actions)
 
