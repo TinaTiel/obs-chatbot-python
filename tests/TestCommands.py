@@ -68,55 +68,38 @@ class TestCommands(unittest.TestCase):
 		executor.execute.assert_not_called()
 		self.assertEqual(State.FAILURE, result.state)
 
-	# def test_only_one_root_executor_allowed(self):
-	# 	'''
-	# 	Only pass one (root) executor to the Command, a list is not allowed.
-	# 	While this is possible, it overcomplicates the configuration. If one wants to 
-	# 	have multiple executors, then the solution is to pass executors into the root executor 
-	# 	(instead of actions)
-	# 	'''
-	# 	pass
-
-	# def test_execution_many_args(self):
-	# 	'''
-	# 	Arguments are separated by spaces
-	# 	and can be grouped by quotes
-	# 	'''
-	# 	# Given a command
-	# 	user = User("foo")
-	# 	restriction = Restriction()
-	# 	executor = Executor([])
-	# 	executor.execute = MagicMock()
-	# 	command = Command("name", "descr", ["alias"], executor, restriction)
+	def test_execution_many_args(self):
+		'''
+		Arguments are separated by spaces
+		and can be grouped by quotes
+		'''
+		# Given a command
+		user = User("foo")
+		executor = Executor([])
+		executor.execute = MagicMock()
+		command = Command("name", executor)
 		
-	# 	# When the command is executed with many args in one string
-	# 	command.execute(user, "foo 'bar bar' \"baz baz\"")
+		# When the command is executed with many args in one string
+		command.execute(user, "foo 'bar bar' \"baz baz\"")
 
-	# 	# Then the executor is executed with a list of arg strings
-	# 	executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
+		# Then the executor is executed with a list of arg strings
+		executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
 
-	# def test_actions_no_args(self):
-	# 		'''
-	# 		No arguments can be supplied
-	# 		'''
-	# 		# Given a command with many actions
-	# 		user = User("foo")
-	# 		restriction = Restriction()
-	# 		exec1 = Executor([])
-	# 		exec2 = Executor([])
-	# 		exec3 = Executor([])
-	# 		exec1.execute = MagicMock()
-	# 		exec2.execute = MagicMock()
-	# 		exec3.execute = MagicMock()
-	# 		command = Command("name", "descr", ["alias"], [exec1, exec2, exec3], restriction)
-	# 		self.assertEqual(3, len(command.actions))
-			
-	# 		# When the command is executed with no args
-	# 		command.execute(user, None)
+	def test_actions_no_args(self):
+		'''
+		No arguments can be supplied
+		'''
+		# Given a command with many actions
+		user = User("foo")
+		executor = Executor([])
+		executor.execute = MagicMock()
+		command = Command("name", executor)
+		
+		# When the command is executed with many args in one string
+		command.execute(user, None)
 
-	# 		# Then each action is executed with no args
-	# 		for action in command.actions:
-	# 			action.execute.assert_called_with(user, [])
+		# Then the executor is executed with a list of arg strings
+		executor.execute.assert_called_with(user, [])
 
 if __name__ == '__main__':
 	unittest.main()
