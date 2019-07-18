@@ -11,8 +11,7 @@ class Action():
 
 		self.restrictions = []
 		self.add_restrictions(restrictions if isinstance(restrictions, list) else [])
-		self.args = args
-		self._init_args()
+		self._init_args(args)
 
 	def execute(self, user, args):
 		if(not self._permit(user)):
@@ -31,8 +30,21 @@ class Action():
 				return False
 		return True
 
-	def _init_args(self):
+	def _init_args(self, args):
 		pass
+
+	def _execute(self, user, args):
+		pass
+
+class AnyArgs(Action):
+	'''A dummy Action class
+	that takes args provided
+	'''
+	def __init__(self, **kwargs):
+		super().__init__(kwargs)
+
+	def _init_args(self, args):
+		self.args = args
 
 	def _execute(self, user, args):
 		pass
