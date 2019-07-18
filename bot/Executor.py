@@ -8,7 +8,7 @@ class Executor():
 	def execute(self, user, args_list):
 		pass
 
-class ExecuteAll(Executor):
+class ExecuteAll():
 	def __init__(self, **kwargs):
 		actions = kwargs.get("actions", None)
 		if(actions is None):
@@ -28,7 +28,7 @@ class ExecuteAll(Executor):
 		# Return success
 		return Result(State.SUCCESS, results)
 
-class ExecuteGated(Executor):
+class ExecuteGated():
 	def __init__(self, **kwargs):
 		actions = kwargs.get("actions", None)
 		if(actions is None):
@@ -57,3 +57,12 @@ class ExecuteGated(Executor):
 			self.executed.append(selected)
 
 		return Result(result.state, [result])
+
+# class ExecuteRandom(Executor):
+# 	def __init__(self, **kwargs):
+# 		actions = kwargs.get("actions", None)
+# 		max_picked = kwargs.get("max_picked": 2)
+# 		if(actions is None):
+# 			raise ValueError("Executor must have 'actions'.")
+# 		self.executed = list()
+# 		self.actions = deque(actions)
