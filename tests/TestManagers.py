@@ -177,7 +177,15 @@ class TestManagers(unittest.TestCase):
 										"type": "AnyArgs",
 										"args": {
 											"lvl": "b",
-											"num": 2
+											"num": 2,
+											"allows": [
+												{
+													"type": "AllowVoting",
+													"args": {
+														"min_votes": 2
+													}
+												}
+											]
 										}
 									}
 								]
