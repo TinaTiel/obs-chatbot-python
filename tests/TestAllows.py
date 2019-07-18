@@ -22,136 +22,136 @@ class TestAllows(unittest.TestCase):
 			self.fail("Instantiating AllowUserStatus failed unexpectedly!")
 
 
-	# def test_allow_userStatus_Everyone(self):
-	# 	'''
-	# 	The general public is allowed
-	# 	'''
-	# 	# Given a allow to the general public
-	# 	allow = AllowUserStatus(**{"min_status": Permission.EVERYONE})
+	def test_allow_userStatus_Everyone(self):
+		'''
+		The general public is allowed
+		'''
+		# Given a allow to the general public
+		allow = AllowUserStatus(**{"min_status": "EVERYONE"})
 
-	# 	# All users are permitted
-	# 	self.assertTrue(allow.permit(self.user_public))
-	# 	self.assertTrue(allow.permit(self.user_follower))
-	# 	self.assertTrue(allow.permit(self.user_subscriber))
-	# 	self.assertTrue(allow.permit(self.user_moderator))
-	# 	self.assertTrue(allow.permit(self.user_broadcaster))
+		# All users are permitted
+		self.assertTrue(allow.permit(self.user_public))
+		self.assertTrue(allow.permit(self.user_follower))
+		self.assertTrue(allow.permit(self.user_subscriber))
+		self.assertTrue(allow.permit(self.user_moderator))
+		self.assertTrue(allow.permit(self.user_broadcaster))
 
-	# def test_allow_userStatus_Follower(self):
-	# 	'''
-	# 	Followers and higher are allowed
-	# 	'''
-	# 	# Given a allow to followers
-	# 	allow = AllowUserStatus(**{"min_status": Permission.FOLLOWER})
+	def test_allow_userStatus_Follower(self):
+		'''
+		Followers and higher are allowed
+		'''
+		# Given a allow to followers
+		allow = AllowUserStatus(**{"min_status": "FOLLOWER"})
 
-	# 	# Only followers and above are permitted
-	# 	self.assertFalse(allow.permit(self.user_public))
-	# 	self.assertTrue(allow.permit(self.user_follower))
-	# 	self.assertTrue(allow.permit(self.user_subscriber))
-	# 	self.assertTrue(allow.permit(self.user_moderator))
-	# 	self.assertTrue(allow.permit(self.user_broadcaster))
+		# Only followers and above are permitted
+		self.assertFalse(allow.permit(self.user_public))
+		self.assertTrue(allow.permit(self.user_follower))
+		self.assertTrue(allow.permit(self.user_subscriber))
+		self.assertTrue(allow.permit(self.user_moderator))
+		self.assertTrue(allow.permit(self.user_broadcaster))
 
-	# def test_allow_userStatus_Subscriber(self):
-	# 	'''
-	# 	Subscribers and higher are allowed
-	# 	'''
-	# 	# Given a allow to subscribers
-	# 	allow = AllowUserStatus(**{"min_status": Permission.SUBSCRIBER})
+	def test_allow_userStatus_Subscriber(self):
+		'''
+		Subscribers and higher are allowed
+		'''
+		# Given a allow to subscribers
+		allow = AllowUserStatus(**{"min_status": "SUBSCRIBER"})
 
-	# 	# Only subscribers and above are permitted
-	# 	self.assertFalse(allow.permit(self.user_public))
-	# 	self.assertFalse(allow.permit(self.user_follower))
-	# 	self.assertTrue(allow.permit(self.user_subscriber))
-	# 	self.assertTrue(allow.permit(self.user_moderator))
-	# 	self.assertTrue(allow.permit(self.user_broadcaster))
+		# Only subscribers and above are permitted
+		self.assertFalse(allow.permit(self.user_public))
+		self.assertFalse(allow.permit(self.user_follower))
+		self.assertTrue(allow.permit(self.user_subscriber))
+		self.assertTrue(allow.permit(self.user_moderator))
+		self.assertTrue(allow.permit(self.user_broadcaster))
 
-	# def test_allow_userStatus_Moderator(self):
-	# 	'''
-	# 	Moderators and higher are allowed
-	# 	'''
-	# 	# Given a allow to moderators
-	# 	allow = AllowUserStatus(**{"min_status": Permission.MODERATOR})
+	def test_allow_userStatus_Moderator(self):
+		'''
+		Moderators and higher are allowed
+		'''
+		# Given a allow to moderators
+		allow = AllowUserStatus(**{"min_status": "MODERATOR"})
 
-	# 	# Only moderators and above are permitted
-	# 	self.assertFalse(allow.permit(self.user_public))
-	# 	self.assertFalse(allow.permit(self.user_follower))
-	# 	self.assertFalse(allow.permit(self.user_subscriber))
-	# 	self.assertTrue(allow.permit(self.user_moderator))
-	# 	self.assertTrue(allow.permit(self.user_broadcaster))
+		# Only moderators and above are permitted
+		self.assertFalse(allow.permit(self.user_public))
+		self.assertFalse(allow.permit(self.user_follower))
+		self.assertFalse(allow.permit(self.user_subscriber))
+		self.assertTrue(allow.permit(self.user_moderator))
+		self.assertTrue(allow.permit(self.user_broadcaster))
 
-	# def test_allow_userStatus_Broadcaster(self):
-	# 	'''
-	# 	Only broadcaster is allowed
-	# 	'''
-	# 	# Given a allow to broadcaster
-	# 	allow = AllowUserStatus(**{"min_status": Permission.BROADCASTER})
+	def test_allow_userStatus_Broadcaster(self):
+		'''
+		Only broadcaster is allowed
+		'''
+		# Given a allow to broadcaster
+		allow = AllowUserStatus(**{"min_status": "BROADCASTER"})
 
-	# 	# Only broadcaster is permitted
-	# 	self.assertFalse(allow.permit(self.user_public))
-	# 	self.assertFalse(allow.permit(self.user_follower))
-	# 	self.assertFalse(allow.permit(self.user_subscriber))
-	# 	self.assertFalse(allow.permit(self.user_moderator))
-	# 	self.assertTrue(allow.permit(self.user_broadcaster))
+		# Only broadcaster is permitted
+		self.assertFalse(allow.permit(self.user_public))
+		self.assertFalse(allow.permit(self.user_follower))
+		self.assertFalse(allow.permit(self.user_subscriber))
+		self.assertFalse(allow.permit(self.user_moderator))
+		self.assertTrue(allow.permit(self.user_broadcaster))
 
-	# def test_allow_voting_duplicates(self):
-	# 	'''
-	# 	Voting-based permission, duplicate votes allowed
-	# 	'''
-	# 	# Given vote allow with unique votes required
-	# 	allow = AllowVoting(**{"min_votes": 5, "uniques": False})
+	def test_allow_voting_duplicates(self):
+		'''
+		Voting-based permission, duplicate votes allowed
+		'''
+		# Given vote allow with unique votes required
+		allow = AllowVoting(**{"min_votes": 5, "uniques": False})
 
-	# 	# When the same user votes multiple times
-	# 	self.assertFalse(allow.permit(self.user_public))
-	# 	self.assertFalse(allow.permit(self.user_public))
-	# 	self.assertFalse(allow.permit(self.user_public))
+		# When the same user votes multiple times
+		self.assertFalse(allow.permit(self.user_public))
+		self.assertFalse(allow.permit(self.user_public))
+		self.assertFalse(allow.permit(self.user_public))
 
-	# 	# Then all those votes are counted
-	# 	self.assertEqual(3, len(allow.votes))
+		# Then all those votes are counted
+		self.assertEqual(3, len(allow.votes))
 
-	# 	# And permit is True only after the min votes are met, then votes reset
-	# 	self.assertFalse(allow.permit(self.user_public))
-	# 	self.assertEqual(4, len(allow.votes))
+		# And permit is True only after the min votes are met, then votes reset
+		self.assertFalse(allow.permit(self.user_public))
+		self.assertEqual(4, len(allow.votes))
 
-	# 	self.assertTrue(allow.permit(self.user_public))
-	# 	self.assertEqual(0, len(allow.votes))
+		self.assertTrue(allow.permit(self.user_public))
+		self.assertEqual(0, len(allow.votes))
 
-	# def test_allow_voting_uniques(self):
-	# 	'''
-	# 	Voting based permission, but requires unique votes
-	# 	'''
-	# 	# Given vote allow with unique votes required
-	# 	allow = AllowVoting(**{"min_votes": 5})
+	def test_allow_voting_uniques(self):
+		'''
+		Voting based permission, but requires unique votes
+		'''
+		# Given vote allow with unique votes required
+		allow = AllowVoting(**{"min_votes": 5})
 
-	# 	# When the same user votes multiple times
-	# 	self.assertFalse(allow.permit(self.user_public))
-	# 	self.assertFalse(allow.permit(self.user_public))
-	# 	self.assertFalse(allow.permit(self.user_public))
+		# When the same user votes multiple times
+		self.assertFalse(allow.permit(self.user_public))
+		self.assertFalse(allow.permit(self.user_public))
+		self.assertFalse(allow.permit(self.user_public))
 
-	# 	# Then only unique votes are counted
-	# 	self.assertEqual(1, len(allow.votes))
-	# 	self.assertFalse(allow.permit(User("foo")))
-	# 	self.assertFalse(allow.permit(User("bar")))
-	# 	self.assertFalse(allow.permit(User("baz")))
-	# 	self.assertEqual(4, len(allow.votes))
+		# Then only unique votes are counted
+		self.assertEqual(1, len(allow.votes))
+		self.assertFalse(allow.permit(User("foo")))
+		self.assertFalse(allow.permit(User("bar")))
+		self.assertFalse(allow.permit(User("baz")))
+		self.assertEqual(4, len(allow.votes))
 
-	# 	self.assertTrue(allow.permit(User("trigger")))
-	# 	self.assertEqual(0, len(allow.votes))
-	# 	# But when unique voters vote then it is counted and triggers permit
+		self.assertTrue(allow.permit(User("trigger")))
+		self.assertEqual(0, len(allow.votes))
+		# But when unique voters vote then it is counted and triggers permit
 
-	# def test_allow_whitelist(self):
-	# 	'''
-	# 	Whitelist based allow, good for makeshift integrations
-	# 	such as whitelisting Patreons or otherwise specific folks
-	# 	'''
+	def test_allow_whitelist(self):
+		'''
+		Whitelist based allow, good for makeshift integrations
+		such as whitelisting Patreons or otherwise specific folks
+		'''
 
-	# 	# Given a whitelist
-	# 	whitelist = ["foo"]
-	# 	allow = AllowWhitelist(**{"whitelist": whitelist})
+		# Given a whitelist
+		whitelist = ["foo"]
+		allow = AllowWhitelist(**{"whitelist": whitelist})
 
-	# 	# An user not a member of the whitelist is denied
-	# 	self.assertFalse(allow.permit(User("bar")))
+		# An user not a member of the whitelist is denied
+		self.assertFalse(allow.permit(User("bar")))
 
-	# 	# But an user belonging to the whitelist is allowed
-	# 	self.assertTrue(allow.permit(User("foo")))
+		# But an user belonging to the whitelist is allowed
+		self.assertTrue(allow.permit(User("foo")))
 
 if __name__ == '__main__':
 	unittest.main()
