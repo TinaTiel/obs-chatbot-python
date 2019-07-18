@@ -99,6 +99,9 @@ class CommandManager():
 		class_ = self._get_class("Executor", executor_type)
 		executor = class_(**args)
 
+	def build_action(self, conf):
+		pass
+
 	def _get_class(self, module_name, class_name):
 		try:
 			module_ = import_module("bot." + module_name)
