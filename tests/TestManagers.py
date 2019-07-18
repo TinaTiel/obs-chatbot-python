@@ -98,7 +98,7 @@ class TestManagers(unittest.TestCase):
 		# Otherwise if all are required
 		# No errors occur
 		try:
-			command_manager.build_executor({'type': "Action", 'args': {"actions":[]}})
+			command_manager.build_action({'type': "Action", 'args': {'args': {} }})
 		except ValueError:
 			self.fail("command manager build_action() failed unexpectedly!")
 
@@ -111,7 +111,7 @@ class TestManagers(unittest.TestCase):
 
 		# Otherwise given a valid type (from the Action module), no errors
 		try:
-			command_manager.build_executor({"type": "Action", "args": {}})
+			command_manager.build_action({"type": "Action", "args": {'args': {} }})
 		except ValueError:
 			self.fail("command manager build_action() failed unexpectedly")
 

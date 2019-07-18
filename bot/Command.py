@@ -93,14 +93,26 @@ class CommandManager():
 		executor_type = conf.get('type', None)
 		args = conf.get('args', None)
 		if(executor_type is None or args is None):
-			raise ValueError("Command 'allows' configuration is missing 'type' or 'args' configurations.")
+			raise ValueError("Command 'execute' configuration is missing 'type' or 'args' configurations.")
 
 		# Try to load specified type & instantiate it
 		class_ = self._get_class("Executor", executor_type)
 		executor = class_(**args)
 
+		return executor
+
 	def build_action(self, conf):
-		pass
+		# Get required confs
+		action_type = conf.get('type', None)
+		args = conf.get('args', None)
+		if(action_type is None or args is None):
+			raise ValueError("Command 'action' configuration is missing 'type' or 'args' configurations. ")
+
+		# Try to load specified type & instantiate it
+		class_ = self._get_class("Action", action_type)
+		action = class_(**args)
+
+		return action
 
 	def _get_class(self, module_name, class_name):
 		try:

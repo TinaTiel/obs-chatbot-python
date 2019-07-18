@@ -2,10 +2,17 @@ from bot.Result import *
 
 class Action():
 
-	def __init__(self, restrictions=[], config={}):
+	def __init__(self, **kwargs):
+		# restrictions=[], config={}
+		restrictions = kwargs.get('restrictions', [])
+		args = kwargs.get('args', None)
+		if(args is None):
+			raise ValueError("Action is missing 'args' configuration")
+
 		self.restrictions = []
 		self.add_restrictions(restrictions if isinstance(restrictions, list) else [])
-		self.config = config
+		self.args = args
+		self._init_args()
 
 	def execute(self, user, args):
 		if(not self._permit(user)):
@@ -23,6 +30,9 @@ class Action():
 			if not restriction.permit(user):
 				return False
 		return True
+
+	def _init_args(self):
+		pass
 
 	def _execute(self, user, args):
 		pass

@@ -15,7 +15,7 @@ class TestActions(unittest.TestCase):
 		r1 = Allow()
 		r2 = Allow()
 		r3 = Allow()
-		action = Action([r1, r2, r3])
+		action = Action(**{"restrictions":[r1, r2, r3], "args": {}})
 
 		# Each restriction has a reference to the command
 		self.assertEqual(action, r1.action)
@@ -27,7 +27,7 @@ class TestActions(unittest.TestCase):
 		An action having no restrictions always executes
 		'''
 		# Given an action with no restrictions
-		action = Action()
+		action = Action(**{"args": {}})
 		action._execute = MagicMock()
 		self.assertEqual(0, len(action.restrictions))
 
@@ -46,7 +46,7 @@ class TestActions(unittest.TestCase):
 		restrictionPass = Allow()
 		restrictionPass.permit = MagicMock(return_value=True)
 
-		action = Action([restrictionPass])
+		action = Action(**{"restrictions":[restrictionPass], "args": {}})
 		action._execute = MagicMock()
 		self.assertEqual(1, len(action.restrictions))
 
@@ -68,7 +68,7 @@ class TestActions(unittest.TestCase):
 		restrictionFail = Allow()
 		restrictionFail.permit = MagicMock(return_value=False)
 
-		action = Action([restrictionPass, restrictionFail])
+		action = Action(**{"restrictions":[restrictionPass, restrictionFail], "args": {}})
 		action._execute = MagicMock()
 		self.assertEqual(2, len(action.restrictions))
 

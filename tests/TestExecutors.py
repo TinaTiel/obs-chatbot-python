@@ -12,9 +12,9 @@ class TestExecutors(unittest.TestCase):
 		Default executor is to execute all Actions in order per request
 		'''
 		# Given the default Executor and a list of succeeding Actions
-		a1 = Action()
-		a2 = Action()
-		a3 = Action()
+		a1 = Action(**{"args": {}})
+		a2 = Action(**{"args": {}})
+		a3 = Action(**{"args": {}})
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
@@ -37,9 +37,9 @@ class TestExecutors(unittest.TestCase):
 		Default executor is to execute all Actions in order per request
 		'''
 		# Given the default Executor and a list of Actions including a failure
-		a1 = Action()
-		a2 = Action()
-		a3 = Action()
+		a1 = Action(**{"args": {}})
+		a2 = Action(**{"args": {}})
+		a3 = Action(**{"args": {}})
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.FAILURE))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
@@ -63,9 +63,9 @@ class TestExecutors(unittest.TestCase):
 		next action at the next request if the prior action executed with SUCCESS
 		'''
 		# Given the Gated Executor and a list of succeeding actions
-		a1 = Action()
-		a2 = Action()
-		a3 = Action()
+		a1 = Action(**{"args": {}})
+		a2 = Action(**{"args": {}})
+		a3 = Action(**{"args": {}})
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
@@ -121,9 +121,9 @@ class TestExecutors(unittest.TestCase):
 		next action at the next request if the prior action executed with SUCCESS
 		'''
 		# Given the Gated Executor and a list of succeeding actions
-		a1 = Action()
-		a2 = Action()
-		a3 = Action()
+		a1 = Action(**{"args": {}})
+		a2 = Action(**{"args": {}})
+		a3 = Action(**{"args": {}})
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.FAILURE))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
@@ -180,13 +180,13 @@ class TestExecutors(unittest.TestCase):
 
 	def test_executors_can_contain_executors(self):
 		# Given the default Executor and a list of succeeding Actions AND an Executor containing Executors
-		a1 = Action()
-		a2 = Action()
-		a3 = Action()
-		a4 = Action()
-		a5 = Action()
-		a6 = Action()
-		a7 = Action()
+		a1 = Action(**{"args": {}})
+		a2 = Action(**{"args": {}})
+		a3 = Action(**{"args": {}})
+		a4 = Action(**{"args": {}})
+		a5 = Action(**{"args": {}})
+		a6 = Action(**{"args": {}})
+		a7 = Action(**{"args": {}})
 		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
 		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
