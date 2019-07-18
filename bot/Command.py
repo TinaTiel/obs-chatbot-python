@@ -52,6 +52,8 @@ class CommandManager():
 		# allows = self._build_allows(allows_confs)
 		pass
 
+	def get_command(self, command_name):
+		pass
 
 	def execute(self, command_name, user, args):
 		'''

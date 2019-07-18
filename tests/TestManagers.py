@@ -211,5 +211,8 @@ class TestManagers(unittest.TestCase):
 		self.assertDictEqual({"lvl": "b", "num": 1}, cmd.executor.actions[1].actions[1].args)
 		self.assertDictEqual({"lvl": "a", "num": 2}, cmd.executor.actions[2].args)
 
+		def test_command_registry_and_retrieval(self):
+			pass
+
 if __name__ == '__main__':
 	unittest.main()
