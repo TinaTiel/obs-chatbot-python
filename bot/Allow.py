@@ -9,10 +9,14 @@ class Allow():
 
 class AllowUserStatus(Allow):
 	'''
-	Allow is based on user status in Twitch
+	Allow is based on user status in Twitch, default is highest permission (broadcaster only)
 	'''
 	def __init__(self, **kwargs):
-		self.min_status = kwargs.get('min_status', Permission.BROADCASTER)
+		min_status = kwargs.get('min_status', "BROADCASTER")
+		try:
+			self.min_status = Permission[min_status]
+		except Exception as e:
+			raise ValueError("Permission string '{}' is invalid, must be one of: {}".format(min_status, Permission.__members__))
 
 	def permit(self, user):
 
