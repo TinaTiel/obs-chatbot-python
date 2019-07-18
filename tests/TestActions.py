@@ -7,29 +7,29 @@ class TestActions(unittest.TestCase):
 	def setUp(self):
 		pass
 
-	def test_restrictions_have_parent_action_reference(self):
+	def test_allows_have_parent_action_reference(self):
 		'''
-		Each restriction added to an action must have a reference to its parent action
+		Each allow added to an action must have a reference to its parent action
 		'''
-		# Given a command with several restrictions
+		# Given a command with several allows
 		r1 = Allow()
 		r2 = Allow()
 		r3 = Allow()
-		action = Action(**{"restrictions":[r1, r2, r3], "args": {}})
+		action = Action(**{"allows":[r1, r2, r3], "args": {}})
 
-		# Each restriction has a reference to the command
+		# Each allow has a reference to the command
 		self.assertEqual(action, r1.action)
 		self.assertEqual(action, r2.action)
 		self.assertEqual(action, r3.action)
 
-	def test_restrictions_none(self):
+	def test_allows_none(self):
 		'''
-		An action having no restrictions always executes
+		An action having no allows always executes
 		'''
-		# Given an action with no restrictions
+		# Given an action with no allows
 		action = Action(**{"args": {}})
 		action._execute = MagicMock()
-		self.assertEqual(0, len(action.restrictions))
+		self.assertEqual(0, len(action.allows))
 
 		# It will always execute
 		result = action.execute(User("foo"), None).state
@@ -38,17 +38,17 @@ class TestActions(unittest.TestCase):
 		self.assertEqual(State.SUCCESS, result)
 		action._execute.assert_called()
 
-	def test_restrictions_passing(self):
+	def test_allows_passing(self):
 		'''
-		A Command having all passing restrictions executes
+		A Command having all passing allows executes
 		'''
-		# Given an action with passing restrictions
-		restrictionPass = Allow()
-		restrictionPass.permit = MagicMock(return_value=True)
+		# Given an action with passing allows
+		allowPass = Allow()
+		allowPass.permit = MagicMock(return_value=True)
 
-		action = Action(**{"restrictions":[restrictionPass], "args": {}})
+		action = Action(**{"allows":[allowPass], "args": {}})
 		action._execute = MagicMock()
-		self.assertEqual(1, len(action.restrictions))
+		self.assertEqual(1, len(action.allows))
 
 		# When it executes
 		result = action.execute(User("foo"), None).state
@@ -57,20 +57,20 @@ class TestActions(unittest.TestCase):
 		self.assertEqual(State.SUCCESS, result)
 		action._execute.assert_called()
 
-	def test_restrictions_failing(self):
+	def test_allows_failing(self):
 		'''
-		A Command having any failing restriction doesn't execute
+		A Command having any failing allow doesn't execute
 		'''
-		# Given an action with passing and failing restrictions
-		restrictionPass = Allow()
-		restrictionPass.permit = MagicMock(return_value=True)
+		# Given an action with passing and failing allows
+		allowPass = Allow()
+		allowPass.permit = MagicMock(return_value=True)
 
-		restrictionFail = Allow()
-		restrictionFail.permit = MagicMock(return_value=False)
+		allowFail = Allow()
+		allowFail.permit = MagicMock(return_value=False)
 
-		action = Action(**{"restrictions":[restrictionPass, restrictionFail], "args": {}})
+		action = Action(**{"allows":[allowPass, allowFail], "args": {}})
 		action._execute = MagicMock()
-		self.assertEqual(2, len(action.restrictions))
+		self.assertEqual(2, len(action.allows))
 
 		# When it executes
 		result = action.execute(User("foo"), None).state

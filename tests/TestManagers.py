@@ -59,6 +59,7 @@ class TestManagers(unittest.TestCase):
 		except ValueError:
 			self.fail("command manager build_allow() failed unexpectedly!")
 
+	@patch.object(CommandManager, 'build_action', fake_build) # Patching out the inner methods of build_command
 	def test_execute_params(self):
 		# type and args are required
 		command_manager = CommandManager()
@@ -73,6 +74,7 @@ class TestManagers(unittest.TestCase):
 		except ValueError:
 			self.fail("command manager build_executor() failed unexpectedly!")
 
+	@patch.object(CommandManager, 'build_action', fake_build) # Patching out the inner methods of build_command
 	def test_execute_params_valid_type(self):
 
 		command_manager = CommandManager()
