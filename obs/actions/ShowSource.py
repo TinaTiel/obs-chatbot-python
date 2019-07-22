@@ -88,14 +88,17 @@ class ShowSource(Action):
 			self.pickable_items = self.source
 			return
 
-		self.picked_items = []
-		self.pickable_items = [self.source]
-		if(self.pick_from_group):
-			self.log.debug("Command {}: Group picking enabled".format(self.command_name))
-			source_settings = self.obs_client.client.call(obswebsocket.requests.GetSourceSettings(self.source))
-			if(source_settings):
-				self.log.debug("Command {}: Found source settings on source {}: {}".format(self.command_name, self.source, source_settings))
-				items = source_settings.getSourcesettings().get('items', None)
-				if(items and len(items)>0): #If this is incorrect, restart OBS
-					self.pickable_items = list(map(lambda item: item.get('name'), items)) 
-		self.log.debug("Command {}: Pickable items are: {}".format(self.command_name, self.pickable_items))
+		try:
+			self.picked_items = []
+			self.pickable_items = [self.source]
+			if(self.pick_from_group):
+				self.log.debug("Command {}: Group picking enabled".format(self.command_name))
+				source_settings = self.obs_client.client.call(obswebsocket.requests.GetSourceSettings(self.source))
+				if(source_settings):
+					self.log.debug("Command {}: Found source settings on source {}: {}".format(self.command_name, self.source, source_settings))
+					items = source_settings.getSourcesettings().get('items', None)
+					if(items and len(items)>0): #If this is incorrect, restart OBS
+						self.pickable_items = list(map(lambda item: item.get('name'), items)) 
+			self.log.debug("Command {}: Pickable items are: {}".format(self.command_name, self.pickable_items))
+		except Exception e:
+			raise ValueError("Command {}: OBS/Config Error, specified source may not exist in OBS. Error: {}".format(self.command_name, e))
