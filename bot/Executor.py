@@ -1,5 +1,6 @@
 from bot.Result import *
 from collections import deque
+from importlib import import_module
 
 class Executor():
 	def __init__(self, **kwargs):
@@ -7,16 +8,20 @@ class Executor():
 		self._build(**kwargs)
 
 	def _validate(self, **kwargs):
-		actions = kwargs.get("actions", None)
-		if(actions is None):
-			raise ValueError("Executor must have 'actions'.")
+		args = kwargs.get('args', None)
+		if(args is None):
+			raise ValueError("Executor must have 'args'. Conf: {}".format(kwargs))
 
-	def _build(**kwargs):
+		actions = args.get("actions", None)
+		if(actions is None):
+			raise ValueError("Executor args must have 'actions'. Conf: {}".format(kwargs))
+
+	def _build(self, **kwargs):
 		self.actions = []
-		for conf in kwargs.get('actions'):
+		for conf in kwargs['args']['actions']:
 			# Get the action type
 			if(conf['type'] is None):
-				raise ValueError("Missing 'type' for specified Action or Executor")
+				raise ValueError("Missing 'type' for specified Action or Executor. Conf: {}".format(conf['type']))
 
 			# determine the corresponding class
 			try:
@@ -28,8 +33,7 @@ class Executor():
 					raise ValueError("Specified action/executor '{}' does not exist. Error: {}".format(conf['type'], e))
 
 			# instantiate it
-			try:
-				actions.append(_class(**conf['args']))
+			self.actions.append(_class(**conf))
 
 	def _get_class(self, module_name, class_name):
 		try:

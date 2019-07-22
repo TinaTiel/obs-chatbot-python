@@ -11,68 +11,71 @@ class TestExecutors(unittest.TestCase):
 		# Given a minimum configuration 
 		# Then an Executor can be instantiated
 		try:
-			Executor(**{"actions": []})
+			Executor(**{'args': {"actions": []}})
 		except Exception:
 			self.fail("Unexpected exception")
 
 		# But given missing information
 		# Then a ValueError is thrown
 		self.assertRaises(ValueError, Executor, **{})
+		self.assertRaises(ValueError, Executor, **{'args': {}})
 
 	def test_builds_children_actions_or_executors(self):
 		# Given a config that includes children
 		config = {
-			"actions": [
-				{
-					"type": "DummyAction",
-					"args": {
-						"lvl": "a",
-						"num": 1
-					}
-				}, 
-				{
-					"type": "Execute",
-					"args": {
-						"actions": [
-							{
-								"type": "Execute",
-								"args": {
-									"actions": [
-										{
-											"type": "DummyAction",
-											"args": {
-												"lvl": "c",
-												"num": 1
+			"args": {
+				"actions": [
+					{
+						"type": "DummyAction",
+						"args": {
+							"lvl": "a",
+							"num": 1
+						}
+					}, 
+					{
+						"type": "Executor",
+						"args": {
+							"actions": [
+								{
+									"type": "Executor",
+									"args": {
+										"actions": [
+											{
+												"type": "DummyAction",
+												"args": {
+													"lvl": "c",
+													"num": 1
+												}
 											}
-										}
-									]
+										]
+									}
+								},
+								{
+									"type": "DummyAction",
+									"args": {
+										"lvl": "b",
+										"num": 1
+									}
+								},
+								{
+									"type": "DummyAction",
+									"args": {
+										"lvl": "b",
+										"num": 2
+									}
 								}
-							},
-							{
-								"type": "DummyAction",
-								"args": {
-									"lvl": "b",
-									"num": 1
-								}
-							},
-							{
-								"type": "DummyAction",
-								"args": {
-									"lvl": "b",
-									"num": 2
-								}
-							}
-						]
+							]
+						}
+					},
+					{
+						"type": "DummyAction",
+						"args": {
+							"lvl": "a",
+							"num": 2
+						}
 					}
-				},
-				{
-					"type": "DummyAction",
-					"args": {
-						"lvl": "a",
-						"num": 2
-					}
-				}
-			]
+				]
+			}
 		}
 
 		# Then when built
@@ -82,11 +85,12 @@ class TestExecutors(unittest.TestCase):
 		self.assertTrue(isinstance(e.actions[0], DummyAction))
 		self.assertDictEqual({"lvl": "a", "num": 1}, e.actions[0].args)
 
-		self.assertTrue(isinstance(e.actions[1], Execute))
-		self.assertTrue(isinstance(e.actions[1].actions[0], Execute))
+		self.assertTrue(isinstance(e.actions[1], Executor))
+
+		self.assertTrue(isinstance(e.actions[1].actions[0], Executor))
 
 		self.assertDictEqual({"lvl": "c", "num": 1}, e.actions[1].actions[0].actions[0].args)
-		self.assertTrue(isinstance(e.actions[1].actions[0], DummyAction))
+		self.assertTrue(isinstance(e.actions[1].actions[0].actions[0], DummyAction))
 
 		self.assertDictEqual({"lvl": "b", "num": 1}, e.actions[1].actions[1].args)
 		self.assertTrue(isinstance(e.actions[1].actions[1], DummyAction))

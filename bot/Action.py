@@ -6,7 +6,7 @@ class Action():
 		allows = kwargs.get('allows', [])
 		args = kwargs.get('args', None)
 		if(args is None):
-			raise ValueError("Action is missing 'args' configuration")
+			raise ValueError("Action is missing 'args' configuration. Config provided: {}".format(kwargs))
 
 		self.allows = []
 		self.add_allows(allows if isinstance(allows, list) else [])
@@ -39,8 +39,6 @@ class DummyAction(Action):
 	'''A dummy Action class
 	that takes args provided
 	'''
-	def __init__(self, **kwargs):
-		super().__init__(kwargs)
 
 	def _init_args(self, args):
 		self.args = args
