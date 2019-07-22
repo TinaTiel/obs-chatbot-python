@@ -3,23 +3,21 @@ from collections import deque
 
 class Executor():
 	def __init__(self, **kwargs):
-		self._build(**kwargs)
+		self._validate(**kwargs)
+		self.actions = kwargs['actions']
 
-	def _build(self, **kwargs):
+	def _validate(self, **kwargs):
 		actions = kwargs.get("actions", None)
 		if(actions is None):
 			raise ValueError("Executor must have 'actions'.")
-		self.actions = actions
 
 	def execute(self, user, args_list):
 		pass
 
-class ExecuteAll():
+class ExecuteAll(Executor):
 	def __init__(self, **kwargs):
-		actions = kwargs.get("actions", None)
-		if(actions is None):
-			raise ValueError("Executor must have 'actions'.")
-		self.actions = actions
+		self._validate(**kwargs)
+		self.actions = kwargs['actions']
 
 	def execute(self, user, args_list):
 		results = []
@@ -34,13 +32,11 @@ class ExecuteAll():
 		# Return success
 		return Result(State.SUCCESS, results)
 
-class ExecuteGated():
+class ExecuteGated(Executor):
 	def __init__(self, **kwargs):
-		actions = kwargs.get("actions", None)
-		if(actions is None):
-			raise ValueError("Executor must have 'actions'.")
+		self._validate(**kwargs)
 		self.executed = list()
-		self.actions = deque(actions)
+		self.actions = deque(kwargs['actions'])
 
 	def execute(self, user, args_list):
 		# If this was initialized with no actions at all, do nothing
