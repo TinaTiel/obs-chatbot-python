@@ -7,6 +7,19 @@ class TestActions(unittest.TestCase):
 	def setUp(self):
 		pass
 
+	def test_minimum_config(self):
+		# Given a minimum set of arguments
+		# Then an Action class can be substantiated
+		try:
+			action = Action(**{"args": {}})
+		except Exception:
+			self.fail("Unexpected exception")
+
+		# And given any missing arguments
+		# Then a ValueError is thrown
+		self.assertRaises(ValueError, Action, **{})
+		self.assertRaises(ValueError, Action, **{"allows": []})
+
 	def test_allows_have_parent_action_reference(self):
 		'''
 		Each allow added to an action must have a reference to its parent action

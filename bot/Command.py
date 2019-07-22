@@ -100,12 +100,12 @@ class CommandManager():
 		if(actions is None):
 			raise ValueError("Executor is missing 'actions' configurations.")
 
-		# # build each action specified in the args
-		# for action in actions:
-		# 	try:
-		# 		self.build_executor(action)
-		# 	except:
-		# 		self.build_action(action)
+		# build each action specified in the args
+		for action in actions:
+			try:
+				self.build_executor(action)
+			except:
+				self.build_action(action)
 
 		# Try to load specified type & instantiate it
 		class_ = self._get_class("Executor", executor_type)

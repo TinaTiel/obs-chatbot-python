@@ -2,7 +2,7 @@ from bot.Result import *
 from collections import deque
 
 class Executor():
-	def __init__(self, actions):
+	def __init__(self, **kwargs):
 		pass
 
 	def execute(self, user, args_list):
