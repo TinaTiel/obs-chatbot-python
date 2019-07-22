@@ -24,7 +24,7 @@ class TestExecutors(unittest.TestCase):
 		config = {
 			"actions": [
 				{
-					"type": "AnyArgs",
+					"type": "DummyAction",
 					"args": {
 						"lvl": "a",
 						"num": 1
@@ -39,7 +39,7 @@ class TestExecutors(unittest.TestCase):
 								"args": {
 									"actions": [
 										{
-											"type": "AnyArgs",
+											"type": "DummyAction",
 											"args": {
 												"lvl": "c",
 												"num": 1
@@ -49,14 +49,14 @@ class TestExecutors(unittest.TestCase):
 								}
 							},
 							{
-								"type": "AnyArgs",
+								"type": "DummyAction",
 								"args": {
 									"lvl": "b",
 									"num": 1
 								}
 							},
 							{
-								"type": "AnyArgs",
+								"type": "DummyAction",
 								"args": {
 									"lvl": "b",
 									"num": 2
@@ -66,7 +66,7 @@ class TestExecutors(unittest.TestCase):
 					}
 				},
 				{
-					"type": "AnyArgs",
+					"type": "DummyAction",
 					"args": {
 						"lvl": "a",
 						"num": 2
@@ -79,15 +79,19 @@ class TestExecutors(unittest.TestCase):
 		e = Executor(**config)
 
 		# The children are built
-		self.assertTrue(isinstance(e.actions[0], AnyArgs))
+		self.assertTrue(isinstance(e.actions[0], DummyAction))
 		self.assertDictEqual({"lvl": "a", "num": 1}, e.actions[0].args)
 
 		self.assertTrue(isinstance(e.actions[1], Execute))
 		self.assertTrue(isinstance(e.actions[1].actions[0], Execute))
-		self.assertDictEqual({"lvl": "c", "num": 1}, e.actions[1].actions[0].actions[0].args)
-		self.assertDictEqual({"lvl": "b", "num": 1}, e.actions[1].actions[1].args)
 
-		self.assertTrue(isinstance(e.actions[2], AnyArgs))
+		self.assertDictEqual({"lvl": "c", "num": 1}, e.actions[1].actions[0].actions[0].args)
+		self.assertTrue(isinstance(e.actions[1].actions[0], DummyAction))
+
+		self.assertDictEqual({"lvl": "b", "num": 1}, e.actions[1].actions[1].args)
+		self.assertTrue(isinstance(e.actions[1].actions[1], DummyAction))
+
+		self.assertTrue(isinstance(e.actions[2], DummyAction))
 		self.assertDictEqual({"lvl": "a", "num": 2}, e.actions[2].args)
 
 	# def test_all_executor_success(self):

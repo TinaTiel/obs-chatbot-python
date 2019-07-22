@@ -35,7 +35,7 @@ class Action():
 	def _execute(self, user, args):
 		pass
 
-class AnyArgs(Action):
+class DummyAction(Action):
 	'''A dummy Action class
 	that takes args provided
 	'''
