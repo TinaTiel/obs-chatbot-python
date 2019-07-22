@@ -4,12 +4,40 @@ from collections import deque
 class Executor():
 	def __init__(self, **kwargs):
 		self._validate(**kwargs)
-		self.actions = kwargs['actions']
+		self._build(**kwargs)
 
 	def _validate(self, **kwargs):
 		actions = kwargs.get("actions", None)
 		if(actions is None):
 			raise ValueError("Executor must have 'actions'.")
+
+	def _build(**kwargs):
+		self.actions = []
+		for conf in kwargs.get('actions'):
+			# Get the action type
+			if(conf['type'] is None):
+				raise ValueError("Missing 'type' for specified Action or Executor")
+
+			# determine the corresponding class
+			try:
+				_class = self._get_class("Action", conf['type'] )
+			except Exception:
+				try:
+					_class = self._get_class("Executor", conf['type'] )
+				except Exception as e:
+					raise ValueError("Specified action/executor '{}' does not exist. Error: {}".format(conf['type'], e))
+
+			# instantiate it
+			try:
+				actions.append(_class(**conf['args']))
+
+	def _get_class(self, module_name, class_name):
+		try:
+			module_ = import_module("bot." + module_name)
+			class_ = getattr(module_, class_name)
+			return class_
+		except Exception as e:
+			raise ValueError("Could not load specified {} type '{}': {}".format(module_name, class_name, e))
 
 	def execute(self, user, args_list):
 		pass
