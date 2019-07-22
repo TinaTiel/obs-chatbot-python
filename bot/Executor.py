@@ -3,7 +3,13 @@ from collections import deque
 
 class Executor():
 	def __init__(self, **kwargs):
-		pass
+		self._build(**kwargs)
+
+	def _build(self, **kwargs):
+		actions = kwargs.get("actions", None)
+		if(actions is None):
+			raise ValueError("Executor must have 'actions'.")
+		self.actions = actions
 
 	def execute(self, user, args_list):
 		pass
