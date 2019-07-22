@@ -7,222 +7,234 @@ class TestExecutors(unittest.TestCase):
 	def setUp(self):
 		pass
 
-	def test_all_executor_success(self):
-		'''
-		Default executor is to execute all Actions in order per request
-		'''
-		# Given the default Executor and a list of succeeding Actions
-		a1 = Action(**{"args": {}})
-		a2 = Action(**{"args": {}})
-		a3 = Action(**{"args": {}})
-		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteAll(**{"actions": [a1, a2, a3]})
+	def test_minimum_config(self):
+		# Given a minimum configuration 
+		# Then an Executor can be instantiated
+		try:
+			Executor(**{"actions": []})
+		except Exception:
+			self.fail("Unexpected exception")
 
-		# When executed 
-		result = executor.execute(User("foo"), None)
+		# But given missing information
+		# Then a ValueError is thrown
+		self.assertRaises(ValueError, Executor, **{})
 
-		# Then each action is executed in order
-		a1.execute.assert_called_once()
-		a2.execute.assert_called_once()
-		a3.execute.assert_called_once()
+	# def test_all_executor_success(self):
+	# 	'''
+	# 	Default executor is to execute all Actions in order per request
+	# 	'''
+	# 	# Given the default Executor and a list of succeeding Actions
+	# 	a1 = Action(**{"args": {}})
+	# 	a2 = Action(**{"args": {}})
+	# 	a3 = Action(**{"args": {}})
+	# 	a1.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a2.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	executor = ExecuteAll(**{"actions": [a1, a2, a3]})
 
-		# And when all execute then a SUCCESS is returned
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(3, len(result.messages))
+	# 	# When executed 
+	# 	result = executor.execute(User("foo"), None)
 
-	def test_all_executor_failure(self):
-		'''
-		Default executor is to execute all Actions in order per request
-		'''
-		# Given the default Executor and a list of Actions including a failure
-		a1 = Action(**{"args": {}})
-		a2 = Action(**{"args": {}})
-		a3 = Action(**{"args": {}})
-		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a2.execute = MagicMock(return_value=Result(State.FAILURE))
-		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteAll(**{"actions": [a1, a2, a3]})
+	# 	# Then each action is executed in order
+	# 	a1.execute.assert_called_once()
+	# 	a2.execute.assert_called_once()
+	# 	a3.execute.assert_called_once()
 
-		# When executed 
-		result = executor.execute(User("foo"), None)
+	# 	# And when all execute then a SUCCESS is returned
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(3, len(result.messages))
 
-		# Then each action is executed in order
-		a1.execute.assert_called_once()
-		a2.execute.assert_called_once()
-		a3.execute.assert_not_called()
+	# def test_all_executor_failure(self):
+	# 	'''
+	# 	Default executor is to execute all Actions in order per request
+	# 	'''
+	# 	# Given the default Executor and a list of Actions including a failure
+	# 	a1 = Action(**{"args": {}})
+	# 	a2 = Action(**{"args": {}})
+	# 	a3 = Action(**{"args": {}})
+	# 	a1.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a2.execute = MagicMock(return_value=Result(State.FAILURE))
+	# 	a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	executor = ExecuteAll(**{"actions": [a1, a2, a3]})
 
-		# And when all execute then a SUCCESS is returned
-		self.assertEqual(State.FAILURE, result.state)
-		self.assertEqual(2, len(result.messages))
+	# 	# When executed 
+	# 	result = executor.execute(User("foo"), None)
 
-	def test_gated_executor_success(self):
-		'''
-		Gated executor executes one action per request, only advancing to the 
-		next action at the next request if the prior action executed with SUCCESS
-		'''
-		# Given the Gated Executor and a list of succeeding actions
-		a1 = Action(**{"args": {}})
-		a2 = Action(**{"args": {}})
-		a3 = Action(**{"args": {}})
-		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteGated(**{"actions": [a1, a2, a3]})
+	# 	# Then each action is executed in order
+	# 	a1.execute.assert_called_once()
+	# 	a2.execute.assert_called_once()
+	# 	a3.execute.assert_not_called()
 
-		# When executed only the next action in the list is executed
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(1, a1.execute.call_count)
-		self.assertEqual(0, a2.execute.call_count)
-		self.assertEqual(0, a3.execute.call_count)
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	# And when all execute then a SUCCESS is returned
+	# 	self.assertEqual(State.FAILURE, result.state)
+	# 	self.assertEqual(2, len(result.messages))
 
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(1, a1.execute.call_count)
-		self.assertEqual(1, a2.execute.call_count)
-		self.assertEqual(0, a3.execute.call_count)
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(1, len(result.messages))
+	# def test_gated_executor_success(self):
+	# 	'''
+	# 	Gated executor executes one action per request, only advancing to the 
+	# 	next action at the next request if the prior action executed with SUCCESS
+	# 	'''
+	# 	# Given the Gated Executor and a list of succeeding actions
+	# 	a1 = Action(**{"args": {}})
+	# 	a2 = Action(**{"args": {}})
+	# 	a3 = Action(**{"args": {}})
+	# 	a1.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a2.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	executor = ExecuteGated(**{"actions": [a1, a2, a3]})
 
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(1, a1.execute.call_count)
-		self.assertEqual(1, a2.execute.call_count)
-		self.assertEqual(1, a3.execute.call_count)
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	# When executed only the next action in the list is executed
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(1, a1.execute.call_count)
+	# 	self.assertEqual(0, a2.execute.call_count)
+	# 	self.assertEqual(0, a3.execute.call_count)
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		# And this same order is maintained when it cycles through the actions again
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(2, a1.execute.call_count)
-		self.assertEqual(1, a2.execute.call_count)
-		self.assertEqual(1, a3.execute.call_count)
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(1, a1.execute.call_count)
+	# 	self.assertEqual(1, a2.execute.call_count)
+	# 	self.assertEqual(0, a3.execute.call_count)
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(2, a1.execute.call_count)
-		self.assertEqual(2, a2.execute.call_count)
-		self.assertEqual(1, a3.execute.call_count)
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(1, a1.execute.call_count)
+	# 	self.assertEqual(1, a2.execute.call_count)
+	# 	self.assertEqual(1, a3.execute.call_count)
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(2, a1.execute.call_count)
-		self.assertEqual(2, a2.execute.call_count)
-		self.assertEqual(2, a3.execute.call_count)
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	# And this same order is maintained when it cycles through the actions again
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(2, a1.execute.call_count)
+	# 	self.assertEqual(1, a2.execute.call_count)
+	# 	self.assertEqual(1, a3.execute.call_count)
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-	def test_gated_executor_failure(self):
-		'''
-		Gated executor executes one action per request, only advancing to the 
-		next action at the next request if the prior action executed with SUCCESS
-		'''
-		# Given the Gated Executor and a list of succeeding actions
-		a1 = Action(**{"args": {}})
-		a2 = Action(**{"args": {}})
-		a3 = Action(**{"args": {}})
-		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a2.execute = MagicMock(return_value=Result(State.FAILURE))
-		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteGated(**{"actions": [a1, a2, a3]})
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(2, a1.execute.call_count)
+	# 	self.assertEqual(2, a2.execute.call_count)
+	# 	self.assertEqual(1, a3.execute.call_count)
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		# When executed only the next action in the list is executed
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(1, a1.execute.call_count)
-		self.assertEqual(0, a2.execute.call_count)
-		self.assertEqual(0, a3.execute.call_count)
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(2, a1.execute.call_count)
+	# 	self.assertEqual(2, a2.execute.call_count)
+	# 	self.assertEqual(2, a3.execute.call_count)
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		# When when the next executor in the list fails then it doesn't advance
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(1, a1.execute.call_count)
-		self.assertEqual(1, a2.execute.call_count)
-		self.assertEqual(0, a3.execute.call_count)
-		self.assertEqual(State.FAILURE, result.state)
-		self.assertEqual(1, len(result.messages))
+	# def test_gated_executor_failure(self):
+	# 	'''
+	# 	Gated executor executes one action per request, only advancing to the 
+	# 	next action at the next request if the prior action executed with SUCCESS
+	# 	'''
+	# 	# Given the Gated Executor and a list of succeeding actions
+	# 	a1 = Action(**{"args": {}})
+	# 	a2 = Action(**{"args": {}})
+	# 	a3 = Action(**{"args": {}})
+	# 	a1.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a2.execute = MagicMock(return_value=Result(State.FAILURE))
+	# 	a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	executor = ExecuteGated(**{"actions": [a1, a2, a3]})
 
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(1, a1.execute.call_count)
-		self.assertEqual(2, a2.execute.call_count)
-		self.assertEqual(0, a3.execute.call_count)
-		self.assertEqual(State.FAILURE, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	# When executed only the next action in the list is executed
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(1, a1.execute.call_count)
+	# 	self.assertEqual(0, a2.execute.call_count)
+	# 	self.assertEqual(0, a3.execute.call_count)
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(1, a1.execute.call_count)
-		self.assertEqual(3, a2.execute.call_count)
-		self.assertEqual(0, a3.execute.call_count)
-		self.assertEqual(State.FAILURE, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	# When when the next executor in the list fails then it doesn't advance
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(1, a1.execute.call_count)
+	# 	self.assertEqual(1, a2.execute.call_count)
+	# 	self.assertEqual(0, a3.execute.call_count)
+	# 	self.assertEqual(State.FAILURE, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		# etc.
-		# And when the next item succeeds
-		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(1, a1.execute.call_count)
+	# 	self.assertEqual(2, a2.execute.call_count)
+	# 	self.assertEqual(0, a3.execute.call_count)
+	# 	self.assertEqual(State.FAILURE, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		# Then execution order resumes
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(1, a1.execute.call_count)
-		self.assertEqual(1, a2.execute.call_count)
-		self.assertEqual(0, a3.execute.call_count)
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(1, a1.execute.call_count)
+	# 	self.assertEqual(3, a2.execute.call_count)
+	# 	self.assertEqual(0, a3.execute.call_count)
+	# 	self.assertEqual(State.FAILURE, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		result = executor.execute(User("foo"), None)
-		self.assertEqual(1, a1.execute.call_count)
-		self.assertEqual(1, a2.execute.call_count)
-		self.assertEqual(1, a3.execute.call_count)
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(1, len(result.messages))
+	# 	# etc.
+	# 	# And when the next item succeeds
+	# 	a2.execute = MagicMock(return_value=Result(State.SUCCESS))
 
-	def test_executors_can_contain_executors(self):
-		# Given the default Executor and a list of succeeding Actions AND an Executor containing Executors
-		a1 = Action(**{"args": {}})
-		a2 = Action(**{"args": {}})
-		a3 = Action(**{"args": {}})
-		a4 = Action(**{"args": {}})
-		a5 = Action(**{"args": {}})
-		a6 = Action(**{"args": {}})
-		a7 = Action(**{"args": {}})
-		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a4.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a5.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a6.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a7.execute = MagicMock(return_value=Result(State.SUCCESS))
-		executor = ExecuteAll(**{"actions":[a1, 
-												ExecuteAll(**{"actions":[a2, 
-																	a3, 
-																	ExecuteAll(**{"actions":[a4, 
-																						a5]}),
-																	a6]}), 
-												a7]}) # etc...
+	# 	# Then execution order resumes
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(1, a1.execute.call_count)
+	# 	self.assertEqual(1, a2.execute.call_count)
+	# 	self.assertEqual(0, a3.execute.call_count)
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		# When executed 
-		result = executor.execute(User("foo"), None)
+	# 	result = executor.execute(User("foo"), None)
+	# 	self.assertEqual(1, a1.execute.call_count)
+	# 	self.assertEqual(1, a2.execute.call_count)
+	# 	self.assertEqual(1, a3.execute.call_count)
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(1, len(result.messages))
 
-		# Then each action is executed in order including those contained in an Executor
-		a1.execute.assert_called_once()
-		a2.execute.assert_called_once()
-		a3.execute.assert_called_once()
-		a4.execute.assert_called_once()
-		a5.execute.assert_called_once()
-		a6.execute.assert_called_once()
-		a7.execute.assert_called_once()
+	# def test_executors_can_contain_executors(self):
+	# 	# Given the default Executor and a list of succeeding Actions AND an Executor containing Executors
+	# 	a1 = Action(**{"args": {}})
+	# 	a2 = Action(**{"args": {}})
+	# 	a3 = Action(**{"args": {}})
+	# 	a4 = Action(**{"args": {}})
+	# 	a5 = Action(**{"args": {}})
+	# 	a6 = Action(**{"args": {}})
+	# 	a7 = Action(**{"args": {}})
+	# 	a1.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a2.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a4.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a5.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a6.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	a7.execute = MagicMock(return_value=Result(State.SUCCESS))
+	# 	executor = ExecuteAll(**{"actions":[a1, 
+	# 											ExecuteAll(**{"actions":[a2, 
+	# 																a3, 
+	# 																ExecuteAll(**{"actions":[a4, 
+	# 																					a5]}),
+	# 																a6]}), 
+	# 											a7]}) # etc...
 
-		# And when all execute then a SUCCESS is returned including for nested executors
-		self.assertEqual(State.SUCCESS, result.state)
-		self.assertEqual(3, len(result.messages))
+	# 	# When executed 
+	# 	result = executor.execute(User("foo"), None)
 
-		self.assertEqual(State.SUCCESS, result.messages[1].state)
-		self.assertEqual(4, len(result.messages[1].messages))
+	# 	# Then each action is executed in order including those contained in an Executor
+	# 	a1.execute.assert_called_once()
+	# 	a2.execute.assert_called_once()
+	# 	a3.execute.assert_called_once()
+	# 	a4.execute.assert_called_once()
+	# 	a5.execute.assert_called_once()
+	# 	a6.execute.assert_called_once()
+	# 	a7.execute.assert_called_once()
 
-		self.assertEqual(State.SUCCESS, result.messages[1].messages[2].state)
-		self.assertEqual(2, len(result.messages[1].messages[2].messages))
+	# 	# And when all execute then a SUCCESS is returned including for nested executors
+	# 	self.assertEqual(State.SUCCESS, result.state)
+	# 	self.assertEqual(3, len(result.messages))
+
+	# 	self.assertEqual(State.SUCCESS, result.messages[1].state)
+	# 	self.assertEqual(4, len(result.messages[1].messages))
+
+	# 	self.assertEqual(State.SUCCESS, result.messages[1].messages[2].state)
+	# 	self.assertEqual(2, len(result.messages[1].messages[2].messages))
 
 if __name__ == '__main__':
 	unittest.main()
