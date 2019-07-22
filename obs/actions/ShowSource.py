@@ -100,5 +100,5 @@ class ShowSource(Action):
 					if(items and len(items)>0): #If this is incorrect, restart OBS
 						self.pickable_items = list(map(lambda item: item.get('name'), items)) 
 			self.log.debug("Command {}: Pickable items are: {}".format(self.command_name, self.pickable_items))
-		except Exception e:
+		except Exception as e:
 			raise ValueError("Command {}: OBS/Config Error, specified source may not exist in OBS. Error: {}".format(self.command_name, e))
