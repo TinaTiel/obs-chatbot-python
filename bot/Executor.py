@@ -2,7 +2,7 @@ from bot.Result import *
 from collections import deque
 from importlib import import_module
 
-class Executor():
+class ExecutorBase():
 	def __init__(self, parent=None, lvl=0, **kwargs):
 		self.parent = parent
 		self.lvl = lvl
@@ -56,10 +56,7 @@ class Executor():
 	def execute(self, user, args_list):
 		pass
 
-class ExecuteAll(Executor):
-	def __init__(self, **kwargs):
-		self._validate(**kwargs)
-		self.actions = kwargs['actions']
+class ExecuteAll(ExecutorBase):
 
 	def execute(self, user, args_list):
 		results = []
@@ -74,7 +71,7 @@ class ExecuteAll(Executor):
 		# Return success
 		return Result(State.SUCCESS, results)
 
-class ExecuteGated(Executor):
+class ExecuteGated(ExecutorBase):
 	def __init__(self, **kwargs):
 		self._validate(**kwargs)
 		self.executed = list()

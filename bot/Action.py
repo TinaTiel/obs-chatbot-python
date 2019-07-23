@@ -1,4 +1,5 @@
 from bot.Result import *
+from bot.Manager import *
 
 class Action():
 

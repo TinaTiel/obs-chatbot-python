@@ -11,14 +11,14 @@ class TestExecutors(unittest.TestCase):
 		# Given a minimum configuration 
 		# Then an Executor can be instantiated
 		try:
-			Executor(**{'args': {"actions": []}})
+			ExecutorBase(**{'args': {"actions": []}})
 		except Exception:
 			self.fail("Unexpected exception")
 
 		# But given missing information
 		# Then a ValueError is thrown
-		self.assertRaises(ValueError, Executor, **{})
-		self.assertRaises(ValueError, Executor, **{'args': {}})
+		self.assertRaises(ValueError, ExecutorBase, **{})
+		self.assertRaises(ValueError, ExecutorBase, **{'args': {}})
 
 	def test_builds_children_actions_or_executors(self):
 		# Given a config that includes children
@@ -33,11 +33,11 @@ class TestExecutors(unittest.TestCase):
 						}
 					}, 
 					{
-						"type": "Executor",
+						"type": "ExecutorBase",
 						"args": {
 							"actions": [
 								{
-									"type": "Executor",
+									"type": "ExecutorBase",
 									"args": {
 										"actions": [
 											{
@@ -79,16 +79,16 @@ class TestExecutors(unittest.TestCase):
 		}
 
 		# Then when built
-		e = Executor(**config)
-		print(e)
+		e = ExecutorBase(**config)
+		#print(e)
 
 		# The children are built
 		self.assertTrue(isinstance(e.actions[0], DummyAction))
 		self.assertDictEqual({"lvl": "a", "num": 1}, e.actions[0].args)
 
-		self.assertTrue(isinstance(e.actions[1], Executor))
+		self.assertTrue(isinstance(e.actions[1], ExecutorBase))
 
-		self.assertTrue(isinstance(e.actions[1].actions[0], Executor))
+		self.assertTrue(isinstance(e.actions[1].actions[0], ExecutorBase))
 
 		self.assertDictEqual({"lvl": "c", "num": 1}, e.actions[1].actions[0].actions[0].args)
 		self.assertTrue(isinstance(e.actions[1].actions[0].actions[0], DummyAction))
@@ -99,55 +99,77 @@ class TestExecutors(unittest.TestCase):
 		self.assertTrue(isinstance(e.actions[2], DummyAction))
 		self.assertDictEqual({"lvl": "a", "num": 2}, e.actions[2].args)
 
-	# def test_all_executor_success(self):
-	# 	'''
-	# 	Default executor is to execute all Actions in order per request
-	# 	'''
-	# 	# Given the default Executor and a list of succeeding Actions
-	# 	a1 = Action(**{"args": {}})
-	# 	a2 = Action(**{"args": {}})
-	# 	a3 = Action(**{"args": {}})
-	# 	a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	a2.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	executor = ExecuteAll(**{"actions": [a1, a2, a3]})
+	def test_all_executor_success(self):
+		'''
+		Default executor is to execute all Actions in order per request
+		'''
+		# Given an ExecuteAll Executor and a list of succeeding Actions
+		config = {
+			"args": {
+				"actions": [
+					{"type": "Action", "args": {}},
+					{"type": "Action", "args": {}},
+					{"type": "Action", "args": {}}
+				]
+			}
+		}
 
-	# 	# When executed 
-	# 	result = executor.execute(User("foo"), None)
+		executor = ExecuteAll(**config)
 
-	# 	# Then each action is executed in order
-	# 	a1.execute.assert_called_once()
-	# 	a2.execute.assert_called_once()
-	# 	a3.execute.assert_called_once()
+		a1 = executor.actions[0]
+		a2 = executor.actions[0]
+		a3 = executor.actions[0]
+		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
 
-	# 	# And when all execute then a SUCCESS is returned
-	# 	self.assertEqual(State.SUCCESS, result.state)
-	# 	self.assertEqual(3, len(result.messages))
+		# When executed 
+		result = executor.execute(User("foo"), None)
 
-	# def test_all_executor_failure(self):
-	# 	'''
-	# 	Default executor is to execute all Actions in order per request
-	# 	'''
-	# 	# Given the default Executor and a list of Actions including a failure
-	# 	a1 = Action(**{"args": {}})
-	# 	a2 = Action(**{"args": {}})
-	# 	a3 = Action(**{"args": {}})
-	# 	a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	a2.execute = MagicMock(return_value=Result(State.FAILURE))
-	# 	a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	executor = ExecuteAll(**{"actions": [a1, a2, a3]})
+		# Then each action is executed in order
+		a1.execute.assert_called_once()
+		a2.execute.assert_called_once()
+		a3.execute.assert_called_once()
 
-	# 	# When executed 
-	# 	result = executor.execute(User("foo"), None)
+		# And when all execute then a SUCCESS is returned
+		self.assertEqual(State.SUCCESS, result.state)
+		self.assertEqual(3, len(result.messages))
 
-	# 	# Then each action is executed in order
-	# 	a1.execute.assert_called_once()
-	# 	a2.execute.assert_called_once()
-	# 	a3.execute.assert_not_called()
+	def test_all_executor_failure(self):
+		'''
+		Default executor is to execute all Actions in order per request
+		'''
+		# Given an ExecuteAll Executor and a list of Actions including a failure
+		config = {
+			"args": {
+				"actions": [
+					{"type": "Action", "args": {}},
+					{"type": "Action", "args": {}},
+					{"type": "Action", "args": {}}
+				]
+			}
+		}
 
-	# 	# And when all execute then a SUCCESS is returned
-	# 	self.assertEqual(State.FAILURE, result.state)
-	# 	self.assertEqual(2, len(result.messages))
+		executor = ExecuteAll(**config)
+
+		a1 = executor.actions[0]
+		a2 = executor.actions[1]
+		a3 = executor.actions[2]
+		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a2.execute = MagicMock(return_value=Result(State.FAILURE))
+		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+
+		# When executed 
+		result = executor.execute(User("foo"), None)
+
+		# Then each action is executed in order
+		a1.execute.assert_called_once()
+		a2.execute.assert_called_once()
+		a3.execute.assert_not_called()
+
+		# And when all execute then a SUCCESS is returned
+		self.assertEqual(State.FAILURE, result.state)
+		self.assertEqual(2, len(result.messages))
 
 	# def test_gated_executor_success(self):
 	# 	'''
