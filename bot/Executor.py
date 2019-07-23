@@ -73,9 +73,9 @@ class ExecuteAll(ExecutorBase):
 
 class ExecuteGated(ExecutorBase):
 	def __init__(self, **kwargs):
-		self._validate(**kwargs)
+		super().__init__(**kwargs)
 		self.executed = list()
-		self.actions = deque(kwargs['actions'])
+		self.actions = deque(self.actions)
 
 	def execute(self, user, args_list):
 		# If this was initialized with no actions at all, do nothing
