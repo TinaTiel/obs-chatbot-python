@@ -80,6 +80,7 @@ class TestExecutors(unittest.TestCase):
 
 		# Then when built
 		e = Executor(**config)
+		print(e)
 
 		# The children are built
 		self.assertTrue(isinstance(e.actions[0], DummyAction))

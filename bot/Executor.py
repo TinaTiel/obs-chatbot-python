@@ -3,9 +3,18 @@ from collections import deque
 from importlib import import_module
 
 class Executor():
-	def __init__(self, **kwargs):
+	def __init__(self, parent=None, lvl=0, **kwargs):
+		self.parent = parent
+		self.lvl = lvl
 		self._validate(**kwargs)
 		self._build(**kwargs)
+
+	def __repr__(self):
+		res = "{}{}[\n".format("\t"*(self.lvl), self.__class__.__name__)
+		for action in self.actions:
+			res += "{}\n".format(action)
+		res += "{}]\n".format("\t"*(self.lvl))
+		return res
 
 	def _validate(self, **kwargs):
 		args = kwargs.get('args', None)
@@ -33,7 +42,8 @@ class Executor():
 					raise ValueError("Specified action/executor '{}' does not exist. Error: {}".format(conf['type'], e))
 
 			# instantiate it
-			self.actions.append(_class(**conf))
+			_obj = _class(self, self.lvl+1, **conf)
+			self.actions.append(_obj)
 
 	def _get_class(self, module_name, class_name):
 		try:

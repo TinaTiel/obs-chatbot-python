@@ -2,7 +2,9 @@ from bot.Result import *
 
 class Action():
 
-	def __init__(self, **kwargs):
+	def __init__(self, parent=None, lvl=0, **kwargs):
+		self.parent = parent
+		self.lvl = lvl
 		allows = kwargs.get('allows', [])
 		args = kwargs.get('args', None)
 		if(args is None):
@@ -11,6 +13,9 @@ class Action():
 		self.allows = []
 		self.add_allows(allows if isinstance(allows, list) else [])
 		self._init_args(args)
+
+	def __repr__(self):
+		return "{}{}={{args: {}}}".format("\t"*(self.lvl), self.__class__.__name__, str(self.args))
 
 	def execute(self, user, args):
 		if(not self._permit(user)):
