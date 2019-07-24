@@ -107,33 +107,43 @@ class TestExecutors(unittest.TestCase):
 		config = {
 			"args": {
 				"actions": [
-					{"type": "Action", "args": {}},
-					{"type": "Action", "args": {}},
-					{"type": "Action", "args": {}}
+					{"type": "DummyAction", "args": {}},
+					{"type": "ExecuteAll", "args": {
+						"actions": [
+							{"type": "DummyAction", "args": {}},
+							{"type": "DummyAction", "args": {}}
+						]
+					}},
+					{"type": "DummyAction", "args": {}}
 				]
 			}
 		}
 
 		executor = ExecuteAll(**config)
 
-		a1 = executor.actions[0]
-		a2 = executor.actions[0]
-		a3 = executor.actions[0]
-		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a2.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a1 =  executor.actions[0]
+		a2 =  executor.actions[1]
+		a21 = executor.actions[1].actions[0]
+		a22 = executor.actions[1].actions[1]
+		a3 =  executor.actions[2]
+		a1.execute =  MagicMock(return_value=Result(State.SUCCESS))
+		a21.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a22.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a3.execute =  MagicMock(return_value=Result(State.SUCCESS))
 
 		# When executed 
 		result = executor.execute(User("foo"), None)
 
 		# Then each action is executed in order
 		a1.execute.assert_called_once()
-		a2.execute.assert_called_once()
+		a21.execute.assert_called_once()
+		a22.execute.assert_called_once()
 		a3.execute.assert_called_once()
 
 		# And when all execute then a SUCCESS is returned
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(3, len(result.messages))
+		self.assertEqual(2, len(result.messages[1].messages))
 
 	def test_all_executor_failure(self):
 		'''
@@ -143,33 +153,43 @@ class TestExecutors(unittest.TestCase):
 		config = {
 			"args": {
 				"actions": [
-					{"type": "Action", "args": {}},
-					{"type": "Action", "args": {}},
-					{"type": "Action", "args": {}}
+					{"type": "DummyAction", "args": {}},
+					{"type": "ExecuteAll", "args": {
+						"actions": [
+							{"type": "DummyAction", "args": {}},
+							{"type": "DummyAction", "args": {}}
+						]
+					}},
+					{"type": "DummyAction", "args": {}}
 				]
 			}
 		}
 
 		executor = ExecuteAll(**config)
 
-		a1 = executor.actions[0]
-		a2 = executor.actions[1]
-		a3 = executor.actions[2]
-		a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-		a2.execute = MagicMock(return_value=Result(State.FAILURE))
-		a3.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a1 =  executor.actions[0]
+		a2 =  executor.actions[1]
+		a21 = executor.actions[1].actions[0]
+		a22 = executor.actions[1].actions[1]
+		a3 =  executor.actions[2]
+		a1.execute =  MagicMock(return_value=Result(State.SUCCESS))
+		a21.execute = MagicMock(return_value=Result(State.FAILURE))
+		a22.execute = MagicMock(return_value=Result(State.SUCCESS))
+		a3.execute =  MagicMock(return_value=Result(State.SUCCESS))
 
 		# When executed 
 		result = executor.execute(User("foo"), None)
 
 		# Then each action is executed in order
 		a1.execute.assert_called_once()
-		a2.execute.assert_called_once()
+		a21.execute.assert_called_once()
+		a22.execute.assert_not_called()
 		a3.execute.assert_not_called()
 
 		# And when all execute then a SUCCESS is returned
 		self.assertEqual(State.FAILURE, result.state)
 		self.assertEqual(2, len(result.messages))
+		self.assertEqual(1, len(result.messages[1].messages))
 
 	def test_gated_executor_success(self):
 		'''
@@ -313,52 +333,6 @@ class TestExecutors(unittest.TestCase):
 		self.assertEqual(1, a3.execute.call_count)
 		self.assertEqual(State.SUCCESS, result.state)
 		self.assertEqual(1, len(result.messages))
-
-	# def test_executors_can_contain_executors(self):
-	# 	# Given the default Executor and a list of succeeding Actions AND an Executor containing Executors
-	# 	a1 = Action(**{"args": {}})
-	# 	a2 = Action(**{"args": {}})
-	# 	a3 = Action(**{"args": {}})
-	# 	a4 = Action(**{"args": {}})
-	# 	a5 = Action(**{"args": {}})
-	# 	a6 = Action(**{"args": {}})
-	# 	a7 = Action(**{"args": {}})
-	# 	a1.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	a2.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	a3.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	a4.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	a5.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	a6.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	a7.execute = MagicMock(return_value=Result(State.SUCCESS))
-	# 	executor = ExecuteAll(**{"actions":[a1, 
-	# 											ExecuteAll(**{"actions":[a2, 
-	# 																a3, 
-	# 																ExecuteAll(**{"actions":[a4, 
-	# 																					a5]}),
-	# 																a6]}), 
-	# 											a7]}) # etc...
-
-	# 	# When executed 
-	# 	result = executor.execute(User("foo"), None)
-
-	# 	# Then each action is executed in order including those contained in an Executor
-	# 	a1.execute.assert_called_once()
-	# 	a2.execute.assert_called_once()
-	# 	a3.execute.assert_called_once()
-	# 	a4.execute.assert_called_once()
-	# 	a5.execute.assert_called_once()
-	# 	a6.execute.assert_called_once()
-	# 	a7.execute.assert_called_once()
-
-	# 	# And when all execute then a SUCCESS is returned including for nested executors
-	# 	self.assertEqual(State.SUCCESS, result.state)
-	# 	self.assertEqual(3, len(result.messages))
-
-	# 	self.assertEqual(State.SUCCESS, result.messages[1].state)
-	# 	self.assertEqual(4, len(result.messages[1].messages))
-
-	# 	self.assertEqual(State.SUCCESS, result.messages[1].messages[2].state)
-	# 	self.assertEqual(2, len(result.messages[1].messages[2].messages))
 
 if __name__ == '__main__':
 	unittest.main()
