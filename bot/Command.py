@@ -5,10 +5,10 @@ from importlib import import_module
 
 class Command():
 
-	def __init__(self, name, executor, allows, description="", aliases=[]):
+	def __init__(self, name, executor_conf, allow_confs, description="", aliases=[]):
 		self.name = name
-		self.executor = executor
-		self.allows = allows
+		self._build_executor(executor_conf)
+		self._build_allows(allow_confs)
 		self.description = description
 		self.aliases = aliases
 
@@ -36,6 +36,20 @@ class Command():
 			if not allow.permit(user):
 				return False
 		return True
+
+	def _build_executor(self, conf):
+		pass
+
+	def _build_allows(self, confs):
+		pass
+
+	def _get_class(self, module_name, class_name):
+		try:
+			module_ = import_module("bot." + module_name)
+			class_ = getattr(module_, class_name)
+			return class_
+		except Exception as e:
+			raise ValueError("Could not load specified {} type '{}': {}".format(module_name, class_name, e))
 
 class CommandManager():
 
