@@ -7,7 +7,6 @@ class TestCommands(unittest.TestCase):
 	def setUp(self):
 		self.allow_always = Allow()
 		self.allow_always.permit = MagicMock(return_value=True)
-		
 
 	def test_allows_none(self):
 		'''
@@ -28,48 +27,67 @@ class TestCommands(unittest.TestCase):
 		executor.execute.assert_not_called()
 		self.assertEqual(State.FAILURE, result.state)
 
-	def test_allows_passing(self):
+	def test_allows_conf(self):
 		'''
-		A Command having all passing allows executes
+		The configuration for a set of Allows must have certain type and args
 		'''
-		user = User("foo")
+		# Given invalid configs, a ValueError is thrown
 		executor = DummyExecutor(**{"args": {"actions":[]}})
-		executor.execute = MagicMock()
+		self.assertRaises(ValueError, Command, "name", executor, [{}])
+		self.assertRaises(ValueError, Command, "name", executor, [{"type": "foo"}])
+		self.assertRaises(ValueError, Command, "name", executor, [{"args": {}}])
+		self.assertRaises(ValueError, Command, "name", executor, [{"type": "foo", "args": {}}])
+		self.assertRaises(ValueError, Command, "name", executor, [{"type": "foo", "args": {}}, {"type": "DummyAllow", "args": {}}])
 
-		# Given a command with passing allows
-		allowPass = Allow()
-		allowPass.permit = MagicMock(return_value=True)
-		commandPass = Command("name", executor, [allowPass, allowPass])
-		self.assertEqual(2, len(commandPass.allows))
+		try:
+			command = Command("name", executor, [{"type": "DummyAllow", "args": {}}])
+		except Exception:
+			self.fail("Unexpected exception")
+		# But given a valid config, no error is thrown
 
-		# When executed
-		result = commandPass.execute(user, None)
 
-		# Then the command executes
-		executor.execute.assert_called()
+	# def test_allows_passing(self):
+	# 	'''
+	# 	A Command having all passing allows executes
+	# 	'''
+	# 	user = User("foo")
+	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
+	# 	executor.execute = MagicMock()
 
-	def test_allows_failing(self):
-		'''
-		A Command having any failing allow doesn't execute
-		'''
-		user = User("foo")
-		executor = DummyExecutor(**{"args": {"actions":[]}})
-		executor.execute = MagicMock()
+	# 	# Given a command with passing allows
+	# 	allowPass = Allow()
+	# 	allowPass.permit = MagicMock(return_value=True)
+	# 	commandPass = Command("name", executor, [{}, {}])
+	# 	self.assertEqual(2, len(commandPass.allows))
 
-		# Given a command with a failing allow
-		allowPass = Allow()
-		allowPass.permit = MagicMock(return_value=True)
-		allowFail = Allow()
-		allowFail.permit = MagicMock(return_value=False)
-		commandFail = Command("name", executor, [allowPass, allowFail, allowPass])
-		self.assertEqual(3, len(commandFail.allows))
+	# 	# When executed
+	# 	result = commandPass.execute(user, None)
 
-		# When executed
-		result = commandFail.execute(user, None)
+	# 	# Then the command executes
+	# 	executor.execute.assert_called()
 
-		# Then the command does NOT execute any available actions and returns a FAILURE
-		executor.execute.assert_not_called()
-		self.assertEqual(State.FAILURE, result.state)
+	# def test_allows_failing(self):
+	# 	'''
+	# 	A Command having any failing allow doesn't execute
+	# 	'''
+	# 	user = User("foo")
+	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
+	# 	executor.execute = MagicMock()
+
+	# 	# Given a command with a failing allow
+	# 	allowPass = Allow()
+	# 	allowPass.permit = MagicMock(return_value=True)
+	# 	allowFail = Allow()
+	# 	allowFail.permit = MagicMock(return_value=False)
+	# 	commandFail = Command("name", executor, [allowPass, allowFail, allowPass])
+	# 	self.assertEqual(3, len(commandFail.allows))
+
+	# 	# When executed
+	# 	result = commandFail.execute(user, None)
+
+	# 	# Then the command does NOT execute any available actions and returns a FAILURE
+	# 	executor.execute.assert_not_called()
+	# 	self.assertEqual(State.FAILURE, result.state)
 
 	# def test_execution_many_args(self):
 	# 	'''

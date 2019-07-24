@@ -7,6 +7,13 @@ class Allow():
 	def permit(self, user):
 		raise NotImplementedError("Tell me what the restriction is you poopyhead!")
 
+class DummyAllow(Allow):
+	'''
+	A dummy Allow class for testing
+	'''
+	def permit(self, user):
+		pass
+
 class AllowUserStatus(Allow):
 	'''
 	Allow is based on user status in Twitch, default is highest permission (broadcaster only)
