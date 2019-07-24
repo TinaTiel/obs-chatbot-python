@@ -41,7 +41,17 @@ class Command():
 		pass
 
 	def _build_allows(self, confs):
-		pass
+		self.allows = []
+		for conf in confs:
+			# Get required confs
+			allow_type = conf.get('type', None)
+			args = conf.get('args', None)
+			if(allow_type is None or args is None):
+				raise ValueError("Command 'allows' configuration is missing 'type' or 'args' configurations.")
+
+			# Try to load specified type & instantiate it
+			class_ = self._get_class("Allow", allow_type)
+			self.allows.append(class_(**args))
 
 	def _get_class(self, module_name, class_name):
 		try:
