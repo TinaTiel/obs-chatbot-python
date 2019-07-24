@@ -164,38 +164,44 @@ class TestCommands(unittest.TestCase):
 		executor.execute.assert_not_called()
 		self.assertEqual(State.FAILURE, result.state)
 
-	# def test_execution_many_args(self):
-	# 	'''
-	# 	Arguments are separated by spaces
-	# 	and can be grouped by quotes
-	# 	'''
-	# 	# Given a command
-	# 	user = User("foo")
-	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
-	# 	executor.execute = MagicMock()
-	# 	command = Command("name", executor, [self.allow_always])
+	@patch.object(Command, '_build_allows', fake_build)
+	@patch.object(Command, '_build_executor', fake_build)
+	def test_execution_many_args(self):
+		'''
+		Arguments are separated by spaces
+		and can be grouped by quotes
+		'''
+		# Given a command that will be executed
+		user = User("foo")
+		command = Command("name", [], {})
+		command.executor = DummyExecutor(**{"args": {"actions":[]}})
+		command.executor.execute = MagicMock()
+		command._permit = MagicMock(return_value=True)
 		
-	# 	# When the command is executed with many args in one string
-	# 	command.execute(user, "foo 'bar bar' \"baz baz\"")
+		# When the command is executed with many args in one string
+		command.execute(user, "foo 'bar bar' \"baz baz\"")
 
-	# 	# Then the executor is executed with a list of arg strings
-	# 	executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
+		# Then the executor is executed with a list of arg strings
+		command.executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
 
-	# def test_actions_no_args(self):
-	# 	'''
-	# 	No arguments can be supplied
-	# 	'''
-	# 	# Given a command with many actions
-	# 	user = User("foo")
-	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
-	# 	executor.execute = MagicMock()
-	# 	command = Command("name", executor, [self.allow_always])
+	@patch.object(Command, '_build_allows', fake_build)
+	@patch.object(Command, '_build_executor', fake_build)
+	def test_actions_no_args(self):
+		'''
+		No arguments can be supplied
+		'''
+		# Given a command that will be executed
+		user = User("foo")
+		command = Command("name", [], {})
+		command.executor = DummyExecutor(**{"args": {"actions":[]}})
+		command.executor.execute = MagicMock()
+		command._permit = MagicMock(return_value=True)
 		
-	# 	# When the command is executed with many args in one string
-	# 	command.execute(user, None)
+		# When the command is executed with many args in one string
+		command.execute(user, None)
 
-	# 	# Then the executor is executed with a list of arg strings
-	# 	executor.execute.assert_called_with(user, [])
+		# Then the executor is executed with a list of arg strings
+		command.executor.execute.assert_called_with(user, [])
 
 if __name__ == '__main__':
 	unittest.main()
