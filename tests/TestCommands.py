@@ -44,11 +44,21 @@ class TestCommands(unittest.TestCase):
 
 		# But given a valid executor then no error is thrown
 		try:
-			command = Command("name", [], {"type": "DummyExecutor", "args": {}})
-			command = Command("name", [], {"type": "DummyAction", "args": {}})
+			command_executor = Command("name", [], {"type": "DummyExecutor", "args": {}})
+			command_action = Command("name", [], {"type": "DummyAction", "args": {}})
 		except Exception:
 			self.fail("Unexpected exception")
-		# Or but given a valid action then no error is thrown
+
+		# And the executor types are as expected
+		self.assertTrue(isinstance(command_executor.executor, DummyExecutor))
+		self.assertTrue(isinstance(command_action.executor, DummyAction))
+
+		# And executing results in no errors
+		try:
+			command_executor.execute(User("foo"), None)
+			command_action.execute(User("foo"), None)
+		except Exception:
+			self.fail("Unexpected exception")
 
 	@patch.object(Command, '_build_executor', fake_build)
 	def test_allows_none(self):
@@ -160,7 +170,7 @@ class TestCommands(unittest.TestCase):
 	# 	'''
 	# 	# Given a command
 	# 	user = User("foo")
-	# 	executor = Executor([])
+	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
 	# 	executor.execute = MagicMock()
 	# 	command = Command("name", executor, [self.allow_always])
 		
@@ -176,7 +186,7 @@ class TestCommands(unittest.TestCase):
 	# 	'''
 	# 	# Given a command with many actions
 	# 	user = User("foo")
-	# 	executor = Executor([])
+	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
 	# 	executor.execute = MagicMock()
 	# 	command = Command("name", executor, [self.allow_always])
 		
