@@ -44,7 +44,7 @@ class TestCommands(unittest.TestCase):
 
 		# But given a valid executor then no error is thrown
 		try:
-			command_executor = Command("name", [], {"type": "DummyExecutor", "args": {}})
+			command_executor = Command("name", [], {"type": "DummyExecutor", "args": {"actions": []}})
 			command_action = Command("name", [], {"type": "DummyAction", "args": {}})
 		except Exception:
 			self.fail("Unexpected exception")
@@ -82,6 +82,7 @@ class TestCommands(unittest.TestCase):
 		command.executor.execute.assert_not_called()
 		self.assertEqual(State.FAILURE, result.state)
 
+	@patch.object(Command, '_build_executor', fake_build)
 	def test_allows_single(self):
 		'''
 		A single Allow is fine, too
