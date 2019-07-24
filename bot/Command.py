@@ -5,10 +5,10 @@ from importlib import import_module
 
 class Command():
 
-	def __init__(self, name, executor_conf, allow_confs, description="", aliases=[]):
+	def __init__(self, name, allow_confs, executor_conf, description="", aliases=[]):
 		self.name = name
-		self._build_executor(executor_conf)
 		self._build_allows(allow_confs)
+		self._build_executor(executor_conf)
 		self.description = description
 		self.aliases = aliases
 

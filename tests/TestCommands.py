@@ -17,7 +17,7 @@ class TestCommands(unittest.TestCase):
 		executor.execute = MagicMock()
 
 		# Given a command with no allows
-		commandNoAllows = Command("name", executor, [])
+		commandNoAllows = Command("name", [], executor)
 		self.assertEqual(0, len(commandNoAllows.allows))
 
 		# When executed
@@ -33,14 +33,15 @@ class TestCommands(unittest.TestCase):
 		'''
 		# Given invalid configs, a ValueError is thrown
 		executor = DummyExecutor(**{"args": {"actions":[]}})
-		self.assertRaises(ValueError, Command, "name", executor, [{}])
-		self.assertRaises(ValueError, Command, "name", executor, [{"type": "foo"}])
-		self.assertRaises(ValueError, Command, "name", executor, [{"args": {}}])
-		self.assertRaises(ValueError, Command, "name", executor, [{"type": "foo", "args": {}}])
-		self.assertRaises(ValueError, Command, "name", executor, [{"type": "foo", "args": {}}, {"type": "DummyAllow", "args": {}}])
+		
+		self.assertRaises(ValueError, Command, "name", [{}], executor)
+		self.assertRaises(ValueError, Command, "name", [{"type": "foo"}], executor)
+		self.assertRaises(ValueError, Command, "name", [{"args": {}}], executor)
+		self.assertRaises(ValueError, Command, "name", [{"type": "foo", "args": {}}], executor)
+		self.assertRaises(ValueError, Command, "name", [{"type": "foo", "args": {}}, {"type": "DummyAllow", "args": {}}], executor)
 
 		try:
-			command = Command("name", executor, [{"type": "DummyAllow", "args": {}}])
+			command = Command("name", [{"type": "DummyAllow", "args": {}}], executor)
 		except Exception:
 			self.fail("Unexpected exception")
 		# But given a valid config, no error is thrown
