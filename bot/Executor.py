@@ -56,6 +56,13 @@ class ExecutorBase():
 	def execute(self, user, args_list):
 		pass
 
+class DummyExecutor(ExecutorBase):
+	'''
+	A dummy executor that does nothing
+	'''
+	def execute(self, user, args_list):
+		pass
+
 class ExecuteAll(ExecutorBase):
 
 	def execute(self, user, args_list):

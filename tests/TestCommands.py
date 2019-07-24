@@ -14,7 +14,7 @@ class TestCommands(unittest.TestCase):
 		A Command having no allows never executes
 		'''
 		user = User("foo")
-		executor = Executor([])
+		executor = DummyExecutor(**{"args": {"actions":[]}})
 		executor.execute = MagicMock()
 
 		# Given a command with no allows
@@ -33,7 +33,7 @@ class TestCommands(unittest.TestCase):
 		A Command having all passing allows executes
 		'''
 		user = User("foo")
-		executor = Executor([])
+		executor = DummyExecutor(**{"args": {"actions":[]}})
 		executor.execute = MagicMock()
 
 		# Given a command with passing allows
@@ -53,7 +53,7 @@ class TestCommands(unittest.TestCase):
 		A Command having any failing allow doesn't execute
 		'''
 		user = User("foo")
-		executor = Executor([])
+		executor = DummyExecutor(**{"args": {"actions":[]}})
 		executor.execute = MagicMock()
 
 		# Given a command with a failing allow
@@ -71,38 +71,38 @@ class TestCommands(unittest.TestCase):
 		executor.execute.assert_not_called()
 		self.assertEqual(State.FAILURE, result.state)
 
-	def test_execution_many_args(self):
-		'''
-		Arguments are separated by spaces
-		and can be grouped by quotes
-		'''
-		# Given a command
-		user = User("foo")
-		executor = Executor([])
-		executor.execute = MagicMock()
-		command = Command("name", executor, [self.allow_always])
+	# def test_execution_many_args(self):
+	# 	'''
+	# 	Arguments are separated by spaces
+	# 	and can be grouped by quotes
+	# 	'''
+	# 	# Given a command
+	# 	user = User("foo")
+	# 	executor = Executor([])
+	# 	executor.execute = MagicMock()
+	# 	command = Command("name", executor, [self.allow_always])
 		
-		# When the command is executed with many args in one string
-		command.execute(user, "foo 'bar bar' \"baz baz\"")
+	# 	# When the command is executed with many args in one string
+	# 	command.execute(user, "foo 'bar bar' \"baz baz\"")
 
-		# Then the executor is executed with a list of arg strings
-		executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
+	# 	# Then the executor is executed with a list of arg strings
+	# 	executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
 
-	def test_actions_no_args(self):
-		'''
-		No arguments can be supplied
-		'''
-		# Given a command with many actions
-		user = User("foo")
-		executor = Executor([])
-		executor.execute = MagicMock()
-		command = Command("name", executor, [self.allow_always])
+	# def test_actions_no_args(self):
+	# 	'''
+	# 	No arguments can be supplied
+	# 	'''
+	# 	# Given a command with many actions
+	# 	user = User("foo")
+	# 	executor = Executor([])
+	# 	executor.execute = MagicMock()
+	# 	command = Command("name", executor, [self.allow_always])
 		
-		# When the command is executed with many args in one string
-		command.execute(user, None)
+	# 	# When the command is executed with many args in one string
+	# 	command.execute(user, None)
 
-		# Then the executor is executed with a list of arg strings
-		executor.execute.assert_called_with(user, [])
+	# 	# Then the executor is executed with a list of arg strings
+	# 	executor.execute.assert_called_with(user, [])
 
 if __name__ == '__main__':
 	unittest.main()
