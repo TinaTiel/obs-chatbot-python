@@ -56,41 +56,42 @@ class TestCommands(unittest.TestCase):
 		executor = DummyExecutor(**{"args": {"actions":[]}})
 		executor.execute = MagicMock()
 		dummyAllow = {"type": "DummyAllow", "args": {}}
-		command = Command("name", executor, [dummyAllow, dummyAllow, dummyAllow])
+		command = Command("name", [dummyAllow, dummyAllow, dummyAllow], executor)
+		command.executor = executor
 
-		self.assertEqual(2, len(commandPass.allows))
+		self.assertEqual(3, len(command.allows))
 		command.allows[0].permit = MagicMock(return_value=True)
 		command.allows[1].permit = MagicMock(return_value=True)
 		command.allows[2].permit = MagicMock(return_value=True)
 		
 		# When executed
-		result = commandPass.execute(user, None)
+		result = command.execute(user, None)
 
 		# Then the command executes
 		executor.execute.assert_called()
 
-	# def test_allows_failing(self):
-	# 	'''
-	# 	A Command having any failing allow doesn't execute
-	# 	'''
-	# 	user = User("foo")
-	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
-	# 	executor.execute = MagicMock()
+	def test_allows_failing(self):
+		'''
+		A Command having any failing allow doesn't execute
+		'''
+		user = User("foo")
+		executor = DummyExecutor(**{"args": {"actions":[]}})
+		executor.execute = MagicMock()
+		dummyAllow = {"type": "DummyAllow", "args": {}}
+		command = Command("name", [dummyAllow, dummyAllow, dummyAllow], executor)
+		command.executor = executor
 
-	# 	# Given a command with a failing allow
-	# 	allowPass = Allow()
-	# 	allowPass.permit = MagicMock(return_value=True)
-	# 	allowFail = Allow()
-	# 	allowFail.permit = MagicMock(return_value=False)
-	# 	commandFail = Command("name", executor, [allowPass, allowFail, allowPass])
-	# 	self.assertEqual(3, len(commandFail.allows))
+		self.assertEqual(3, len(command.allows))
+		command.allows[0].permit = MagicMock(return_value=True)
+		command.allows[1].permit = MagicMock(return_value=False)
+		command.allows[2].permit = MagicMock(return_value=True)
 
-	# 	# When executed
-	# 	result = commandFail.execute(user, None)
+		# When executed
+		result = command.execute(user, None)
 
-	# 	# Then the command does NOT execute any available actions and returns a FAILURE
-	# 	executor.execute.assert_not_called()
-	# 	self.assertEqual(State.FAILURE, result.state)
+		# Then the command does NOT execute any available actions and returns a FAILURE
+		executor.execute.assert_not_called()
+		self.assertEqual(State.FAILURE, result.state)
 
 	# def test_execution_many_args(self):
 	# 	'''
