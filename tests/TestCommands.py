@@ -14,7 +14,7 @@ class TestCommands(unittest.TestCase):
 	@patch.object(Command, '_build_executor', fake_build)
 	def test_allows_conf(self):
 		'''
-		The configuration for a set of Allows must have certain type and args
+		The configuration for a single or set of Allows must have certain type and args
 		'''
 		# Given invalid configs, a ValueError is thrown
 		executor = DummyExecutor(**{"args": {"actions":[]}})
@@ -28,22 +28,26 @@ class TestCommands(unittest.TestCase):
 		# But given a valid config, no error is thrown
 		try:
 			command = Command("name", [{"type": "DummyAllow", "args": {}}], {})
+			command = Command("name", {"type": "DummyAllow", "args": {}}, {})
 		except Exception:
 			self.fail("Unexpected exception")
 
-	# def test_executor_conf(self):
-	# 	'''
-	# 	The executor can be either an Executor or a single Action
-	# 	'''
-	# 	dummyAllow = {"type": "DummyAllow", "args": {}}
-	# 	# Given a command with invalid executor / action, ValueError is thrown
-	# 	self.assertRaises(ValueError, Command, "name", dummyAllow, {})
-	# 	self.assertRaises(ValueError, Command, "name", dummyAllow, {"type": "foo"})
-	# 	self.assertRaises(ValueError, Command, "name", dummyAllow, {"args": {}})
+	def test_executor_conf(self):
+		'''
+		The executor can be either an Executor or a single Action, but not a list
+		'''
+		# Given a command with invalid executor / action, ValueError is thrown
+		self.assertRaises(ValueError, Command, "name", [], {})
+		self.assertRaises(ValueError, Command, "name", [], {"type": "foo"})
+		self.assertRaises(ValueError, Command, "name", [], {"args": {}})
+		self.assertRaises(ValueError, Command, "name", [], [])
 
-	# 	# But given a valid executor then no error is thrown
-	# 	try
-
+		# But given a valid executor then no error is thrown
+		try:
+			command = Command("name", [], {"type": "DummyExecutor", "args": {}})
+			command = Command("name", [], {"type": "DummyAction", "args": {}})
+		except Exception:
+			self.fail("Unexpected exception")
 		# Or but given a valid action then no error is thrown
 
 	@patch.object(Command, '_build_executor', fake_build)
@@ -67,6 +71,12 @@ class TestCommands(unittest.TestCase):
 		# Then the command does NOT execute any available actions and returns a FAILURE
 		command.executor.execute.assert_not_called()
 		self.assertEqual(State.FAILURE, result.state)
+
+	def test_allows_single(self):
+		'''
+		A single Allow is fine, too
+		'''
+		self.fail("not tested yet")
 
 	@patch.object(Command, '_build_executor', fake_build)
 	def test_allows_passing(self):
