@@ -33,39 +33,41 @@ class TestCommands(unittest.TestCase):
 		'''
 		# Given invalid configs, a ValueError is thrown
 		executor = DummyExecutor(**{"args": {"actions":[]}})
-		
+
 		self.assertRaises(ValueError, Command, "name", [{}], executor)
 		self.assertRaises(ValueError, Command, "name", [{"type": "foo"}], executor)
 		self.assertRaises(ValueError, Command, "name", [{"args": {}}], executor)
 		self.assertRaises(ValueError, Command, "name", [{"type": "foo", "args": {}}], executor)
 		self.assertRaises(ValueError, Command, "name", [{"type": "foo", "args": {}}, {"type": "DummyAllow", "args": {}}], executor)
-
+		
+		# But given a valid config, no error is thrown
 		try:
 			command = Command("name", [{"type": "DummyAllow", "args": {}}], executor)
 		except Exception:
 			self.fail("Unexpected exception")
-		# But given a valid config, no error is thrown
 
+	def test_allows_passing(self):
+		'''
+		A Command having all passing allows executes
+		'''
 
-	# def test_allows_passing(self):
-	# 	'''
-	# 	A Command having all passing allows executes
-	# 	'''
-	# 	user = User("foo")
-	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
-	# 	executor.execute = MagicMock()
+		# Given a command with passing allows
+		user = User("foo")
+		executor = DummyExecutor(**{"args": {"actions":[]}})
+		executor.execute = MagicMock()
+		dummyAllow = {"type": "DummyAllow", "args": {}}
+		command = Command("name", executor, [dummyAllow, dummyAllow, dummyAllow])
 
-	# 	# Given a command with passing allows
-	# 	allowPass = Allow()
-	# 	allowPass.permit = MagicMock(return_value=True)
-	# 	commandPass = Command("name", executor, [{}, {}])
-	# 	self.assertEqual(2, len(commandPass.allows))
+		self.assertEqual(2, len(commandPass.allows))
+		command.allows[0].permit = MagicMock(return_value=True)
+		command.allows[1].permit = MagicMock(return_value=True)
+		command.allows[2].permit = MagicMock(return_value=True)
+		
+		# When executed
+		result = commandPass.execute(user, None)
 
-	# 	# When executed
-	# 	result = commandPass.execute(user, None)
-
-	# 	# Then the command executes
-	# 	executor.execute.assert_called()
+		# Then the command executes
+		executor.execute.assert_called()
 
 	# def test_allows_failing(self):
 	# 	'''
