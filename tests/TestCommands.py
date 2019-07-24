@@ -46,71 +46,76 @@ class TestCommands(unittest.TestCase):
 
 		# Or but given a valid action then no error is thrown
 
-	# def test_allows_none(self):
-	# 	'''
-	# 	A Command having no allows never executes
-	# 	'''
-	# 	user = User("foo")
-	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
-	# 	executor.execute = MagicMock()
+	@patch.object(Command, '_build_executor', fake_build)
+	def test_allows_none(self):
+		'''
+		A Command having no allows never executes
+		'''
 
-	# 	# Given a command with no allows
-	# 	commandNoAllows = Command("name", [], executor)
-	# 	self.assertEqual(0, len(commandNoAllows.allows))
+		# Given a command with no allows
+		executor = DummyExecutor(**{"args": {"actions":[]}})
+		executor.execute = MagicMock()
 
-	# 	# When executed
-	# 	result = commandNoAllows.execute(user, None)
+		command = Command("name", [], {})
+		command.executor = executor
 
-	# 	# Then the command does NOT execute any available actions and returns a FAILURE
-	# 	executor.execute.assert_not_called()
-	# 	self.assertEqual(State.FAILURE, result.state)
+		self.assertEqual(0, len(command.allows))
 
-	# def test_allows_passing(self):
-	# 	'''
-	# 	A Command having all passing allows executes
-	# 	'''
+		# When executed
+		result = command.execute(User("foo"), None)
 
-	# 	# Given a command with passing allows
-	# 	user = User("foo")
-	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
-	# 	executor.execute = MagicMock()
-	# 	dummyAllow = {"type": "DummyAllow", "args": {}}
-	# 	command = Command("name", [dummyAllow, dummyAllow, dummyAllow], executor)
-	# 	command.executor = executor
+		# Then the command does NOT execute any available actions and returns a FAILURE
+		command.executor.execute.assert_not_called()
+		self.assertEqual(State.FAILURE, result.state)
 
-	# 	self.assertEqual(3, len(command.allows))
-	# 	command.allows[0].permit = MagicMock(return_value=True)
-	# 	command.allows[1].permit = MagicMock(return_value=True)
-	# 	command.allows[2].permit = MagicMock(return_value=True)
+	@patch.object(Command, '_build_executor', fake_build)
+	def test_allows_passing(self):
+		'''
+		A Command having all passing allows executes
+		'''
+
+		# Given a command with passing allows
+		executor = DummyExecutor(**{"args": {"actions":[]}})
+		executor.execute = MagicMock()
+		dummyAllow = {"type": "DummyAllow", "args": {}}
+
+		command = Command("name", [dummyAllow, dummyAllow, dummyAllow], {})
+		command.executor = executor
+
+		self.assertEqual(3, len(command.allows))
+		command.allows[0].permit = MagicMock(return_value=True)
+		command.allows[1].permit = MagicMock(return_value=True)
+		command.allows[2].permit = MagicMock(return_value=True)
 		
-	# 	# When executed
-	# 	result = command.execute(user, None)
+		# When executed
+		result = command.execute(User("foo"), None)
 
-	# 	# Then the command executes
-	# 	executor.execute.assert_called()
+		# Then the command executes
+		executor.execute.assert_called()
 
-	# def test_allows_failing(self):
-	# 	'''
-	# 	A Command having any failing allow doesn't execute
-	# 	'''
-	# 	user = User("foo")
-	# 	executor = DummyExecutor(**{"args": {"actions":[]}})
-	# 	executor.execute = MagicMock()
-	# 	dummyAllow = {"type": "DummyAllow", "args": {}}
-	# 	command = Command("name", [dummyAllow, dummyAllow, dummyAllow], executor)
-	# 	command.executor = executor
+	@patch.object(Command, '_build_executor', fake_build)
+	def test_allows_failing(self):
+		'''
+		A Command having any failing allow doesn't execute
+		'''
+		user = User("foo")
+		executor = DummyExecutor(**{"args": {"actions":[]}})
+		executor.execute = MagicMock()
+		dummyAllow = {"type": "DummyAllow", "args": {}}
+		command = Command("name", [dummyAllow, dummyAllow, dummyAllow], {})
+		command.executor = executor
 
-	# 	self.assertEqual(3, len(command.allows))
-	# 	command.allows[0].permit = MagicMock(return_value=True)
-	# 	command.allows[1].permit = MagicMock(return_value=False)
-	# 	command.allows[2].permit = MagicMock(return_value=True)
+		self.assertEqual(3, len(command.allows))
+		command.allows[0].permit = MagicMock(return_value=True)
+		command.allows[1].permit = MagicMock(return_value=False)
+		command.allows[2].permit = MagicMock(return_value=True)
 
-	# 	# When executed
-	# 	result = command.execute(user, None)
+		# When executed
+		result = command.execute(user, None)
 
-	# 	# Then the command does NOT execute any available actions and returns a FAILURE
-	# 	executor.execute.assert_not_called()
-	# 	self.assertEqual(State.FAILURE, result.state)
+		# Then the command does NOT execute any available actions and returns a FAILURE
+		executor.execute.assert_not_called()
+		self.assertEqual(State.FAILURE, result.state)
 
 	# def test_execution_many_args(self):
 	# 	'''
