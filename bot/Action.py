@@ -13,7 +13,8 @@ class Action():
 
 		self.allows = []
 		self.add_allows(allows if isinstance(allows, list) else [])
-		self._init_args(args)
+		self.args = args
+		self._init_args()
 
 	def __repr__(self):
 		return "{}{}={{args: {}}}".format("\t"*(self.lvl), self.__class__.__name__, str(self.args))
@@ -35,7 +36,7 @@ class Action():
 				return False
 		return True
 
-	def _init_args(self, args):
+	def _init_args(self):
 		pass
 
 	def _execute(self, user, args):
@@ -46,8 +47,8 @@ class DummyAction(Action):
 	that takes args provided
 	'''
 
-	def _init_args(self, args):
-		self.args = args
+	def _init_args(self):
+		pass
 
 	def _execute(self, user, args):
 		pass

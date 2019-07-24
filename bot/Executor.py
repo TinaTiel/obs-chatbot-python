@@ -72,8 +72,8 @@ class ExecuteAll(ExecutorBase):
 		return Result(State.SUCCESS, results)
 
 class ExecuteGated(ExecutorBase):
-	def __init__(self, **kwargs):
-		super().__init__(**kwargs)
+	def __init__(self, parent=None, lvl=0, **kwargs):
+		super().__init__(parent, lvl, **kwargs)
 		self.executed = list()
 		self.actions = deque(self.actions)
 
@@ -92,12 +92,25 @@ class ExecuteGated(ExecutorBase):
 		# else put it back in the queue
 		selected = self.actions.popleft()
 		result = selected.execute(user, args_list)
-		if(result.state != State.SUCCESS):
-			self.actions.appendleft(selected)
+		
+		# If it has executed successfully then don't execute it again unless it has more actions to execute
+		if(result.state == State.SUCCESS):
+			# If it was an Action, then take it out of the queue
+			if(not hasattr(selected, 'actions')): # not an Executor; just an Action
+				self.executed.append(selected)
+			# Otherwise it's an executor
+			else:
+				# If it has more actions then put it back in the queue
+				if(len(selected.actions) > 0):
+					self.actions.appendleft(selected)
+				# Otherwise take it out of the queue
+				else:
+					self.executed.append(selected)
+			return Result(State.SUCCESS, [result])
+		# If the action didn't execute, put it back in the queue
 		else:
-			self.executed.append(selected)
-
-		return Result(result.state, [result])
+			self.actions.appendleft(selected)
+			return Result(State.FAILURE, [result])
 
 # class ExecuteRandom(Executor):
 # 	def __init__(self, **kwargs):
