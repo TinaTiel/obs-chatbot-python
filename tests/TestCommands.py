@@ -76,7 +76,33 @@ class TestCommands(unittest.TestCase):
 		'''
 		A single Allow is fine, too
 		'''
-		self.fail("not tested yet")
+		# Given a command with a single Allow definition
+		dummyAllow = {"type": "DummyAllow", "args": {}}
+		command = Command("name", dummyAllow, {})
+		command.executor = DummyExecutor(**{"args": {"actions":[]}})
+		command.executor.execute = MagicMock()
+
+		# If that allow doesn't permit
+		command.allows[0].permit = MagicMock(return_value=False)
+
+		# When executed
+		result = command.execute(User("foo"), None)
+
+		# Then the command is not executed and returns a FAILURE
+		command.executor.execute.assert_not_called()
+		self.assertEqual(State.FAILURE, result.state)
+
+		# And if that allow permits
+		command.executor = DummyExecutor(**{"args": {"actions":[]}})
+		command.executor.execute = MagicMock()
+		command.allows[0].permit = MagicMock(return_value=True)
+		
+		# When executed
+		result = command.execute(User("foo"), None)
+
+		# Then the command executes
+		command.executor.execute.assert_called()
+
 
 	@patch.object(Command, '_build_executor', fake_build)
 	def test_allows_passing(self):

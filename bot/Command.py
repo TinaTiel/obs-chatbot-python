@@ -41,6 +41,8 @@ class Command():
 		pass
 
 	def _build_allows(self, confs):
+		if(not isinstance(confs, list)):
+			confs = [confs]
 		self.allows = []
 		for conf in confs:
 			# Get required confs
