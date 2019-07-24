@@ -38,14 +38,35 @@ class Command():
 		return True
 
 	def _build_executor(self, conf):
-		pass
+		# validate conf isn't a list
+		if(isinstance(conf, list)):
+			raise ValueError("Root executor configuration cannot be a list. Use an Executor containing Executors instead.")
+
+		# get requiried items
+		exec_type = conf.get('type', None)
+		args = conf.get('args', None)
+		if(exec_type is None or args is None):
+			raise ValueError("Command 'execute' configuration is missing 'type' or 'args' configurations.")
+
+		# Try to load the specified class and instantiate it
+		try:
+			class_ = self._get_class("Executor", exec_type)
+		except Exception:
+			try:
+				class_ = self._get_class("Action", exec_type)
+			except Exception:
+				raise ValueError("Specified action/executor '{}' does not exist. Error: {}".format(exec_type, e))
+		self.executor = class_(**conf)
 
 	def _build_allows(self, confs):
+		# do a type conversion if not a list
 		if(not isinstance(confs, list)):
 			confs = [confs]
+		
+		# Build each Allow object from confs
 		self.allows = []
 		for conf in confs:
-			# Get required confs
+			# Get required items
 			allow_type = conf.get('type', None)
 			args = conf.get('args', None)
 			if(allow_type is None or args is None):
