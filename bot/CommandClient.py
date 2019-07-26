@@ -11,9 +11,7 @@ class CommandClientBase:
 		'''
 		Tries to load each command specified in the confs dict
 		'''
-		commands = confs.get('commands', None)
-		if (commands is None or not isinstance(commands, list)):
-			raise ValueError("Missing 'commands' when initializing list of commands, or 'commands' isn't a list")
+		commands = self._validate_commands_conf(confs)
 
 		for command in commands:
 			self.load_command(command)
@@ -55,6 +53,12 @@ class CommandClientBase:
 
 	def reload_commands(self, confs):
 		pass
+
+	def _validate_commands_conf(self, confs):
+		commands = confs.get('commands', None)
+		if (commands is None or not isinstance(commands, list)):
+			raise ValueError("Missing 'commands' when initializing list of commands, or 'commands' isn't a list")
+		return commands
 
 	def _build_command(self, conf):
 		# Check for required args
