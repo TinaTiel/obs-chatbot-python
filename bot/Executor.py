@@ -60,6 +60,10 @@ class DummyExecutor(ExecutorBase):
 	'''
 	A dummy executor that does nothing
 	'''
+	def __init__(self, parent=None, lvl=0, **kwargs):
+		self.parent = parent
+		self.lvl = lvl
+
 	def execute(self, user, args_list):
 		pass
 

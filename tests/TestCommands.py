@@ -17,7 +17,7 @@ class TestCommands(unittest.TestCase):
 		The configuration for a single or set of Allows must have certain type and args
 		'''
 		# Given invalid configs, a ValueError is thrown
-		executor = DummyExecutor(**{"args": {"actions":[]}})
+		executor = DummyExecutor(**{})
 
 		self.assertRaises(ValueError, CommandBase, "name", [{}], {})
 		self.assertRaises(ValueError, CommandBase, "name", [{"type": "foo"}], {})
@@ -44,7 +44,7 @@ class TestCommands(unittest.TestCase):
 
 		# But given a valid executor then no error is thrown
 		try:
-			command_executor = CommandBase("name", [], {"type": "DummyExecutor", "args": {"actions": []}})
+			command_executor = CommandBase("name", [], {"type": "DummyExecutor", "args": {}})
 			command_action = CommandBase("name", [], {"type": "DummyAction", "args": {}})
 		except Exception:
 			self.fail("Unexpected exception")
@@ -67,7 +67,7 @@ class TestCommands(unittest.TestCase):
 		'''
 
 		# Given a command with no allows
-		executor = DummyExecutor(**{"args": {"actions":[]}})
+		executor = DummyExecutor(**{})
 		executor.execute = MagicMock()
 
 		command = CommandBase("name", [], {})
@@ -90,7 +90,7 @@ class TestCommands(unittest.TestCase):
 		# Given a command with a single Allow definition
 		dummyAllow = {"type": "DummyAllow", "args": {}}
 		command = CommandBase("name", dummyAllow, {})
-		command.executor = DummyExecutor(**{"args": {"actions":[]}})
+		command.executor = DummyExecutor(**{})
 		command.executor.execute = MagicMock()
 
 		# If that allow doesn't permit
@@ -104,7 +104,7 @@ class TestCommands(unittest.TestCase):
 		self.assertEqual(State.FAILURE, result.state)
 
 		# And if that allow permits
-		command.executor = DummyExecutor(**{"args": {"actions":[]}})
+		command.executor = DummyExecutor(**{})
 		command.executor.execute = MagicMock()
 		command.allows[0].permit = MagicMock(return_value=True)
 		
@@ -122,7 +122,7 @@ class TestCommands(unittest.TestCase):
 		'''
 
 		# Given a command with passing allows
-		executor = DummyExecutor(**{"args": {"actions":[]}})
+		executor = DummyExecutor(**{})
 		executor.execute = MagicMock()
 		dummyAllow = {"type": "DummyAllow", "args": {}}
 
@@ -146,7 +146,7 @@ class TestCommands(unittest.TestCase):
 		A Command having any failing allow doesn't execute
 		'''
 		user = User("foo")
-		executor = DummyExecutor(**{"args": {"actions":[]}})
+		executor = DummyExecutor(**{})
 		executor.execute = MagicMock()
 		dummyAllow = {"type": "DummyAllow", "args": {}}
 		command = CommandBase("name", [dummyAllow, dummyAllow, dummyAllow], {})
@@ -174,7 +174,7 @@ class TestCommands(unittest.TestCase):
 		# Given a command that will be executed
 		user = User("foo")
 		command = CommandBase("name", [], {})
-		command.executor = DummyExecutor(**{"args": {"actions":[]}})
+		command.executor = DummyExecutor(**{})
 		command.executor.execute = MagicMock()
 		command._permit = MagicMock(return_value=True)
 		
@@ -193,7 +193,7 @@ class TestCommands(unittest.TestCase):
 		# Given a command that will be executed
 		user = User("foo")
 		command = CommandBase("name", [], {})
-		command.executor = DummyExecutor(**{"args": {"actions":[]}})
+		command.executor = DummyExecutor(**{})
 		command.executor.execute = MagicMock()
 		command._permit = MagicMock(return_value=True)
 		
