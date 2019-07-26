@@ -25,9 +25,9 @@ class TestActions(unittest.TestCase):
 		Each allow added to an action must have a reference to its parent action
 		'''
 		# Given a command with several allows
-		r1 = Allow()
-		r2 = Allow()
-		r3 = Allow()
+		r1 = DummyAllow()
+		r2 = DummyAllow()
+		r3 = DummyAllow()
 		action = ActionBase(**{"allows":[r1, r2, r3], "args": {}})
 
 		# Each allow has a reference to the command
@@ -56,7 +56,7 @@ class TestActions(unittest.TestCase):
 		A Command having all passing allows executes
 		'''
 		# Given an action with passing allows
-		allowPass = Allow()
+		allowPass = DummyAllow()
 		allowPass.permit = MagicMock(return_value=True)
 
 		action = ActionBase(**{"allows":[allowPass], "args": {}})
@@ -75,10 +75,10 @@ class TestActions(unittest.TestCase):
 		A Command having any failing allow doesn't execute
 		'''
 		# Given an action with passing and failing allows
-		allowPass = Allow()
+		allowPass = DummyAllow()
 		allowPass.permit = MagicMock(return_value=True)
 
-		allowFail = Allow()
+		allowFail = DummyAllow()
 		allowFail.permit = MagicMock(return_value=False)
 
 		action = ActionBase(**{"allows":[allowPass, allowFail], "args": {}})

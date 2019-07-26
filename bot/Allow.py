@@ -1,20 +1,25 @@
 from bot.Permission import *
 
-class Allow():
+class AllowBase():
 	def __init__(self, **kwargs):
 		pass
 
 	def permit(self, user):
 		raise NotImplementedError("Tell me what the restriction is you poopyhead!")
 
-class DummyAllow(Allow):
+
+class DummyAllow(AllowBase):
 	'''
 	A dummy Allow class for testing
 	'''
+	def __init__(self, **kwargs):
+		pass
+
 	def permit(self, user):
 		pass
 
-class AllowUserStatus(Allow):
+
+class AllowUserStatus(AllowBase):
 	'''
 	Allow is based on user status in Twitch, default is highest permission (broadcaster only)
 	'''
@@ -40,7 +45,8 @@ class AllowUserStatus(Allow):
 
 		return user_status >= self.min_status
 
-class AllowVoting(Allow):
+
+class AllowVoting(AllowBase):
 	def __init__(self, **kwargs):
 		min_votes = kwargs.get('min_votes', 9999)
 		uniques = kwargs.get('uniques', True)
@@ -73,7 +79,7 @@ class AllowVoting(Allow):
 			self.votes.add(user.username)
 
 
-class AllowWhitelist(Allow):
+class AllowWhitelist(AllowBase):
 	def __init__(self, **kwargs):
 		# whitelist
 		whitelist = kwargs.get('whitelist', [])

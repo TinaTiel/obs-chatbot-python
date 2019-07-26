@@ -5,7 +5,7 @@ from bot import *
 class TestCommands(unittest.TestCase):
 
 	def setUp(self):
-		self.allow_always = Allow()
+		self.allow_always = DummyAllow()
 		self.allow_always.permit = MagicMock(return_value=True)
 
 	def fake_build(self, config):
