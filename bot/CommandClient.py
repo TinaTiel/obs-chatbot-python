@@ -1,4 +1,5 @@
 import bot.Common as Common
+from bot.Command import *
 
 class CommandClientBase:
 
@@ -30,9 +31,12 @@ class CommandClientBase:
 		action = conf.get('action', None)
 		if(name is None or allows is None or action is None):
 			raise ValueError("Command requires 'name', 'allows', or 'action'")
+		
+		# Get optional args
+		description = conf.get('description', "")
+		aliases = conf.get('aliases', [])
 
-		# Determine the executor type
-		pass
+		return Command(name, allows, action, description, aliases)
 
 class DummyCommandClient(CommandClientBase):
 

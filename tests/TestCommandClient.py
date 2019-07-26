@@ -50,13 +50,13 @@ class TestCommandClient(unittest.TestCase):
 		self.assertRaises(ValueError, client.load_command, {'action': {}, 'name': {}})
 		self.assertRaises(ValueError, client.load_command, {'name': {}, 'allows': []})
 		self.assertRaises(ValueError, client.load_command, {'name': {}, 'allows': [], 'action': {'type': 'idontexist', 'args': {}}})
-		self.assertRaises(ValueError, client.load_command, {'name': {}, 'allows': [{'type': 'idontexist', 'args': {}}], 'action': {{'type': 'DummyAction', 'args': {}}}})
+		self.assertRaises(ValueError, client.load_command, {'name': {}, 'allows': [{'type': 'idontexist', 'args': {}}], 'action': {'type': 'DummyAction', 'args': {}}})
 
 		# When loading a valid command then it will not raise an error and will be accessible for retrieval
 		try:
 			conf = {
 				'name': 'foo',
-				'descr': 'bar', 
+				'description': 'bar',
 				'aliases': ['baz'],
 				'allows': [
 					{
@@ -84,7 +84,7 @@ class TestCommandClient(unittest.TestCase):
 		try:
 			conf = {
 				'name': 'foo',
-				'descr': 'bar', 
+				'description': 'bar',
 				'aliases': ['baz'],
 				'allows': [
 					{
@@ -93,7 +93,7 @@ class TestCommandClient(unittest.TestCase):
 					}
 				],
 				'action': {
-					'type': 'BaseExecutor',
+					'type': 'ExecutorBase',
 					'args': {
 						'actions': [
 							{
@@ -114,7 +114,7 @@ class TestCommandClient(unittest.TestCase):
 		self.assertEqual('bar', command.description)
 		self.assertEqual('baz', command.aliases[0])
 		self.assertEqual(1, len(command.allows))
-		self.assertTrue(isinstance(command.executor, BaseExecutor))
+		self.assertTrue(isinstance(command.executor, ExecutorBase))
 		self.assertTrue(isinstance(command.executor.actions[0], DummyAction))
 
 	# def test_command_execution(self):

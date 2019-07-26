@@ -1,6 +1,5 @@
 import shlex
 from bot.Result import *
-from bot.Executor import *
 import bot.Common as Common
 
 class CommandBase():
@@ -54,7 +53,7 @@ class CommandBase():
 		except Exception:
 			try:
 				class_ = Common.get_class("Action", exec_type)
-			except Exception:
+			except Exception as e:
 				raise ValueError("Specified action/executor '{}' does not exist. Error: {}".format(exec_type, e))
 		self.executor = class_(**conf)
 
@@ -76,9 +75,15 @@ class CommandBase():
 			class_ = Common.get_class("Allow", allow_type)
 			self.allows.append(class_(**args))
 
+
 class DummyCommand(CommandBase):
 	def __init__(self, name, allow_confs, executor_conf, description="", aliases=[]):
 		pass
 
 	def execute(self, user, args):
 		pass
+
+
+class Command(CommandBase):
+	def __init__(self, name, allow_confs, executor_conf, description="", aliases=[]):
+		super().__init__(name, allow_confs, executor_conf, description, aliases)
