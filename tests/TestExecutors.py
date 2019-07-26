@@ -26,7 +26,7 @@ class TestExecutors(unittest.TestCase):
 			"args": {
 				"actions": [
 					{
-						"type": "DummyAction",
+						"type": "ActionBase",
 						"args": {
 							"lvl": "a",
 							"num": 1
@@ -41,7 +41,7 @@ class TestExecutors(unittest.TestCase):
 									"args": {
 										"actions": [
 											{
-												"type": "DummyAction",
+												"type": "ActionBase",
 												"args": {
 													"lvl": "c",
 													"num": 1
@@ -51,14 +51,14 @@ class TestExecutors(unittest.TestCase):
 									}
 								},
 								{
-									"type": "DummyAction",
+									"type": "ActionBase",
 									"args": {
 										"lvl": "b",
 										"num": 1
 									}
 								},
 								{
-									"type": "DummyAction",
+									"type": "ActionBase",
 									"args": {
 										"lvl": "b",
 										"num": 2
@@ -68,7 +68,7 @@ class TestExecutors(unittest.TestCase):
 						}
 					},
 					{
-						"type": "DummyAction",
+						"type": "ActionBase",
 						"args": {
 							"lvl": "a",
 							"num": 2
@@ -83,7 +83,7 @@ class TestExecutors(unittest.TestCase):
 		#print(e)
 
 		# The children are built
-		self.assertTrue(isinstance(e.actions[0], DummyAction))
+		self.assertTrue(isinstance(e.actions[0], ActionBase))
 		self.assertDictEqual({"lvl": "a", "num": 1}, e.actions[0].args)
 
 		self.assertTrue(isinstance(e.actions[1], ExecutorBase))
@@ -91,12 +91,12 @@ class TestExecutors(unittest.TestCase):
 		self.assertTrue(isinstance(e.actions[1].actions[0], ExecutorBase))
 
 		self.assertDictEqual({"lvl": "c", "num": 1}, e.actions[1].actions[0].actions[0].args)
-		self.assertTrue(isinstance(e.actions[1].actions[0].actions[0], DummyAction))
+		self.assertTrue(isinstance(e.actions[1].actions[0].actions[0], ActionBase))
 
 		self.assertDictEqual({"lvl": "b", "num": 1}, e.actions[1].actions[1].args)
-		self.assertTrue(isinstance(e.actions[1].actions[1], DummyAction))
+		self.assertTrue(isinstance(e.actions[1].actions[1], ActionBase))
 
-		self.assertTrue(isinstance(e.actions[2], DummyAction))
+		self.assertTrue(isinstance(e.actions[2], ActionBase))
 		self.assertDictEqual({"lvl": "a", "num": 2}, e.actions[2].args)
 
 	def test_all_executor_success(self):

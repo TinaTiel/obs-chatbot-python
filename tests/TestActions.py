@@ -11,14 +11,14 @@ class TestActions(unittest.TestCase):
 		# Given a minimum set of arguments
 		# Then an Action class can be substantiated
 		try:
-			action = Action(**{"args": {}})
+			action = ActionBase(**{"args": {}})
 		except Exception:
 			self.fail("Unexpected exception")
 
 		# And given any missing arguments
 		# Then a ValueError is thrown
-		self.assertRaises(ValueError, Action, **{})
-		self.assertRaises(ValueError, Action, **{"allows": []})
+		self.assertRaises(ValueError, ActionBase, **{})
+		self.assertRaises(ValueError, ActionBase, **{"allows": []})
 
 	def test_allows_have_parent_action_reference(self):
 		'''
@@ -28,7 +28,7 @@ class TestActions(unittest.TestCase):
 		r1 = Allow()
 		r2 = Allow()
 		r3 = Allow()
-		action = Action(**{"allows":[r1, r2, r3], "args": {}})
+		action = ActionBase(**{"allows":[r1, r2, r3], "args": {}})
 
 		# Each allow has a reference to the command
 		self.assertEqual(action, r1.action)
@@ -40,7 +40,7 @@ class TestActions(unittest.TestCase):
 		An action having no allows always executes
 		'''
 		# Given an action with no allows
-		action = Action(**{"args": {}})
+		action = ActionBase(**{"args": {}})
 		action._execute = MagicMock()
 		self.assertEqual(0, len(action.allows))
 
@@ -59,7 +59,7 @@ class TestActions(unittest.TestCase):
 		allowPass = Allow()
 		allowPass.permit = MagicMock(return_value=True)
 
-		action = Action(**{"allows":[allowPass], "args": {}})
+		action = ActionBase(**{"allows":[allowPass], "args": {}})
 		action._execute = MagicMock()
 		self.assertEqual(1, len(action.allows))
 
@@ -81,7 +81,7 @@ class TestActions(unittest.TestCase):
 		allowFail = Allow()
 		allowFail.permit = MagicMock(return_value=False)
 
-		action = Action(**{"allows":[allowPass, allowFail], "args": {}})
+		action = ActionBase(**{"allows":[allowPass, allowFail], "args": {}})
 		action._execute = MagicMock()
 		self.assertEqual(2, len(action.allows))
 

@@ -1,6 +1,6 @@
 from bot.Result import *
 
-class Action():
+class ActionBase():
 
 	def __init__(self, parent=None, lvl=0, **kwargs):
 		self.parent = parent
@@ -41,10 +41,13 @@ class Action():
 	def _execute(self, user, args):
 		pass
 
-class DummyAction(Action):
+class DummyAction(ActionBase):
 	'''A dummy Action class
 	that takes args provided
 	'''
+	def __init__(self, parent=None, lvl=0, **kwargs):
+		self.allows = []
+		self.args = {}
 
 	def _init_args(self):
 		pass
