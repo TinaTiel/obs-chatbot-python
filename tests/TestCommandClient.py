@@ -108,7 +108,6 @@ class TestCommandClient(unittest.TestCase):
 		except Exception:
 			self.fail('unexpected exception')
 
-		self.assertEqual(1, len(client.commands))
 		command = client.commands['foo']
 		self.assertEqual('foo', command.name)
 		self.assertEqual('bar', command.description)
