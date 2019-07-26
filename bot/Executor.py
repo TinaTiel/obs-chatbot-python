@@ -1,4 +1,5 @@
 from bot.Result import *
+import bot.Common as Common
 from collections import deque
 from importlib import import_module
 
@@ -34,24 +35,16 @@ class ExecutorBase():
 
 			# determine the corresponding class
 			try:
-				_class = self._get_class("Action", conf['type'] )
+				_class = Common.get_class("Action", conf['type'] )
 			except Exception:
 				try:
-					_class = self._get_class("Executor", conf['type'] )
+					_class = Common.get_class("Executor", conf['type'] )
 				except Exception as e:
 					raise ValueError("Specified action/executor '{}' does not exist. Error: {}".format(conf['type'], e))
 
 			# instantiate it
 			_obj = _class(self, self.lvl+1, **conf)
 			self.actions.append(_obj)
-
-	def _get_class(self, module_name, class_name):
-		try:
-			module_ = import_module("bot." + module_name)
-			class_ = getattr(module_, class_name)
-			return class_
-		except Exception as e:
-			raise ValueError("Could not load specified {} type '{}': {}".format(module_name, class_name, e))
 
 	def execute(self, user, args_list):
 		pass

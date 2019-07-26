@@ -1,7 +1,7 @@
 import shlex
 from bot.Result import *
 from bot.Executor import *
-from importlib import import_module
+import bot.Common as Common
 
 class CommandBase():
 
@@ -50,10 +50,10 @@ class CommandBase():
 
 		# Try to load the specified class and instantiate it
 		try:
-			class_ = self._get_class("Executor", exec_type)
+			class_ = Common.get_class("Executor", exec_type)
 		except Exception:
 			try:
-				class_ = self._get_class("Action", exec_type)
+				class_ = Common.get_class("Action", exec_type)
 			except Exception:
 				raise ValueError("Specified action/executor '{}' does not exist. Error: {}".format(exec_type, e))
 		self.executor = class_(**conf)
@@ -73,16 +73,8 @@ class CommandBase():
 				raise ValueError("Command 'allows' configuration is missing 'type' or 'args' configurations.")
 
 			# Try to load specified type & instantiate it
-			class_ = self._get_class("Allow", allow_type)
+			class_ = Common.get_class("Allow", allow_type)
 			self.allows.append(class_(**args))
-
-	def _get_class(self, module_name, class_name):
-		try:
-			module_ = import_module("bot." + module_name)
-			class_ = getattr(module_, class_name)
-			return class_
-		except Exception as e:
-			raise ValueError("Could not load specified {} type '{}': {}".format(module_name, class_name, e))
 
 class DummyCommand(CommandBase):
 	def __init__(self, name, allow_confs, executor_conf, description="", aliases=[]):

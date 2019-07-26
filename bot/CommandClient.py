@@ -1,3 +1,5 @@
+import bot.Common as Common
+
 class CommandClientBase:
 
 	def __init__(self):
@@ -22,6 +24,14 @@ class CommandClientBase:
 		self.commands[command.name] = command
 
 	def _build_command(self, conf):
+		# Check for required args
+		name = conf.get('name', None)
+		allows = conf.get('allows', None)
+		action = conf.get('action', None)
+		if(name is None or allows is None or action is None):
+			raise ValueError("Command requires 'name', 'allows', or 'action'")
+
+		# Determine the executor type
 		pass
 
 class DummyCommandClient(CommandClientBase):
