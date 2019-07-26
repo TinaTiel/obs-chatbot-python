@@ -78,7 +78,8 @@ class CommandBase():
 
 class DummyCommand(CommandBase):
 	def __init__(self, name, allow_confs, executor_conf, description="", aliases=[]):
-		pass
+		self.name = name
+		self.aliases = aliases
 
 	def execute(self, user, args):
 		pass

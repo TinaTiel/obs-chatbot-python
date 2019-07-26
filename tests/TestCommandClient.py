@@ -117,11 +117,48 @@ class TestCommandClient(unittest.TestCase):
 		self.assertTrue(isinstance(command.executor, ExecutorBase))
 		self.assertTrue(isinstance(command.executor.actions[0], DummyAction))
 
+	def test_aliases(self):
+		'''
+		A command can have 0 to many aliases, each should trigger the same command
+		'''
+		# Given a command added with aliases
+		client = CommandClientBase()
+		conf = {
+			'name': 'foo',
+			'description': '',
+			'aliases': ['bar', 'baz'],
+			'allows': [
+				{
+					'type': 'DummyAllow',
+					'args': {}
+				}
+			],
+			'action': {
+				'type': 'DummyExecutor',
+				'args': {}
+			}
+		}
+		client.load_command(conf)
+
+		# That command should be accessible from the aliases
+		self.assertEqual('foo', client.commands['foo'].name)
+		self.assertEqual('foo', client.commands['bar'].name)
+		self.assertEqual('foo', client.commands['baz'].name)
+
 	# def test_command_execution(self):
 	# 	'''
-	# 	A command added successfully will be accessible in the client
+	# 	A command added successfully is executable
 	# 	'''
-	# 	self.fail("not implemented")
+	# 	# Given a command added to the client
+	# 	client = CommandClientBase()
+	# 	client.commands = [DummyCommand("foo")]
+	# 	# When executed
+
+	# 	# it is executed and a SUCCESS is returned
+
+	# 	# When something that doesn't exist is executed
+
+	# 	# Then nothing happens and a FAILURE is returned
 
 	# def test_command_disable_enable(self):
 	# 	'''
