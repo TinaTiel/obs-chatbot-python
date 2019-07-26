@@ -1,0 +1,2 @@
+class CommandClient:
+	pass
