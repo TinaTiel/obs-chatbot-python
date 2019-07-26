@@ -27,12 +27,12 @@ class TestCommandClient(unittest.TestCase):
 
 		# Comand is loaded for every command provided when no errors
 		client.load_command = MagicMock()
-		client.load_commands([{}, {}, {}])
+		client.load_commands({'commands': [{}, {}, {}]})
 		self.assertEqual(3, client.load_command.call_count)
 
 		# When a good config but one resulting in errors during load then a ValueError is returned
 		client.load_command = MagicMock(side_effect=ValueError)
-		self.assertRaises(ValueError, client.load_commands, [{}, {}, {}])
+		self.assertRaises(ValueError, client.load_commands, {'commands': [{}, {}, {}]})
 
 	# def test_load_command(self):
 	# 	'''
