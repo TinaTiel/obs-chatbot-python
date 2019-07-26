@@ -34,6 +34,12 @@ class CommandClientBase:
 		result = command.execute(user, args)
 		return Result(State.SUCCESS, result)
 
+	def disable(self, command_name):
+		pass
+
+	def enable(self, command_name):
+		pass
+
 	def _build_command(self, conf):
 		# Check for required args
 		name = conf.get('name', None)
@@ -58,3 +64,13 @@ class DummyCommandClient(CommandClientBase):
 
 	def load_command(self, conf):
 		pass
+
+	def execute(self, command_name, user, args):
+		pass
+
+	def disable(self, command_name):
+		pass
+
+	def enable(self, command_name):
+		pass
+

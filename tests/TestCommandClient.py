@@ -157,7 +157,7 @@ class TestCommandClient(unittest.TestCase):
 		client.commands = {'foo': command}
 
 		# When something that doesn't exist is executed
-		result = client.execute('idontexist', user, args)
+		result = client.execute('idontexist', user, None)
 
 		# Then nothing happens and a FAILURE is returned
 		self.assertEqual(State.FAILURE, result.state)
@@ -170,11 +170,48 @@ class TestCommandClient(unittest.TestCase):
 		self.assertEqual(State.SUCCESS, result.state)
 		command.execute.assert_called_with(user, "foo bar baz")
 
-	# def test_command_disable_enable(self):
-	# 	'''
-	# 	Commands can be disabled/enabled during runtime and won't be available to execute
-	# 	'''
-	# 	self.fail("not implemented")
+	def test_command_disable_enable(self):
+		'''
+		Commands can be disabled/enabled during runtime and won't be available to execute
+		'''
+		# Given a client with a command in it
+		user = User("Rosie")
+		args = "foo bar baz"
+		command = DummyCommand("foo", [], {})
+		command.execute = MagicMock()
+		client = CommandClientBase()
+		client.commands = {'foo': command}
+
+		# And that command can be executed normally
+		result = client.execute('foo', user, args)
+		self.assertEqual(State.SUCCESS, result.state)
+		command.execute.assert_called_with(user, "foo bar baz")
+
+		# When a nonexistent command is disabled or enabled then a FAILURE is returned 
+		result = client.disable('idontexist')
+		self.assertEqual(State.FAILURE, result.state)
+		result = client.enable('idontexist')
+		self.assertEqual(State.FAILURE, result.state)
+
+		# And the existing command can still be executed
+		result = client.execute('foo', user, args)
+		self.assertEqual(State.SUCCESS, result.state)
+		command.execute.assert_called_with(user, "foo bar baz")
+
+		# When the command is disabled
+		result = client.disable('foo')
+
+		# Then the command cannot be executed
+		result = client.execute('foo', user, args)
+		self.assertEqual(State.FAILURE, result.state)
+
+		# When the command is re-enabled
+		result = client.enable('foo')
+
+		# Then the command can be executed again
+		result = client.execute('foo', user, args)
+		self.assertEqual(State.SUCCESS, result.state)
+		command.execute.assert_called_with(user, "foo bar baz")
 
 	# def test_command_reload(self):
 	# 	'''
