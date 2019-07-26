@@ -53,6 +53,9 @@ class CommandClientBase:
 			self.commands[alias] = self.disabled.pop(alias)
 		return Result(State.SUCCESS)
 
+	def reload_commands(self, confs):
+		pass
+
 	def _build_command(self, conf):
 		# Check for required args
 		name = conf.get('name', None)

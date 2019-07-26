@@ -219,13 +219,137 @@ class TestCommandClient(unittest.TestCase):
 		self.assertEqual(State.SUCCESS, result.state)
 		command.execute.assert_called_with(user, "foo bar baz")
 
-	# def test_command_reload(self):
-	# 	'''
-	# 	Commands can be reloaded during runtime, e.g. if the broadcaster changes 
-	# 	something during the broadcast and wants those changes available without
-	# 	restarting the entire bot.
+	def test_command_reload(self):
+		'''
+		Commands can be reloaded during runtime, e.g. if the broadcaster changes 
+		something during the broadcast and wants those changes available without
+		restarting the entire bot.
 
-	# 	If there is an error, the reload won't happen and a warning will be logged; the 
-	# 	bot will still function as normal.
-	# 	'''
-	# 	self.fail("not implemented")
+		If there is an error, the reload won't happen and a warning will be logged; the 
+		bot will still function as normal.
+		'''
+		# Given a client loaded with commands
+		client = CommandClientBase()
+		confs = {
+			'commands': [
+				{
+					'name': 'foo',
+					'description': '',
+					'aliases': ['bar', 'baz'],
+					'allows': [
+						{
+							'type': 'DummyAllow',
+							'args': {}
+						}
+					],
+					'action': {
+						'type': 'DummyExecutor',
+						'args': {}
+					}
+				}
+			]
+		}
+		client.load_commands(confs)
+		self.assertEqual('', client.commands['foo'].description)
+		self.assertTrue(isinstance(client.commands['foo'].executor, DummyExecutor))
+		self.assertEqual('', client.commands['bar'].description)
+		self.assertTrue(isinstance(client.commands['bar'].executor, DummyExecutor))
+		self.assertEqual('', client.commands['baz'].description)
+		self.assertTrue(isinstance(client.commands['baz'].executor, DummyExecutor))
+		
+		self.assertEqual(3, len(client.commands))
+
+		# When reloaded with a bad config
+		confs['commands'][0]['action']['type'] = "idontexist"
+		result = client.reload_commands(confs)
+
+		# Those commands are still in the client, and a FAILURE is returned
+		self.assertEqual(State.FAILURE, result.state)
+		self.assertEqual('', client.commands['foo'].description)
+		self.assertTrue(isinstance(client.commands['foo'].executor, DummyExecutor))
+		self.assertEqual('', client.commands['bar'].description)
+		self.assertTrue(isinstance(client.commands['bar'].executor, DummyExecutor))
+		self.assertEqual('', client.commands['baz'].description)
+		self.assertTrue(isinstance(client.commands['baz'].executor, DummyExecutor))
+		
+		self.assertEqual(3, len(client.commands))
+
+		# When reloaded with a good config
+		new_confs = {
+			'commands': [
+				{
+					'name': 'foo',
+					'description': 'some description',
+					'aliases': ['bar', 'baz'],
+					'allows': [
+						{
+							'type': 'DummyAllow',
+							'args': {}
+						}
+					],
+					'action': {
+						'type': 'DummyAction',
+						'args': {}
+					}
+				},
+				{
+					'name': 'beep',
+					'description': 'some other description',
+					'allows': [
+						{
+							'type': 'DummyAllow',
+							'args': {}
+						}
+					],
+					'action': {
+						'type': 'DummyExecutor',
+						'args': {}
+					}
+				}
+			]
+		}
+		client.reload_commands(new_confs)
+
+		# Then the commands are updated and any new commands are added
+		self.assertEqual('some description', client.commands['foo'].description)
+		self.assertTrue(isinstance(client.commands['foo'].executor, DummyAction))
+		self.assertEqual('some description', client.commands['bar'].description)
+		self.assertTrue(isinstance(client.commands['bar'].executor, DummyAction))
+		self.assertEqual('some description', client.commands['baz'].description)
+		self.assertTrue(isinstance(client.commands['baz'].executor, DummyAction))
+
+		self.assertEqual('some other description', client.commands['beep'].description)
+		self.assertTrue(isinstance(client.commands['beep'].executor, DummyExecutor))
+
+		self.assertEqual(4, len(client.commands))
+
+		# And finally when reloaded with fewer commands
+		new_confs = {
+			'commands': [
+				{
+					'name': 'beep',
+					'description': 'some other description',
+					'allows': [
+						{
+							'type': 'DummyAllow',
+							'args': {}
+						}
+					],
+					'action': {
+						'type': 'DummyExecutor',
+						'args': {}
+					}
+				}
+			]
+		}
+		client.reload_commands(new_confs)
+
+		# Then the old commands are removed
+		self.assertEqual(None, client.commands.get('foo', None))
+		self.assertEqual(None, client.commands.get('bar', None))
+		self.assertEqual(None, client.commands.get('baz', None))
+
+		self.assertEqual('some other description', client.commands['beep'].description)
+		self.assertTrue(isinstance(client.commands['beep'].executor, DummyExecutor))
+
+		self.assertEqual(1, len(client.commands))
