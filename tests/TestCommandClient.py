@@ -154,7 +154,7 @@ class TestCommandClient(unittest.TestCase):
 		command = DummyCommand("foo", [], {})
 		command.execute = MagicMock()
 		client = CommandClientBase()
-		client.commands = [command]
+		client.commands = {'foo': command}
 
 		# When something that doesn't exist is executed
 		result = client.execute('idontexist', user, args)
@@ -164,7 +164,7 @@ class TestCommandClient(unittest.TestCase):
 		command.execute.assert_not_called()
 
 		# When something that does exist is executed
-		result = client.execute('idontexist', user, args)
+		result = client.execute('foo', user, args)
 
 		# Then it is executed and a SUCCESS is returned
 		self.assertEqual(State.SUCCESS, result.state)

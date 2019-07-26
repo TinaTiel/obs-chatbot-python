@@ -27,7 +27,12 @@ class CommandClientBase:
 			self.commands[alias] = command
 
 	def execute(self, command_name, user, args):
-		pass
+		command = self.commands.get(command_name, None)
+		if(command is None):
+			return Result(State.FAILURE, "{} is not a command".format(command_name))
+
+		result = command.execute(user, args)
+		return Result(State.SUCCESS, result)
 
 	def _build_command(self, conf):
 		# Check for required args
