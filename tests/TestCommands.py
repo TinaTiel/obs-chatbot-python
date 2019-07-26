@@ -11,7 +11,7 @@ class TestCommands(unittest.TestCase):
 	def fake_build(self, config):
 		pass
 
-	@patch.object(Command, '_build_executor', fake_build)
+	@patch.object(CommandBase, '_build_executor', fake_build)
 	def test_allows_conf(self):
 		'''
 		The configuration for a single or set of Allows must have certain type and args
@@ -19,16 +19,16 @@ class TestCommands(unittest.TestCase):
 		# Given invalid configs, a ValueError is thrown
 		executor = DummyExecutor(**{"args": {"actions":[]}})
 
-		self.assertRaises(ValueError, Command, "name", [{}], {})
-		self.assertRaises(ValueError, Command, "name", [{"type": "foo"}], {})
-		self.assertRaises(ValueError, Command, "name", [{"args": {}}], {})
-		self.assertRaises(ValueError, Command, "name", [{"type": "foo", "args": {}}], {})
-		self.assertRaises(ValueError, Command, "name", [{"type": "foo", "args": {}}, {"type": "DummyAllow", "args": {}}], {})
+		self.assertRaises(ValueError, CommandBase, "name", [{}], {})
+		self.assertRaises(ValueError, CommandBase, "name", [{"type": "foo"}], {})
+		self.assertRaises(ValueError, CommandBase, "name", [{"args": {}}], {})
+		self.assertRaises(ValueError, CommandBase, "name", [{"type": "foo", "args": {}}], {})
+		self.assertRaises(ValueError, CommandBase, "name", [{"type": "foo", "args": {}}, {"type": "DummyAllow", "args": {}}], {})
 		
 		# But given a valid config, no error is thrown
 		try:
-			command = Command("name", [{"type": "DummyAllow", "args": {}}], {})
-			command = Command("name", {"type": "DummyAllow", "args": {}}, {})
+			command = CommandBase("name", [{"type": "DummyAllow", "args": {}}], {})
+			command = CommandBase("name", {"type": "DummyAllow", "args": {}}, {})
 		except Exception:
 			self.fail("Unexpected exception")
 
@@ -37,15 +37,15 @@ class TestCommands(unittest.TestCase):
 		The executor can be either an Executor or a single Action, but not a list
 		'''
 		# Given a command with invalid executor / action, ValueError is thrown
-		self.assertRaises(ValueError, Command, "name", [], {})
-		self.assertRaises(ValueError, Command, "name", [], {"type": "foo"})
-		self.assertRaises(ValueError, Command, "name", [], {"args": {}})
-		self.assertRaises(ValueError, Command, "name", [], [])
+		self.assertRaises(ValueError, CommandBase, "name", [], {})
+		self.assertRaises(ValueError, CommandBase, "name", [], {"type": "foo"})
+		self.assertRaises(ValueError, CommandBase, "name", [], {"args": {}})
+		self.assertRaises(ValueError, CommandBase, "name", [], [])
 
 		# But given a valid executor then no error is thrown
 		try:
-			command_executor = Command("name", [], {"type": "DummyExecutor", "args": {"actions": []}})
-			command_action = Command("name", [], {"type": "DummyAction", "args": {}})
+			command_executor = CommandBase("name", [], {"type": "DummyExecutor", "args": {"actions": []}})
+			command_action = CommandBase("name", [], {"type": "DummyAction", "args": {}})
 		except Exception:
 			self.fail("Unexpected exception")
 
@@ -60,7 +60,7 @@ class TestCommands(unittest.TestCase):
 		except Exception:
 			self.fail("Unexpected exception")
 
-	@patch.object(Command, '_build_executor', fake_build)
+	@patch.object(CommandBase, '_build_executor', fake_build)
 	def test_allows_none(self):
 		'''
 		A Command having no allows never executes
@@ -70,7 +70,7 @@ class TestCommands(unittest.TestCase):
 		executor = DummyExecutor(**{"args": {"actions":[]}})
 		executor.execute = MagicMock()
 
-		command = Command("name", [], {})
+		command = CommandBase("name", [], {})
 		command.executor = executor
 
 		self.assertEqual(0, len(command.allows))
@@ -82,14 +82,14 @@ class TestCommands(unittest.TestCase):
 		command.executor.execute.assert_not_called()
 		self.assertEqual(State.FAILURE, result.state)
 
-	@patch.object(Command, '_build_executor', fake_build)
+	@patch.object(CommandBase, '_build_executor', fake_build)
 	def test_allows_single(self):
 		'''
 		A single Allow is fine, too
 		'''
 		# Given a command with a single Allow definition
 		dummyAllow = {"type": "DummyAllow", "args": {}}
-		command = Command("name", dummyAllow, {})
+		command = CommandBase("name", dummyAllow, {})
 		command.executor = DummyExecutor(**{"args": {"actions":[]}})
 		command.executor.execute = MagicMock()
 
@@ -115,7 +115,7 @@ class TestCommands(unittest.TestCase):
 		command.executor.execute.assert_called()
 
 
-	@patch.object(Command, '_build_executor', fake_build)
+	@patch.object(CommandBase, '_build_executor', fake_build)
 	def test_allows_passing(self):
 		'''
 		A Command having all passing allows executes
@@ -126,7 +126,7 @@ class TestCommands(unittest.TestCase):
 		executor.execute = MagicMock()
 		dummyAllow = {"type": "DummyAllow", "args": {}}
 
-		command = Command("name", [dummyAllow, dummyAllow, dummyAllow], {})
+		command = CommandBase("name", [dummyAllow, dummyAllow, dummyAllow], {})
 		command.executor = executor
 
 		self.assertEqual(3, len(command.allows))
@@ -140,7 +140,7 @@ class TestCommands(unittest.TestCase):
 		# Then the command executes
 		executor.execute.assert_called()
 
-	@patch.object(Command, '_build_executor', fake_build)
+	@patch.object(CommandBase, '_build_executor', fake_build)
 	def test_allows_failing(self):
 		'''
 		A Command having any failing allow doesn't execute
@@ -149,7 +149,7 @@ class TestCommands(unittest.TestCase):
 		executor = DummyExecutor(**{"args": {"actions":[]}})
 		executor.execute = MagicMock()
 		dummyAllow = {"type": "DummyAllow", "args": {}}
-		command = Command("name", [dummyAllow, dummyAllow, dummyAllow], {})
+		command = CommandBase("name", [dummyAllow, dummyAllow, dummyAllow], {})
 		command.executor = executor
 
 		self.assertEqual(3, len(command.allows))
@@ -164,8 +164,8 @@ class TestCommands(unittest.TestCase):
 		executor.execute.assert_not_called()
 		self.assertEqual(State.FAILURE, result.state)
 
-	@patch.object(Command, '_build_allows', fake_build)
-	@patch.object(Command, '_build_executor', fake_build)
+	@patch.object(CommandBase, '_build_allows', fake_build)
+	@patch.object(CommandBase, '_build_executor', fake_build)
 	def test_execution_many_args(self):
 		'''
 		Arguments are separated by spaces
@@ -173,7 +173,7 @@ class TestCommands(unittest.TestCase):
 		'''
 		# Given a command that will be executed
 		user = User("foo")
-		command = Command("name", [], {})
+		command = CommandBase("name", [], {})
 		command.executor = DummyExecutor(**{"args": {"actions":[]}})
 		command.executor.execute = MagicMock()
 		command._permit = MagicMock(return_value=True)
@@ -184,15 +184,15 @@ class TestCommands(unittest.TestCase):
 		# Then the executor is executed with a list of arg strings
 		command.executor.execute.assert_called_with(user, ["foo", "bar bar", "baz baz"])
 
-	@patch.object(Command, '_build_allows', fake_build)
-	@patch.object(Command, '_build_executor', fake_build)
+	@patch.object(CommandBase, '_build_allows', fake_build)
+	@patch.object(CommandBase, '_build_executor', fake_build)
 	def test_actions_no_args(self):
 		'''
 		No arguments can be supplied
 		'''
 		# Given a command that will be executed
 		user = User("foo")
-		command = Command("name", [], {})
+		command = CommandBase("name", [], {})
 		command.executor = DummyExecutor(**{"args": {"actions":[]}})
 		command.executor.execute = MagicMock()
 		command._permit = MagicMock(return_value=True)
