@@ -201,15 +201,21 @@ class TestCommandClient(unittest.TestCase):
 		# When the command is disabled
 		result = client.disable('foo')
 
-		# Then the command cannot be executed
+		# Then the command or any of its aliases cannot be executed
 		result = client.execute('foo', user, args)
+		self.assertEqual(State.FAILURE, result.state)
+		result = client.execute('bar', user, args)
 		self.assertEqual(State.FAILURE, result.state)
 
 		# When the command is re-enabled
 		result = client.enable('foo')
 
-		# Then the command can be executed again
+		# Then the command and its aliases can be executed again
 		result = client.execute('foo', user, args)
+		self.assertEqual(State.SUCCESS, result.state)
+		command.execute.assert_called_with(user, "foo bar baz")
+
+		result = client.execute('bar', user, args)
 		self.assertEqual(State.SUCCESS, result.state)
 		command.execute.assert_called_with(user, "foo bar baz")
 

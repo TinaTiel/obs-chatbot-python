@@ -36,10 +36,11 @@ class CommandClientBase:
 		return Result(State.SUCCESS, result)
 
 	def disable(self, command_name):
-		command = self.commands.get(command_name, None):
+		command = self.commands.pop(command_name, None)
 		if(command is None):
 			return Result(State.FAILURE, "{} is not a command".format(command_name))
 
+		self.disabled[command_name] = command
 
 
 	def enable(self, command_name):
