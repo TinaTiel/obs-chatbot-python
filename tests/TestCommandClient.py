@@ -93,20 +93,29 @@ class TestCommandClient(unittest.TestCase):
 					}
 				],
 				'action': {
-					'type': 'DummyAction',
-					'args': {}
+					'type': 'BaseExecutor',
+					'args': {
+						'actions': [
+							{
+								'type': 'DummyAction',
+								'args': {}
+							}
+						]
+					}
 				}
 			}
 			client.load_command(conf)
 		except Exception:
 			self.fail('unexpected exception')
 
+		self.assertEqual(1, len(client.commands))
 		command = client.commands['foo']
 		self.assertEqual('foo', command.name)
 		self.assertEqual('bar', command.description)
 		self.assertEqual('baz', command.aliases[0])
 		self.assertEqual(1, len(command.allows))
-		self.assertTrue(isinstance(command.executor, DummyAction))
+		self.assertTrue(isinstance(command.executor, BaseExecutor))
+		self.assertTrue(isinstance(command.executor.actions[0], DummyAction))
 
 	# def test_command_execution(self):
 	# 	'''
