@@ -26,6 +26,9 @@ class CommandClientBase:
 		for alias in command.aliases:
 			self.commands[alias] = command
 
+	def execute(self, command_name, user, args):
+		pass
+
 	def _build_command(self, conf):
 		# Check for required args
 		name = conf.get('name', None)

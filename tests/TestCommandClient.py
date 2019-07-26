@@ -144,20 +144,31 @@ class TestCommandClient(unittest.TestCase):
 		self.assertEqual('foo', client.commands['bar'].name)
 		self.assertEqual('foo', client.commands['baz'].name)
 
-	# def test_command_execution(self):
-	# 	'''
-	# 	A command added successfully is executable
-	# 	'''
-	# 	# Given a command added to the client
-	# 	client = CommandClientBase()
-	# 	client.commands = [DummyCommand("foo")]
-	# 	# When executed
+	def test_command_execution(self):
+		'''
+		A command added successfully is executable
+		'''
+		# Given a command added to the client that will always execute
+		user = User("Rosie")
+		args = "foo bar baz"
+		command = DummyCommand("foo", [], {})
+		command.execute = MagicMock()
+		client = CommandClientBase()
+		client.commands = [command]
 
-	# 	# it is executed and a SUCCESS is returned
+		# When something that doesn't exist is executed
+		result = client.execute('idontexist', user, args)
 
-	# 	# When something that doesn't exist is executed
+		# Then nothing happens and a FAILURE is returned
+		self.assertEqual(State.FAILURE, result.state)
+		command.execute.assert_not_called()
 
-	# 	# Then nothing happens and a FAILURE is returned
+		# When something that does exist is executed
+		result = client.execute('idontexist', user, args)
+
+		# Then it is executed and a SUCCESS is returned
+		self.assertEqual(State.SUCCESS, result.state)
+		command.execute.assert_called_with(user, "foo bar baz")
 
 	# def test_command_disable_enable(self):
 	# 	'''
