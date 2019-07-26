@@ -3,3 +3,4 @@ from bot.User import *
 from bot.Allow import *
 from bot.Permission import *
 from bot.Action import *
+from bot.CommandClient import *
