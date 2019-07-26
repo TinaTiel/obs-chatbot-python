@@ -180,7 +180,7 @@ class TestCommandClient(unittest.TestCase):
 		command = DummyCommand("foo", [], {}, "", ["bar", "baz"])
 		command.execute = MagicMock()
 		client = CommandClientBase()
-		client.commands = {'foo': command}
+		client.commands = {'foo': command, 'bar': command, 'baz': command}
 
 		# And that command can be executed normally
 		result = client.execute('foo', user, args)

@@ -39,12 +39,19 @@ class CommandClientBase:
 		command = self.commands.pop(command_name, None)
 		if(command is None):
 			return Result(State.FAILURE, "{} is not a command".format(command_name))
-
 		self.disabled[command_name] = command
-
+		for alias in command.aliases:
+			self.disabled[alias] = self.commands.pop(alias)
+		return Result(State.SUCCESS)
 
 	def enable(self, command_name):
-		pass
+		command = self.disabled.pop(command_name, None)
+		if(command is None):
+			return Result(State.FAILURE, "{} is not a command".format(command_name))
+		self.commands[command_name] = command
+		for alias in command.aliases:
+			self.commands[alias] = self.disabled.pop(alias)
+		return Result(State.SUCCESS)
 
 	def _build_command(self, conf):
 		# Check for required args
