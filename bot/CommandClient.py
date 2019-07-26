@@ -5,6 +5,7 @@ class CommandClientBase:
 
 	def __init__(self):
 		self.commands = {}
+		self.disabled = {}
 
 	def load_commands(self, confs):
 		'''
@@ -35,7 +36,11 @@ class CommandClientBase:
 		return Result(State.SUCCESS, result)
 
 	def disable(self, command_name):
-		pass
+		command = self.commands.get(command_name, None):
+		if(command is None):
+			return Result(State.FAILURE, "{} is not a command".format(command_name))
+
+
 
 	def enable(self, command_name):
 		pass

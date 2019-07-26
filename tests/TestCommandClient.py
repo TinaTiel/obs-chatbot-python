@@ -177,7 +177,7 @@ class TestCommandClient(unittest.TestCase):
 		# Given a client with a command in it
 		user = User("Rosie")
 		args = "foo bar baz"
-		command = DummyCommand("foo", [], {})
+		command = DummyCommand("foo", [], {}, "", ["bar", "baz"])
 		command.execute = MagicMock()
 		client = CommandClientBase()
 		client.commands = {'foo': command}
