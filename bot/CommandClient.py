@@ -1,4 +1,4 @@
-class CommandClient:
+class CommandClientBase:
 
 	def __init__(self):
 		self.commands = []
@@ -10,6 +10,17 @@ class CommandClient:
 
 		for command in commands:
 			self.load_command(command)
+
+	def load_command(self, conf):
+		pass
+
+class DummyCommandClient(CommandClientBase):
+
+	def __init__(self):
+		pass
+
+	def load_commands(self, confs):
+		pass
 
 	def load_command(self, conf):
 		pass

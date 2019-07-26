@@ -12,7 +12,7 @@ class TestCommandClient(unittest.TestCase):
 		All commands must be error free for them all to load
 		'''
 		# Given a Command Client
-		client = CommandClient()
+		client = CommandClientBase()
 		client.load_command = MagicMock()
 
 		# When a bad config is loaded then a ValueError is returned
@@ -39,7 +39,7 @@ class TestCommandClient(unittest.TestCase):
 	# 	Every command requires name, allows, and execute. All other stuff is optional.
 	# 	'''
 	# 	# Given a Command Client
-	# 	client = CommandClient()
+	# 	client = CommandClientBase()
 
 	# 	# When loading an invalid command then it will raise a Value Error
 	# 	self.assertRaises(ValueError, client.load_command, {})
