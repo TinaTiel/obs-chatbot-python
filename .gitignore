@@ -1,3 +1,7 @@
 **__pycache__
 config.json
 **.log
+**config/*.json
+!**config/*.config.json
+**config/**/*.json
+!**config/**/*example.json

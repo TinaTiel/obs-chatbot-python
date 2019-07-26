@@ -83,8 +83,8 @@ class CommandClientBase:
 		# Get optional args
 		description = conf.get('description', "")
 		aliases = conf.get('aliases', [])
-
 		return Command(name, allows, action, description, aliases)
+
 
 class DummyCommandClient(CommandClientBase):
 
