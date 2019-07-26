@@ -21,9 +21,7 @@ class CommandClientBase:
 		Loads a command specified in the conf dict
 		'''
 		command = self._build_command(conf)
-		self.commands[command.name] = command
-		for alias in command.aliases:
-			self.commands[alias] = command
+		self._add_command_to_container(command, self.commands)
 
 	def execute(self, command_name, user, args):
 		command = self.commands.get(command_name, None)
@@ -52,13 +50,27 @@ class CommandClientBase:
 		return Result(State.SUCCESS)
 
 	def reload_commands(self, confs):
-		pass
+		command_confs = self._validate_commands_conf(confs)
+		tmp = {}
+		try:
+			for conf in command_confs:
+				command = self._build_command(conf)
+				self._add_command_to_container(command, tmp)
+		except ValueError:
+			return Result(State.FAILURE, "Invalid configuration")
+		self.commands.clear()
+		self.commands.update(tmp)
 
 	def _validate_commands_conf(self, confs):
-		commands = confs.get('commands', None)
-		if (commands is None or not isinstance(commands, list)):
+		command_confs = confs.get('commands', None)
+		if (command_confs is None or not isinstance(command_confs, list)):
 			raise ValueError("Missing 'commands' when initializing list of commands, or 'commands' isn't a list")
-		return commands
+		return command_confs
+
+	def _add_command_to_container(self, command, container):
+		container[command.name] = command
+		for alias in command.aliases:
+			container[alias] = command
 
 	def _build_command(self, conf):
 		# Check for required args
@@ -94,3 +106,5 @@ class DummyCommandClient(CommandClientBase):
 	def enable(self, command_name):
 		pass
 
+	def reload_commands(self, confs):
+		pass
