@@ -85,7 +85,7 @@ class ShowSource(ActionBase):
 			if(self.pick_from_group):
 				self.log.debug("Group picking enabled")
 				try:
-					import bot.Context as ctx
+					import bot.context.ObsContext as ctx
 					source_settings = ctx.obs_client.client.call(obswebsocket.requests.GetSourceSettings(self.source))
 				except Exception as e:
 					raise ValueError("Group picking enabled, but could not find group {} in OBS".format(self.source))
@@ -99,7 +99,7 @@ class ShowSource(ActionBase):
 			raise ValueError("OBS/Config Error, specified source may not exist in OBS. Error: {}".format(e))
 
 	def _execute(self, user, user_args):
-		import bot.Context as ctx
+		import bot.context.ObsContext as ctx
 		# get the random choice if applicable
 		if(len(self.pickable_items) == 0):
 			self.pickable_items = self.picked_items

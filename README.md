@@ -244,7 +244,18 @@ And in a Chain command:
 `twitch.no_cooldown`: List of commands such as _help_ that should never have cooldown / can be spammed as frequently as viewers want.
 
 # Testing
+You can execute the unit tests as follows: (using the `-B` flag to disable python bytecode caching)
 ```
 pip install -r requirements/dev.txt
-python -m unittest discover tests -v
+python -B -m unittest discover tests/unit -v
+```
+To execute the integration tests, you need to setup your environment as described above.
+Then, rename the _.example.json_ files to _.json_ and execute the tests:
+```
+# Observe the command line and OBS while this executes
+python -B -m unittest tests/integration/TestObsClient -v
+```
+```
+# Just run this test and try to run commands from Twitch chat
+python -B -m unittest tests/integration/TestTwitchClient -v
 ```
