@@ -1,10 +1,12 @@
 import shlex
 from bot.Result import *
 import bot.Common as Common
+import logging
 
 class CommandBase():
 
 	def __init__(self, name, allow_confs, executor_conf, description="", aliases=[]):
+		self.log = logging.getLogger(__name__)
 		self.name = name
 		self._build_allows(allow_confs)
 		self._build_executor(executor_conf)
@@ -13,8 +15,8 @@ class CommandBase():
 
 	def execute(self, user, args):
 		# If not permitted, fail immediately
-
 		if(not self._permit(user)):
+			self.log.debug("User {} isn't permitted to run command {}".format(user.username, self.name))
 			return Result(State.FAILURE, ["Failed Allows/Permissions"])
 
 		# Parse the args

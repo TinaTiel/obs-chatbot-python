@@ -108,3 +108,7 @@ class DummyCommandClient(CommandClientBase):
 
 	def reload_commands(self, confs):
 		pass
+
+
+class CommandClient(CommandClientBase):
+	pass

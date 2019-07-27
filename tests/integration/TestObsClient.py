@@ -10,5 +10,4 @@ class TestObsClient(unittest.TestCase):
 		pass
 
 	def test_something(self):
-		ctx.secrets_obs = Path(ctx.secrets_root, 'obs.example.json')
-		ctx
+		ctx.command_client.execute("showsource", User("foo"), None)
