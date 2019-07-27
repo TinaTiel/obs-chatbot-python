@@ -1,6 +1,10 @@
+import obswebsocket, obswebsocket.requests
+import logging
+
 class ObsClient():
 	
 	def __init__(self, host='localhost', port=4444, password='', max_reconnects=3):
+		self.log = logging.getLogger(__name__)
 		self.host = host
 		self.port = port
 		self.client = obswebsocket.obsws(host, port, password)
@@ -9,8 +13,14 @@ class ObsClient():
 			raise ValueError("Max reconnects must be greater than 0")
 
 	def connect(self):
-		self.client.connect()
-
+		self.log.info("Connecting to OBS Websockets on '{}' at port {}...".format(self.host, self.port))
+		try:
+			self.client.connect()
+			self.log.info('...Connected to OBS Websockets.')
+		except Exception as e:
+			msg = "Could not connect to OBS! Error: {}".format(str(e))
+			self.log.error(msg)
+			raise Exception(msg)
 	def disconnect(self):
 		self.client.disconnect()
 

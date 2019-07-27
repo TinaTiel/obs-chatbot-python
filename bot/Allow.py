@@ -19,7 +19,7 @@ class DummyAllow(AllowBase):
 		pass
 
 
-class AllowUserStatus(AllowBase):
+class UserStatus(AllowBase):
 	'''
 	Allow is based on user status in Twitch, default is highest permission (broadcaster only)
 	'''
@@ -46,7 +46,7 @@ class AllowUserStatus(AllowBase):
 		return user_status >= self.min_status
 
 
-class AllowVoting(AllowBase):
+class Votes(AllowBase):
 	def __init__(self, **kwargs):
 		min_votes = kwargs.get('min_votes', 9999)
 		uniques = kwargs.get('uniques', True)
@@ -79,7 +79,7 @@ class AllowVoting(AllowBase):
 			self.votes.add(user.username)
 
 
-class AllowWhitelist(AllowBase):
+class UserWhitelist(AllowBase):
 	def __init__(self, **kwargs):
 		# whitelist
 		whitelist = kwargs.get('whitelist', [])

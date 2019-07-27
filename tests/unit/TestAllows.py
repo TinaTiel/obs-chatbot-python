@@ -13,13 +13,13 @@ class TestAllows(unittest.TestCase):
 
 	def test_allow_userStatus_valid_status(self):
 		# Given an valid user status, a ValueError is thrown
-		self.assertRaises(ValueError, AllowUserStatus, **{"min_status": "FOOBARBAZ"})
+		self.assertRaises(ValueError, UserStatus, **{"min_status": "FOOBARBAZ"})
 
 		# Given a valid user status, no error
 		try:
-			allow = AllowUserStatus(**{"min_status": "EVERYONE"})
+			allow = UserStatus(**{"min_status": "EVERYONE"})
 		except ValueError:
-			self.fail("Instantiating AllowUserStatus failed unexpectedly!")
+			self.fail("Instantiating UserStatus failed unexpectedly!")
 
 
 	def test_allow_userStatus_Everyone(self):
@@ -27,7 +27,7 @@ class TestAllows(unittest.TestCase):
 		The general public is allowed
 		'''
 		# Given a allow to the general public
-		allow = AllowUserStatus(**{"min_status": "EVERYONE"})
+		allow = UserStatus(**{"min_status": "EVERYONE"})
 
 		# All users are permitted
 		self.assertTrue(allow.permit(self.user_public))
@@ -41,7 +41,7 @@ class TestAllows(unittest.TestCase):
 		Followers and higher are allowed
 		'''
 		# Given a allow to followers
-		allow = AllowUserStatus(**{"min_status": "FOLLOWER"})
+		allow = UserStatus(**{"min_status": "FOLLOWER"})
 
 		# Only followers and above are permitted
 		self.assertFalse(allow.permit(self.user_public))
@@ -55,7 +55,7 @@ class TestAllows(unittest.TestCase):
 		Subscribers and higher are allowed
 		'''
 		# Given a allow to subscribers
-		allow = AllowUserStatus(**{"min_status": "SUBSCRIBER"})
+		allow = UserStatus(**{"min_status": "SUBSCRIBER"})
 
 		# Only subscribers and above are permitted
 		self.assertFalse(allow.permit(self.user_public))
@@ -69,7 +69,7 @@ class TestAllows(unittest.TestCase):
 		Moderators and higher are allowed
 		'''
 		# Given a allow to moderators
-		allow = AllowUserStatus(**{"min_status": "MODERATOR"})
+		allow = UserStatus(**{"min_status": "MODERATOR"})
 
 		# Only moderators and above are permitted
 		self.assertFalse(allow.permit(self.user_public))
@@ -83,7 +83,7 @@ class TestAllows(unittest.TestCase):
 		Only broadcaster is allowed
 		'''
 		# Given a allow to broadcaster
-		allow = AllowUserStatus(**{"min_status": "BROADCASTER"})
+		allow = UserStatus(**{"min_status": "BROADCASTER"})
 
 		# Only broadcaster is permitted
 		self.assertFalse(allow.permit(self.user_public))
@@ -97,7 +97,7 @@ class TestAllows(unittest.TestCase):
 		Voting-based permission, duplicate votes allowed
 		'''
 		# Given vote allow with unique votes required
-		allow = AllowVoting(**{"min_votes": 5, "uniques": False})
+		allow = Votes(**{"min_votes": 5, "uniques": False})
 
 		# When the same user votes multiple times
 		self.assertFalse(allow.permit(self.user_public))
@@ -119,7 +119,7 @@ class TestAllows(unittest.TestCase):
 		Voting based permission, but requires unique votes
 		'''
 		# Given vote allow with unique votes required
-		allow = AllowVoting(**{"min_votes": 5})
+		allow = Votes(**{"min_votes": 5})
 
 		# When the same user votes multiple times
 		self.assertFalse(allow.permit(self.user_public))
@@ -145,7 +145,7 @@ class TestAllows(unittest.TestCase):
 
 		# Given a whitelist
 		whitelist = ["foo"]
-		allow = AllowWhitelist(**{"whitelist": whitelist})
+		allow = UserWhitelist(**{"whitelist": whitelist})
 
 		# An user not a member of the whitelist is denied
 		self.assertFalse(allow.permit(User("bar")))
