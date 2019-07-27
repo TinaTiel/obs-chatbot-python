@@ -4,8 +4,8 @@ import logging
 import threading
 import time
 import os
-from twitch.TwitchBotCore import TwitchBotCore, TwitchCommand, TwitchUser
-from twitch.TwitchApi import TwitchApi
+from bot.twitch.TwitchBotCore import TwitchBotCore, TwitchCommand, TwitchUser
+from bot.twitch.TwitchApi import TwitchApi
 
 
 class TwitchBot(object):

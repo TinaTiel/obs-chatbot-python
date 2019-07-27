@@ -4,11 +4,9 @@ from pathlib import Path
 import logging
 import logging.config
 
-#print('INIT APP CONTEX')
-
 # Configure Logging
 #log_level = getattr(logging, data.get('log_level', "INFO"))
-log_level = logging.DEBUG
+log_level = logging.INFO
 logging.basicConfig(level=log_level)
 logging.getLogger("obswebsocket").setLevel(logging.ERROR) # OBS websocket Core is spammy
 
