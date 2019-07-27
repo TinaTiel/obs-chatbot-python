@@ -1,4 +1,4 @@
-from bot.Result import *
+from bot.Result import Result, State
 import bot.Common as Common
 from collections import deque
 from importlib import import_module

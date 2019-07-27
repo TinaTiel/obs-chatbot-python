@@ -1,6 +1,11 @@
 import unittest
-from unittest.mock import *
-from bot import *
+from unittest.mock import MagicMock, patch
+from bot.Command import CommandBase
+from bot.Allow import DummyAllow
+from bot.User import User
+from bot.Executor import DummyExecutor
+from bot.Result import Result, State
+from bot.Action import DummyAction
 
 class TestCommands(unittest.TestCase):
 

@@ -6,7 +6,7 @@ import ssl
 import irc.bot
 import time
 import requests
-from bot.twitch.TwitchApi import TwitchApi
+from bot.clients.twitch.TwitchApi import TwitchApi
 import re
 
 

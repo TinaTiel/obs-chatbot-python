@@ -1,5 +1,5 @@
 import shlex
-from bot.Result import *
+from bot.Result import Result, State
 import bot.Common as Common
 import logging
 

@@ -1,6 +1,7 @@
 import unittest
-from unittest.mock import *
-from bot import *
+from unittest.mock import MagicMock
+from bot.Allow import AllowBase, UserStatus, Votes, UserWhitelist
+from bot.User import User
 
 class TestAllows(unittest.TestCase):
 

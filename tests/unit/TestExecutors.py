@@ -1,6 +1,9 @@
 import unittest
-from unittest.mock import *
-from bot import *
+from unittest.mock import MagicMock
+from bot.Executor import ExecutorBase, ExecuteAll, ExecuteGated
+from bot.Result import Result, State
+from bot.User import User
+from bot.Action import ActionBase
 
 class TestExecutors(unittest.TestCase):
 

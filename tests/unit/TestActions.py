@@ -1,6 +1,9 @@
 import unittest
-from unittest.mock import *
-from bot import *
+from unittest.mock import MagicMock
+from bot.Action import ActionBase
+from bot.Allow import DummyAllow
+from bot.User import User
+from bot.Result import Result, State
 
 class TestActions(unittest.TestCase):
 

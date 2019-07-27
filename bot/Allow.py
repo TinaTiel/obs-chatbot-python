@@ -1,4 +1,4 @@
-from bot.Permission import *
+from bot.Permission import Permission
 
 class AllowBase():
 	def __init__(self, **kwargs):

@@ -1,4 +1,4 @@
-from bot.twitch.TwitchBot import TwitchBot
+from bot.clients.twitch.TwitchBot import TwitchBot
 import logging
 
 class TwitchClient(TwitchBot):

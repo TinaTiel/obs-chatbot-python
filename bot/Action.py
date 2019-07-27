@@ -1,4 +1,4 @@
-from bot.Result import *
+from bot.Result import Result, State
 import logging
 import obswebsocket
 import random

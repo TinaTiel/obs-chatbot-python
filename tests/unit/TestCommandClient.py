@@ -1,6 +1,11 @@
 import unittest
-from unittest.mock import *
-from bot import *
+from unittest.mock import MagicMock
+from bot.clients.CommandClient import CommandClientBase
+from bot.User import User
+from bot.Command import DummyCommand
+from bot.Result import Result, State
+from bot.Executor import DummyExecutor, ExecutorBase
+from bot.Action import DummyAction
 
 class TestCommandClient(unittest.TestCase):
 

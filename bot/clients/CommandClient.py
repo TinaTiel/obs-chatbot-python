@@ -1,5 +1,6 @@
 import bot.Common as Common
-from bot.Command import *
+from bot.Command import Command
+from bot.Result import Result, State
 
 class CommandClientBase:
 

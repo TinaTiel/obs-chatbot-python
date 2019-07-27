@@ -2,7 +2,7 @@ from collections import namedtuple
 import requests
 import logging
 import time
-from bot.twitch.FuncCache import FuncCache
+from bot.clients.twitch.FuncCache import FuncCache
 
 
 AppToken = namedtuple("AppToken", ["data", "expires"])
