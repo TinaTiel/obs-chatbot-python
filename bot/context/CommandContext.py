@@ -1,4 +1,4 @@
-import bot
+from bot.clients.CommandClient import CommandClient
 import bot.context.AppContext as app
 import os
 from pathlib import Path
@@ -16,7 +16,7 @@ with open(conf_commands_file, encoding='utf-8') as file:
 	except Exception as e:
 		raise Exception("Cannot read commands config file({})! Error message: {}".format(os.path.abspath(file)), str(e))
 
-command_client = bot.clients.CommandClient()
+command_client = CommandClient()
 command_client.load_commands(conf_commands)
 
 log.info("...Done.")

@@ -1,8 +1,7 @@
 import unittest
-from unittest.mock import *
-from bot import *
 import bot.context.ObsContext
 import bot.context.CommandContext as ctx
+from bot.User import User
 from pathlib import Path
 import time
 

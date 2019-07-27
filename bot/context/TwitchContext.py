@@ -1,4 +1,4 @@
-import bot
+from bot.clients.TwitchClient import TwitchClient
 import bot.context.AppContext as app
 import os
 from pathlib import Path
@@ -21,7 +21,7 @@ with open(secrets_twitch_file, encoding='utf-8') as file:
 	except Exception as e:
 		raise Exception("Cannot read Twitch secrets file({})! Error message: {}".format(os.path.abspath(file)), str(e))
 
-twitch_client = bot.clients.TwitchClient(secrets_twitch, None)
+twitch_client = TwitchClient(secrets_twitch, None)
 twitch_client.start()
 log.info("...Done. Verify with !twitchstatus, and press CTRL-C to exit when ready!\n")
 twitch_client.run_forever()
