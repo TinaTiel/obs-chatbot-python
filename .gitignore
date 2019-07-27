@@ -2,6 +2,6 @@
 config.json
 **.log
 **config/*.json
-!**config/*.config.json
+!**config/*.example.json
 **config/**/*.json
-!**config/**/*example.json
+!**config/**/*.example.json
