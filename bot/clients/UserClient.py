@@ -19,8 +19,7 @@ class UserClient():
 			raise ValueError("User object isn't string or TwitchUser instance, cannot get user!")
 
 	def get_user_by_username(self, string):
-		# return self.users.get(username, None)
-		pass
+		return self.users.get(username, None)
 
 	def create_or_update_user(self, twitch_user):
 		# existing_user = self.users.get(twitch_user['name'], None)
