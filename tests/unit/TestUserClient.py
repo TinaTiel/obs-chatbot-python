@@ -66,7 +66,7 @@ class TestUserClient(TestCase):
 		self.assertTrue('foo', user.username)
 		self.assertEqual(False, user.follower)
 		self.assertEqual(False, user.subscriber)
-		self.assertEqual(False, user.subscriber_dur)
+		self.assertEqual(False, user.subscriber_duration)
 		self.assertEqual(False, user.moderator)
 		self.assertEqual(False, user.broadcaster)
 		self.assertEqual(0, user.points)
@@ -122,11 +122,12 @@ class TestUserClient(TestCase):
 		user = client.create_user(twitch_user)
 
 		# Then the user is created
+		self.assertEqual(1, len(client.users))
 		self.assertTrue(isinstance(user, User))
 		self.assertEqual('foo', user.username)
 		self.assertEqual(False, user.follower)
 		self.assertEqual(False, user.subscriber)
-		self.assertEqual(False, user.subscriber_dur)
+		self.assertEqual(False, user.subscriber_duration)
 		self.assertEqual(False, user.moderator)
 		self.assertEqual(False, user.broadcaster)
 		self.assertEqual(0, user.points)
@@ -150,11 +151,12 @@ class TestUserClient(TestCase):
 		updated_user = client.update_user(existing_user, updated_twitch_user)
 
 		# Then the existing user object is updated
+		self.assertEqual(1, len(client.users))
 		self.assertTrue(updated_user is existing_user) # same object in memory
 		self.assertEqual('foo', updated_user.username)
 		self.assertEqual(True, updated_user.follower)
 		self.assertEqual(False, updated_user.subscriber)
-		self.assertEqual(False, updated_user.subscriber_dur)
+		self.assertEqual(False, updated_user.subscriber_duration)
 		self.assertEqual(False, updated_user.moderator)
 		self.assertEqual(False, updated_user.broadcaster)
 		self.assertEqual(0, updated_user.points)
