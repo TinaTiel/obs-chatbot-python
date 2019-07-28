@@ -22,6 +22,6 @@ with open(secrets_obs_file, encoding='utf-8') as file:
 		raise Exception("Cannot read obs secrets file({})! Error message: {}".format(os.path.abspath(file)), str(e))
 
 obs_client = ObsClient(secrets_obs.get('host'), secrets_obs.get('port'), secrets_obs.get('password'))
-obs_client.connect()
+#obs_client.connect()
 
 log.info("...Done.")

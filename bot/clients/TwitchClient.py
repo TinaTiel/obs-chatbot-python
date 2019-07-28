@@ -20,7 +20,7 @@ class TwitchClient(TwitchBot):
 						self.log.warn("Twitch Bot not connected to a command client!")
 						self.twitch_failed()
 					else:
-						self.command_client.execute(cmd["user"], cmd["action"], cmd["args"])
+						self.command_client.execute(cmd["action"], cmd["user"], cmd["args"])
 
 		def _pretty_log_dict(self, d, depth = 0):
 			self.log.debug("-----------------")

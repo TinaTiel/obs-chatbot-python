@@ -22,6 +22,7 @@ with open(secrets_twitch_file, encoding='utf-8') as file:
 		raise Exception("Cannot read Twitch secrets file({})! Error message: {}".format(os.path.abspath(file)), str(e))
 
 twitch_client = TwitchClient(secrets_twitch, None)
-twitch_client.start()
+
+#twitch_client.start()
 log.info("...Done. Verify with !twitchstatus, and press CTRL-C to exit when ready!\n")
-twitch_client.run_forever()
+#twitch_client.run_forever()
