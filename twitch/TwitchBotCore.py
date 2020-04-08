@@ -207,9 +207,15 @@ class TwitchBotCore(irc.bot.SingleServerIRCBot):
     def _parse_command(self, e):
         """Parses a twitch message and turns it into a command."""
 
-        # Extract command and arguments, if present.
-        #cmd = e.arguments[0].lstrip("! ")
-        cmd = re.findall(r'!\w+', e.arguments[0])[0].lstrip("! ")
+        # Extract command and arguments, if present. Wrapping in a catch-all
+        # because of behavior from the IRC Python library that I won't touch
+        # with a 1000m long telephone pole.
+        cmd = ""
+        try:
+            cmd = re.findall(r'!\w+', e.arguments[0])[0].lstrip("! ")
+        except:
+            self.log.warning("Couldn't parse Twitch argument")
+
         if " " in cmd:
             action, args = cmd.split(" ", 1)
         else:
@@ -295,7 +301,7 @@ class TwitchBotCore(irc.bot.SingleServerIRCBot):
         # Ignore messages that don't start with an exclamation point.
         #if not e.arguments[0].startswith('!'):
         if not '!' in e.arguments[0][0:3]:
-            self.log.debug("IGNORING IGNORING IGNORING")
+            self.log.debug("IGNORING command, no ! present")
             return
 
         # Parse the command and place it in the queue if cooldown not active.
