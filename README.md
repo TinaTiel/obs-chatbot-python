@@ -1,6 +1,15 @@
 # About
 OBS Chat Bot is a set of Python scripts that allows your viewers to cause actions directly in OBS during broadcasts! For example, a viewer may invoke a `!tiel` command and your OBS instance would briefly show a bird mov file. Or, a series of viewers may vote to execute the `!special` command to change scenes in some interactive fun way.
 
+# Holup
+I'm working on an improved version of this in Java that will address issues of stability and concurrency observed in the Pthon version here. 
+
+It works. 
+Most of the Time.
+
+You're free to use it, but please be aware I'm not spending anymore time on this.
+You're of course welcome to fork this repository and develop on your own independently.
+
 # Dependencies
 This project requires Python 3+, and dependencies are defined in requirements.txt. Install them with:
 ```
