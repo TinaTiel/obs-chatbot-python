@@ -64,7 +64,14 @@ This project also depends on [OBS Websockets](https://obsproject.com/forum/resou
    bot: Twitch Bot is up and running. Connected to OBS Websockets version 4.6.1
    ```
 
-You are now setup! See the documentation below on the commands you can configure in `obs.commands`.
+You are now setup! Run the bot, and see the documentation below on the commands you can configure in `obs.commands`.
+
+# Running
+
+Open a new console window, and run `startBot.py`:
+```
+python startbot.py
+```
 
 # Commands
 
