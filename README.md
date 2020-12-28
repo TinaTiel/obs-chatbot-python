@@ -10,6 +10,8 @@ Most of the Time.
 You're free to use it, but please be aware I'm not spending anymore time on this.
 You're of course welcome to fork this repository and develop on your own independently.
 
+Follow development of the new version of OBS Chatbot at: https://github.com/TinaTiel/obs-chatbot
+
 # Dependencies
 This project requires Python 3+, and dependencies are defined in requirements.txt. Install them with:
 ```
